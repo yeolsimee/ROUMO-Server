@@ -48,8 +48,8 @@ public class CommonControllerAdvice {
         Map<String, String> errors = new HashMap<>();
         e.getBindingResult().getAllErrors()
                 .forEach(c -> errors.put(((FieldError) c).getField(), c.getDefaultMessage()));
-        String message = "요청 필드의 유효성 검사를 실패하였습니다.";
-        return responseService.getFailResult(400, message);
+        errors.put("message", "요청 필드의 유효성 검사를 실패하였습니다.");
+        return responseService.getFailResult(400, errors.toString());
     }
 
     /**
