@@ -21,6 +21,9 @@ import java.util.stream.*;
  * 2023/03/01        jeon-eunseong       최초 생성
  */
 @Getter
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"username"}),
@@ -35,6 +38,12 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String password;
+
+    private String phoneNumber;
+
+    private String birthday;
+
+    private String address;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
