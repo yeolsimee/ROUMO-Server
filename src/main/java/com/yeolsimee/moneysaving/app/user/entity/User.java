@@ -6,8 +6,8 @@ import org.springframework.security.core.authority.*;
 import org.springframework.security.core.userdetails.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.*;
-import java.util.stream.*;
 
 /**
  * packageName    : com.yeolsimee.moneysaving.app.user
@@ -22,8 +22,8 @@ import java.util.stream.*;
  */
 @Getter
 @Builder
-@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"username"}),
@@ -34,26 +34,38 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String username;
+
+    @Column(nullable = false)
+    @Email
     private String email;
+
+    @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    @Column(nullable = false)
     private String phoneNumber;
 
+    @Column(nullable = false)
     private String birthday;
 
+    @Column(nullable = false)
     private String address;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map((role)-> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(role.getValue()));
+        return authorities;
     }
 
     @Override

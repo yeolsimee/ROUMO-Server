@@ -4,7 +4,6 @@ import com.yeolsimee.moneysaving.app.user.entity.*;
 import lombok.*;
 
 import javax.validation.constraints.*;
-import java.util.*;
 
 /**
  * packageName    : com.yeolsimee.moneysaving.app.user.dto
@@ -43,7 +42,7 @@ public class RegisterDto {
     private String address;
 
     public static User toEntity(RegisterDto registerDto) {
-        Role role = new Role(Role.USER);
+
         return User.builder()
                 .username(registerDto.getUsername())
                 .name(registerDto.getName())
@@ -52,7 +51,7 @@ public class RegisterDto {
                 .phoneNumber(registerDto.getPhoneNumber())
                 .birthday(registerDto.getBirthday())
                 .address(registerDto.getAddress())
-                .roles(Collections.singleton(role))
+                .role(Role.ROLE_USER)
                 .build();
     }
 }
