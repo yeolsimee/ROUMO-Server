@@ -3,13 +3,11 @@ package com.yeolsimee.moneysaving.app.user.controller;
 import com.yeolsimee.moneysaving.app.common.response.service.*;
 import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.service.*;
-import com.yeolsimee.moneysaving.app.user.validator.*;
 import lombok.*;
 import org.springframework.http.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.context.*;
-import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.*;
@@ -36,8 +34,6 @@ public class LoginController {
 
     private final CustomUserDetailService customUserDetailService;
 
-    private final RegisterValidator registerValidator;
-
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -48,13 +44,7 @@ public class LoginController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody RegisterDto registerDto, Errors errors){
-
-        registerValidator.validate(registerDto, errors);
-
-        if(errors.hasErrors()){
-            return ResponseEntity.ok(responseService.getSingleResult(errors.getAllErrors()));
-        }
+    public ResponseEntity<?> signup(@Valid @RequestBody RegisterDto registerDto){
         customUserDetailService.signup(registerDto);
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
