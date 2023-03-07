@@ -18,7 +18,6 @@ jobs:
         with:
             java-version: '17'
             distribution: 'adopt'
-
       - name: make application-prod.yml
         run: |
         ## create application-prod.yml
@@ -30,17 +29,14 @@ jobs:
         # GitHub-Actions 에서 설정한 값을 application-prod.yml 파일에 쓰기
           echo "${{ secrets.APPLICATION_PROD_YML }}" >> ./application-prod.yml
         shell: bash
-
       - name: Build with Gradle
         run: ./gradlew bootJar
-
       - name: Login to NCP Container Registry
         uses: docker/login-action@v2
         with:
           registry: ${{ secrets.NCP_CONTAINER_REGISTRY }}
           username: ${{ secrets.NCP_ACCESS_KEY }}
           password: ${{ secrets.NCP_SECRET_KEY }}
-
       - name: build and push
         uses: docker/build-push-action@v3
         with:
