@@ -2,8 +2,6 @@ package com.yeolsimee.moneysaving.app.user.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
-
 /**
  * packageName    : com.yeolsimee.moneysaving.app.user
  * fileName       : Role
@@ -15,16 +13,14 @@ import javax.persistence.*;
  * -----------------------------------------------------------
  * 2023/03/01        jeon-eunseong       최초 생성
  */
-@Setter
+
 @Getter
-@Entity
-@Table(name = "roles")
-public class Role {
+@RequiredArgsConstructor
+public enum Role {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    ROLE_USER("ROLE_USER"),
+    ROLE_ANONYMOUS("ROLE_ANONYMOUS"),
+    ROLE_ADMIN("ROLE_ADMIN");
 
-    @Column(length = 60)
-    private String name;
+    private final String value;
 }
