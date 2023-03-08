@@ -6,7 +6,6 @@ import org.springframework.security.core.authority.*;
 import org.springframework.security.core.userdetails.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.util.*;
 
 /**
@@ -42,7 +41,6 @@ public class User implements UserDetails {
     private String username;
 
     @Column(nullable = false)
-    @Email
     private String email;
 
     @Column(nullable = false)
