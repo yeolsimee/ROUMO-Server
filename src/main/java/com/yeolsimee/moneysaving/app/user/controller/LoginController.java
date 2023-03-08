@@ -10,8 +10,6 @@ import org.springframework.security.core.*;
 import org.springframework.security.core.context.*;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.*;
-
 /**
  * packageName    : com.yeolsimee.moneysaving.app.user.controller
  * fileName       : LoginController
@@ -35,7 +33,7 @@ public class LoginController {
     private final CustomUserDetailService customUserDetailService;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginDto loginDto){
+    public ResponseEntity<?> signin(@RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsername(), loginDto.getPassword()));
 
@@ -44,7 +42,7 @@ public class LoginController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody RegisterDto registerDto){
+    public ResponseEntity<?> signup(@RequestBody RegisterDto registerDto){
         customUserDetailService.signup(registerDto);
         return ResponseEntity.ok(responseService.getSuccessResult());
     }

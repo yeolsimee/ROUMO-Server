@@ -3,8 +3,6 @@ package com.yeolsimee.moneysaving.app.user.dto;
 import com.yeolsimee.moneysaving.app.user.entity.*;
 import lombok.*;
 
-import javax.validation.constraints.*;
-
 /**
  * packageName    : com.yeolsimee.moneysaving.app.user.dto
  * fileName       : RegisterDto
@@ -22,23 +20,16 @@ public class RegisterDto {
 
     private String name;
 
-    @NotNull
     private String username;
 
-    @Email
-    @NotNull
     private String email;
 
-    @NotNull
     private String password;
 
-    @NotNull
     private String phoneNumber;
 
-    @NotNull
     private String birthday;
 
-    @NotNull
     private String address;
 
     public static User toEntity(RegisterDto registerDto) {
