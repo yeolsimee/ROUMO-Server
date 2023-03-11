@@ -1,5 +1,6 @@
 package com.yeolsimee.moneysaving.app.user.entity;
 
+import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
 import lombok.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.*;
@@ -28,7 +29,7 @@ import java.util.*;
         @UniqueConstraint(columnNames = {"username"}),
         @UniqueConstraint(columnNames = {"email"})
 })
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
