@@ -6,8 +6,8 @@ import com.yeolsimee.moneysaving.app.routine.entity.RoutineDayWeek;
 import com.yeolsimee.moneysaving.app.routine.entity.RoutineType;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class RoutineRequest {
@@ -21,13 +21,14 @@ public class RoutineRequest {
     private String alarmTime;
 
     public static Routine toEntity(RoutineRequest routineRequest, Long userId) {
-        List<RoutineDayWeek> routineDayWeekList = new ArrayList<>();
-        routineRequest.getRoutineDayWeeks().stream().map(s -> routineDayWeekList.add(RoutineDayWeek.valueOf(s)));
+        List<RoutineDayWeek> routineDayWeeks = routineRequest.getRoutineDayWeeks()
+                .stream().map(RoutineDayWeek::valueOf)
+                .collect(Collectors.toList());
         return Routine.builder()
                 .userId(userId)
                 .routineName(routineRequest.getRoutineName())
                 .routineCategory(routineRequest.getRoutineCategory())
-                .routineDayWeeks(routineDayWeekList)
+                .routineDayWeeks(routineDayWeeks)
                 .routineType(RoutineType.valueOf(routineRequest.getRoutineType()))
                 .alarmStatus(AlarmStatus.valueOf(routineRequest.getAlarmStatus()))
                 .alarmTime(routineRequest.getAlarmTime())
