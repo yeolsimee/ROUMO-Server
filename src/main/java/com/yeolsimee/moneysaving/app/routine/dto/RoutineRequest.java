@@ -20,6 +20,15 @@ public class RoutineRequest {
     private String alarmStatus;
     private String alarmTime;
 
+    public RoutineRequest(String routineName, String routineCategory, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime) {
+        this.routineName = routineName;
+        this.routineCategory = routineCategory;
+        this.weekTypes = weekTypes;
+        this.routineType = routineType;
+        this.alarmStatus = alarmStatus;
+        this.alarmTime = alarmTime;
+    }
+
     public static Routine toEntity(RoutineRequest routineRequest, Long userId) {
         List<WeekType> weekTypes = routineRequest.getWeekTypes()
                 .stream().map(WeekType::valueOf)
