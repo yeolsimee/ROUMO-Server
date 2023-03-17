@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class RoutineSteps {
 
-    public static ExtractableResponse<Response> 루틴_생성_요청(String routineName, String routineCategory, List<String> routineDayWeeks, String routineType, String alarmStatus, String alarmTime) {
+    public static ExtractableResponse<Response> 루틴_생성_요청(String routineName, String routineCategory, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime) {
         Map<String, Object> params = new HashMap<>();
         params.put("routineName", routineName);
         params.put("routineCategory", routineCategory);
-        params.put("routineDayWeeks", routineDayWeeks);
+        params.put("weekTypes", weekTypes);
         params.put("routineType", routineType);
         params.put("alarmStatus", alarmStatus);
         params.put("alarmTime", alarmTime);

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -18,6 +20,7 @@ public class RoutineService {
     @Transactional
     public RoutineResponse createRoutine(RoutineRequest routineRequest, Long userId) {
         Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, userId));
+        routine.addRoutineDays();
         return RoutineResponse.from(routine);
     }
 }
