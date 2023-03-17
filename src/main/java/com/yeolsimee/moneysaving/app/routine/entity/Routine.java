@@ -67,24 +67,31 @@ public class Routine extends BaseEntity {
             DayOfWeek dayOfWeek = date.getDayOfWeek();
             if (dayOfWeek == DayOfWeek.MONDAY && weekTypes.contains(WeekType.MONDAY)) {
                 routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                continue;
             }
             if (dayOfWeek == DayOfWeek.TUESDAY && weekTypes.contains(WeekType.TUESDAY)) {
                 routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                continue;
             }
             if (dayOfWeek == DayOfWeek.WEDNESDAY && weekTypes.contains(WeekType.WEDNESDAY)) {
                 routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                continue;
             }
             if (dayOfWeek == DayOfWeek.THURSDAY && weekTypes.contains(WeekType.THURSDAY)) {
                 routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                continue;
             }
             if (dayOfWeek == DayOfWeek.FRIDAY && weekTypes.contains(WeekType.FRIDAY)) {
                 routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                continue;
             }
             if (dayOfWeek == DayOfWeek.SATURDAY && weekTypes.contains(WeekType.SATURDAY)) {
                 routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                continue;
             }
             if (dayOfWeek == DayOfWeek.SUNDAY && weekTypes.contains(WeekType.SUNDAY)) {
                 routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                continue;
             }
         }
     }
