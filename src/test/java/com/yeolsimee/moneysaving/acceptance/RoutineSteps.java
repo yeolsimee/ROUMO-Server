@@ -27,4 +27,17 @@ public class RoutineSteps {
                 .when().post("/api/v1/routine")
                 .then().log().all().extract();
     }
+
+    public static ExtractableResponse<Response> 나의_루틴_전체_조회_요청(String startDate, String endDate) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("startDate", startDate);
+        params.put("endDate", endDate);
+
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(params)
+                .when().get("/api/v1/routinedays")
+                .then().log().all().extract();
+    }
 }

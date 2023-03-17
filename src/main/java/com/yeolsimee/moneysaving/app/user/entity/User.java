@@ -60,12 +60,25 @@ public class User extends BaseEntity implements UserDetails  {
     @Column(nullable = false)
     private String address;
 
+    public User(String name, String username, String email, String password, Role role, String phoneNumber, String birthday, String address) {
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
+        this.address = address;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(role.getValue()));
         return authorities;
     }
+
+
 
     @Override
     public boolean isAccountNonExpired() {

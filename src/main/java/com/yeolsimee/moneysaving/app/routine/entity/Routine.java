@@ -1,6 +1,7 @@
 package com.yeolsimee.moneysaving.app.routine.entity;
 
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
+import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +24,6 @@ public class Routine extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
     private String routineName;
     private String routineCategory;
     @Enumerated(EnumType.STRING)
@@ -34,11 +34,14 @@ public class Routine extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AlarmStatus alarmStatus;
     private String alarmTime;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "users_id")
+    private User user;
     @Embedded
     private RoutineDays routineDays = new RoutineDays();
     @Builder
-    public Routine(Long userId, String routineName, String routineCategory, List<WeekType> weekTypes, RoutineType routineType, AlarmStatus alarmStatus, String alarmTime) {
-        this.userId = userId;
+    public Routine(User user, String routineName, String routineCategory, List<WeekType> weekTypes, RoutineType routineType, AlarmStatus alarmStatus, String alarmTime) {
+        this.user = user;
         this.routineName = routineName;
         this.routineCategory = routineCategory;
         this.weekTypes = weekTypes;

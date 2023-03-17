@@ -19,6 +19,8 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
     public static final String ROUTINE_TYPE = "PUBLIC";
     public static final String ALARM_STATUS = "ON";
     public static final String ALARM_TIME = "14";
+    public static final String START_DATE = "20230320";
+    public static final String END_DATE = "20231016";
 
     @DisplayName("루틴을 생성 한다.")
     @Test
@@ -26,6 +28,17 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         // when
         ExtractableResponse<Response> response = RoutineSteps.루틴_생성_요청(ROUTINE_NAME, ROUTINE_CATEGORY, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME);
 
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @DisplayName("특정 기간동안의 나의 루틴 날짜 전체 조회하기")
+    @Test
+    void findAllMyRoutineDays() {
+        // when
+        RoutineSteps.루틴_생성_요청(ROUTINE_NAME, ROUTINE_CATEGORY, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME);
+
+        ExtractableResponse<Response> response = RoutineSteps.나의_루틴_전체_조회_요청(START_DATE, END_DATE);
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }

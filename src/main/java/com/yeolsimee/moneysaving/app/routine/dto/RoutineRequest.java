@@ -4,6 +4,7 @@ import com.yeolsimee.moneysaving.app.routine.entity.AlarmStatus;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.routine.entity.WeekType;
 import com.yeolsimee.moneysaving.app.routine.entity.RoutineType;
+import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.Data;
 
 import java.util.List;
@@ -29,12 +30,12 @@ public class RoutineRequest {
         this.alarmTime = alarmTime;
     }
 
-    public static Routine toEntity(RoutineRequest routineRequest, Long userId) {
+    public static Routine toEntity(RoutineRequest routineRequest, User user) {
         List<WeekType> weekTypes = routineRequest.getWeekTypes()
                 .stream().map(WeekType::valueOf)
                 .collect(Collectors.toList());
         return Routine.builder()
-                .userId(userId)
+                .user(user)
                 .routineName(routineRequest.getRoutineName())
                 .routineCategory(routineRequest.getRoutineCategory())
                 .weekTypes(weekTypes)
