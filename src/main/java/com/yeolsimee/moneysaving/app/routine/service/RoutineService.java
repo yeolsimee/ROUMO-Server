@@ -4,6 +4,7 @@ import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysRequest;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysResponse;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
+import com.yeolsimee.moneysaving.app.routine.entity.Category;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.routine.repository.RoutineRepository;
 import com.yeolsimee.moneysaving.app.user.entity.Role;
@@ -20,13 +21,16 @@ import java.util.List;
 public class RoutineService {
 
     private final RoutineRepository routineRepository;
+    private final CategoryService categoryService;
 
     @Transactional
     public RoutineResponse createRoutine(RoutineRequest routineRequest, Long userId) {
         //임시 유저
         User user = new User("name", "username", "email", "password", Role.ROLE_USER, "phoneNumber", "birthday", "address");
 
-        Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, user));
+        Category category = findOrCreateCategory(routineRequest, userId);
+
+        Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user));
         routine.addRoutineDays();
         return RoutineResponse.from(routine);
     }
@@ -34,5 +38,16 @@ public class RoutineService {
     public RoutineDaysResponse findRoutineDays(Long userId, RoutineDaysRequest routineDaysRequest) {
         List<Routine> findedRoutines = routineRepository.findByUserId(userId);
         return RoutineDaysResponse.from(findedRoutines, routineDaysRequest);
+    }
+
+    private Category findOrCreateCategory(RoutineRequest routineRequest, Long userId) {
+        List<Routine> routines = routineRepository.findByUserId(userId);
+
+        Category category = routines.stream()
+                .map(routine -> routine.getCategory())
+                .filter(myCategory -> myCategory.getCategoryName().contains(routineRequest.getCategoryName()))
+                .findFirst()
+                .orElse(categoryService.createCategory(routineRequest.getCategoryName()));
+        return category;
     }
 }

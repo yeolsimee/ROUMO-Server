@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class RoutineTest {
     private User 사용자;
     private String 루틴_이름;
-    private String 루틴_카테고리;
+    private Category 루틴_카테고리;
     private List<WeekType> 루틴_요일 = new ArrayList<>();
     private RoutineType 루틴_공개범위;
     private AlarmStatus 루틴_알람상태;
@@ -29,7 +29,7 @@ class RoutineTest {
         사용자 = new User(1L,"name", "username", "email", "password", Role.ROLE_USER, "phoneNumber", "birthday", "address");
 
         루틴_이름 = "코딩하기";
-        루틴_카테고리 = "컴퓨터";
+        루틴_카테고리 = new Category("컴퓨터");
         루틴_요일.add(WeekType.MONDAY);
         루틴_요일.add(WeekType.WEDNESDAY);
         루틴_요일.add(WeekType.SUNDAY);

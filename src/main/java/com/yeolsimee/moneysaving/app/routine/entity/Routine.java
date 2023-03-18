@@ -25,7 +25,9 @@ public class Routine extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String routineName;
-    private String routineCategory;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "category_id")
+    private Category category;
     @Enumerated(EnumType.STRING)
     @ElementCollection
     private List<WeekType> weekTypes;
@@ -43,10 +45,10 @@ public class Routine extends BaseEntity {
     private RoutineTimeZone routineTimeZone;
 
     @Builder
-    public Routine(User user, String routineName, String routineCategory, List<WeekType> weekTypes, RoutineType routineType, AlarmStatus alarmStatus, String alarmTime, RoutineTimeZone routineTimeZone) {
+    public Routine(User user, String routineName, Category category, List<WeekType> weekTypes, RoutineType routineType, AlarmStatus alarmStatus, String alarmTime, RoutineTimeZone routineTimeZone) {
         this.user = user;
         this.routineName = routineName;
-        this.routineCategory = routineCategory;
+        this.category = category;
         this.weekTypes = weekTypes;
         this.routineType = routineType;
         this.alarmStatus = alarmStatus;

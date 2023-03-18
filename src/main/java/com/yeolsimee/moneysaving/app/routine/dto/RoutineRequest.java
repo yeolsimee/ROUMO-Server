@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class RoutineRequest {
     private String routineName;
 
-    private String routineCategory;
+    private String categoryName;
 
     private List<String> weekTypes;
     private String routineType;
@@ -19,9 +19,9 @@ public class RoutineRequest {
     private String alarmTime;
     private String routineTimeZone;
 
-    public RoutineRequest(String routineName, String routineCategory, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
+    public RoutineRequest(String routineName, String categoryName, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
         this.routineName = routineName;
-        this.routineCategory = routineCategory;
+        this.categoryName = categoryName;
         this.weekTypes = weekTypes;
         this.routineType = routineType;
         this.alarmStatus = alarmStatus;
@@ -29,14 +29,14 @@ public class RoutineRequest {
         this.routineTimeZone = routineTimeZone;
     }
 
-    public static Routine toEntity(RoutineRequest routineRequest, User user) {
+    public static Routine toEntity(RoutineRequest routineRequest, Category category, User user) {
         List<WeekType> weekTypes = routineRequest.getWeekTypes()
                 .stream().map(WeekType::valueOf)
                 .collect(Collectors.toList());
         return Routine.builder()
                 .user(user)
                 .routineName(routineRequest.getRoutineName())
-                .routineCategory(routineRequest.getRoutineCategory())
+                .category(category)
                 .weekTypes(weekTypes)
                 .routineType(RoutineType.valueOf(routineRequest.getRoutineType()))
                 .alarmStatus(AlarmStatus.valueOf(routineRequest.getAlarmStatus()))
