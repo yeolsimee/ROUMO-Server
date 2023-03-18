@@ -1,9 +1,6 @@
 package com.yeolsimee.moneysaving.app.routine.dto;
 
-import com.yeolsimee.moneysaving.app.routine.entity.AlarmStatus;
-import com.yeolsimee.moneysaving.app.routine.entity.Routine;
-import com.yeolsimee.moneysaving.app.routine.entity.WeekType;
-import com.yeolsimee.moneysaving.app.routine.entity.RoutineType;
+import com.yeolsimee.moneysaving.app.routine.entity.*;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.Data;
 
@@ -20,14 +17,16 @@ public class RoutineRequest {
     private String routineType;
     private String alarmStatus;
     private String alarmTime;
+    private String routineTimeZone;
 
-    public RoutineRequest(String routineName, String routineCategory, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime) {
+    public RoutineRequest(String routineName, String routineCategory, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
         this.routineName = routineName;
         this.routineCategory = routineCategory;
         this.weekTypes = weekTypes;
         this.routineType = routineType;
         this.alarmStatus = alarmStatus;
         this.alarmTime = alarmTime;
+        this.routineTimeZone = routineTimeZone;
     }
 
     public static Routine toEntity(RoutineRequest routineRequest, User user) {
@@ -42,6 +41,7 @@ public class RoutineRequest {
                 .routineType(RoutineType.valueOf(routineRequest.getRoutineType()))
                 .alarmStatus(AlarmStatus.valueOf(routineRequest.getAlarmStatus()))
                 .alarmTime(routineRequest.getAlarmTime())
+                .routineTimeZone(RoutineTimeZone.idOfRoutineTimeZone(routineRequest.routineTimeZone))
                 .build();
     }
 

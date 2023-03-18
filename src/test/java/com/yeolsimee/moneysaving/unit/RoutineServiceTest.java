@@ -24,6 +24,7 @@ public class RoutineServiceTest {
     private String 루틴_공개범위;
     private String 루틴_알람상태;
     private String 루틴_알람시간;
+    private String 루틴_시간대;
     @Autowired
     RoutineService routineService;
 
@@ -39,8 +40,9 @@ public class RoutineServiceTest {
         루틴_공개범위 = "PUBLIC";
         루틴_알람상태 = "ON";
         루틴_알람시간 = "12";
+        루틴_시간대 = "1";
 
-        RoutineRequest routineRequest = new RoutineRequest(루틴_이름, 루틴_카테고리, 루틴_요일, 루틴_공개범위, 루틴_알람상태, 루틴_알람시간);
+        RoutineRequest routineRequest = new RoutineRequest(루틴_이름, 루틴_카테고리, 루틴_요일, 루틴_공개범위, 루틴_알람상태, 루틴_알람시간, 루틴_시간대);
 
         //when
         RoutineResponse routineResponse = routineService.createRoutine(routineRequest, 사용자);
@@ -49,5 +51,6 @@ public class RoutineServiceTest {
         assertThat(routineResponse).isNotNull();
         assertThat(routineResponse.getRoutineName()).isEqualTo("코딩하기");
         assertThat(routineResponse.getWeekTypes()).contains("MONDAY", "WEDNESDAY", "SUNDAY");
+        assertThat(routineResponse.getRoutineTimeZone()).isEqualTo("1");
     }
 }

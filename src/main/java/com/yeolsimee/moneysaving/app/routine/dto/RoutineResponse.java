@@ -17,6 +17,7 @@ public class RoutineResponse {
     private String routineType;
     private String alarmStatus;
     private String alarmTime;
+    private String routineTimeZone;
 
     public static RoutineResponse from(Routine routine) {
         List<String> weekTypes = routine.getWeekTypes()
@@ -30,6 +31,7 @@ public class RoutineResponse {
                 .routineType(String.valueOf(routine.getRoutineType()))
                 .alarmStatus(String.valueOf(routine.getAlarmStatus()))
                 .alarmTime(routine.getAlarmTime())
+                .routineTimeZone(routine.getRoutineTimeZone().routineTimeZoneId())
                 .build();
     }
 

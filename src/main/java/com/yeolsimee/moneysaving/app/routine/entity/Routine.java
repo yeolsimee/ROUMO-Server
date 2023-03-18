@@ -39,8 +39,11 @@ public class Routine extends BaseEntity {
     private User user;
     @Embedded
     private RoutineDays routineDays = new RoutineDays();
+    @Enumerated(EnumType.STRING)
+    private RoutineTimeZone routineTimeZone;
+
     @Builder
-    public Routine(User user, String routineName, String routineCategory, List<WeekType> weekTypes, RoutineType routineType, AlarmStatus alarmStatus, String alarmTime) {
+    public Routine(User user, String routineName, String routineCategory, List<WeekType> weekTypes, RoutineType routineType, AlarmStatus alarmStatus, String alarmTime, RoutineTimeZone routineTimeZone) {
         this.user = user;
         this.routineName = routineName;
         this.routineCategory = routineCategory;
@@ -48,6 +51,7 @@ public class Routine extends BaseEntity {
         this.routineType = routineType;
         this.alarmStatus = alarmStatus;
         this.alarmTime = alarmTime;
+        this.routineTimeZone = routineTimeZone;
     }
 
     public List<RoutineDay> getRoutineDays() {
