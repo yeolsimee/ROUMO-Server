@@ -1,6 +1,7 @@
 package com.yeolsimee.moneysaving.filter;
 
 import com.google.firebase.auth.*;
+import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.service.*;
 import lombok.*;
 import org.apache.http.*;
@@ -25,26 +26,29 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         FirebaseToken decodedToken;
         String authToken = request.getHeader("x-auth");
         if (authToken == null) {
-            setUnauthorizedResponse(response, "INVALID_TOKEN");
+            setUnauthorizedResponse(response, "토큰값이 없습니다.");
             return;
         }
 
-        // verify IdToken
         try{
             decodedToken = firebaseAuth.verifyIdToken(authToken);
         } catch (FirebaseAuthException e) {
-            setUnauthorizedResponse(response, "INVALID_TOKEN");
+            setUnauthorizedResponse(response, "토큰 복호화에 실패했습니다.");
             return;
         }
 
         // User를 가져와 SecurityContext에 저장한다.
         try{
-            UserDetails user = customUserDetailService.loadUserByUsername(decodedToken.getUid());
+            UserDetails user = customUserDetailService.getUserByUid(decodedToken.getUid());
+            if(user == null){
+                customUserDetailService.signup(RegisterDto.builder().build());
+                user = customUserDetailService.getUserByUid(decodedToken.getUid());
+            }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch(NoSuchElementException e){
-            setUnauthorizedResponse(response, "USER_NOT_FOUND");
+            setUnauthorizedResponse(response, "로그인 인증에 실패했습니다.");
             return;
         }
         filterChain.doFilter(request, response);
