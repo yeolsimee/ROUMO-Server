@@ -1,11 +1,9 @@
 package com.yeolsimee.moneysaving.app.routine.service;
 
-import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysRequest;
-import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysResponse;
-import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
-import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
+import com.yeolsimee.moneysaving.app.routine.dto.*;
 import com.yeolsimee.moneysaving.app.routine.entity.Category;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
+import com.yeolsimee.moneysaving.app.routine.entity.RoutineDay;
 import com.yeolsimee.moneysaving.app.routine.repository.RoutineRepository;
 import com.yeolsimee.moneysaving.app.user.entity.Role;
 import com.yeolsimee.moneysaving.app.user.entity.User;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +21,7 @@ public class RoutineService {
 
     private final RoutineRepository routineRepository;
     private final CategoryService categoryService;
+    private final RoutineDayService routineDayService;
 
     @Transactional
     public RoutineResponse createRoutine(RoutineRequest routineRequest, Long userId) {
@@ -49,5 +49,18 @@ public class RoutineService {
                 .findFirst()
                 .orElse(categoryService.createCategory(routineRequest.getCategoryName()));
         return category;
+    }
+
+    public RoutineDayResponse findRoutineDay(Long userId, String pickday) {
+        List<RoutineDay> myRoutineDaysByPickday = routineDayService.findRoutineDaysByRoutineDay(pickday).stream()
+                .filter(routineDay -> routineDay.getUser().getId() == userId)
+                .collect(Collectors.toList());
+
+        List<Category> categories = myRoutineDaysByPickday.stream()
+                .map(routineDay -> routineDay.getRoutine().getCategory())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return RoutineDayResponse.of(categories, pickday);
     }
 }

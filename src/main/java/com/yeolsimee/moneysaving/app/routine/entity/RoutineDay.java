@@ -1,6 +1,7 @@
 package com.yeolsimee.moneysaving.app.routine.entity;
 
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
+import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,12 @@ public class RoutineDay extends BaseEntity {
     @JoinColumn(name = "routine_id")
     private Routine routine;
 
-    public RoutineDay(Routine routine, String routineDay, RoutineCheckYN routineCheckYn) {
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public RoutineDay(User user, Routine routine, String routineDay, RoutineCheckYN routineCheckYn) {
+        this.user = user;
         this.routine = routine;
         this.routineDay = routineDay;
         this.routineCheckYn = routineCheckYn;

@@ -31,4 +31,11 @@ public class RoutineController {
         Long userId = 1L;
         return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDays(userId, routineDaysRequest)));
     }
+
+    @GetMapping("/routineday/{pickDay}")
+    public ResponseEntity<?> findMyRoutineDay( @PathVariable String pickDay) {
+        //임시 유저 아이디
+        Long userId = 1L;
+        return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDay(userId, pickDay)));
+    }
 }

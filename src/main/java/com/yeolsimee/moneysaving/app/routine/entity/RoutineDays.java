@@ -9,6 +9,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Embeddable
 @Getter
@@ -19,5 +20,21 @@ public class RoutineDays {
 
     public void add(RoutineDay routineDay) {
         routineDays.add(routineDay);
+    }
+
+    public RoutineDays(List<RoutineDay> routineDays) {
+        this.routineDays = routineDays;
+    }
+
+    public static RoutineDays of(List<RoutineDay> routineDays) {
+        return new RoutineDays(routineDays);
+    }
+
+    public List<RoutineDay> routineDayByPickday(String pickday) {
+        return routineDays.stream().filter(routineDay -> routineDay.getRoutineDay().equals(pickday)).collect(Collectors.toList());
+    }
+
+    public boolean isRoutineDayByPickday(String pickday) {
+        return routineDays.stream().anyMatch(routineDay -> routineDay.getRoutineDay().contains(pickday));
     }
 }

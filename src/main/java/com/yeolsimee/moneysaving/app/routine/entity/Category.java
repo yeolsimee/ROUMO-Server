@@ -27,4 +27,9 @@ public class Category extends BaseEntity {
     public static Category of(String categoryName) {
         return new Category(categoryName);
     }
+
+    public long remainingRoutineNum(String pickday) {
+        return routines.stream().map(routine -> routine.getRoutineDays())
+                .filter(routineDays -> RoutineDays.of(routineDays).isRoutineDayByPickday(pickday)).count();
+    }
 }

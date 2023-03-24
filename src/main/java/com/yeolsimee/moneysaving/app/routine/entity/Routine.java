@@ -60,6 +60,10 @@ public class Routine extends BaseEntity {
         return routineDays.getRoutineDays();
     }
 
+    public RoutineDay getRoutineDay(String pickday) {
+        return RoutineDays.of(routineDays.getRoutineDays()).routineDayByPickday(pickday).get(0);
+    }
+
     public void addRoutineDays() {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -68,38 +72,38 @@ public class Routine extends BaseEntity {
 
     private void createOneYearRoutineDays(LocalDate today, DateTimeFormatter formatter) {
         if (weekTypes.isEmpty()) {
-            routineDays.add(new RoutineDay(this, today.format(formatter), N));
+            routineDays.add(new RoutineDay(user, this, today.format(formatter), N));
             return;
         }
         for (int i = 0; i < 365; i++) {
             LocalDate date = today.plusDays(i);
             DayOfWeek dayOfWeek = date.getDayOfWeek();
             if (dayOfWeek == DayOfWeek.MONDAY && weekTypes.contains(WeekType.MONDAY)) {
-                routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                routineDays.add(new RoutineDay(user, this, date.format(formatter), N));
                 continue;
             }
             if (dayOfWeek == DayOfWeek.TUESDAY && weekTypes.contains(WeekType.TUESDAY)) {
-                routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                routineDays.add(new RoutineDay(user, this, date.format(formatter), N));
                 continue;
             }
             if (dayOfWeek == DayOfWeek.WEDNESDAY && weekTypes.contains(WeekType.WEDNESDAY)) {
-                routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                routineDays.add(new RoutineDay(user, this, date.format(formatter), N));
                 continue;
             }
             if (dayOfWeek == DayOfWeek.THURSDAY && weekTypes.contains(WeekType.THURSDAY)) {
-                routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                routineDays.add(new RoutineDay(user, this, date.format(formatter), N));
                 continue;
             }
             if (dayOfWeek == DayOfWeek.FRIDAY && weekTypes.contains(WeekType.FRIDAY)) {
-                routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                routineDays.add(new RoutineDay(user, this, date.format(formatter), N));
                 continue;
             }
             if (dayOfWeek == DayOfWeek.SATURDAY && weekTypes.contains(WeekType.SATURDAY)) {
-                routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                routineDays.add(new RoutineDay(user, this, date.format(formatter), N));
                 continue;
             }
             if (dayOfWeek == DayOfWeek.SUNDAY && weekTypes.contains(WeekType.SUNDAY)) {
-                routineDays.add(new RoutineDay(this, date.format(formatter), N));
+                routineDays.add(new RoutineDay(user, this, date.format(formatter), N));
                 continue;
             }
         }
