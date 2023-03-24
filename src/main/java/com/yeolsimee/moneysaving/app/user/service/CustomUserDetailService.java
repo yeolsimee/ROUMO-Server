@@ -28,14 +28,16 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username Not Found"));
-
-        return user;
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     public void signup(RegisterDto registerDto) {
         registerDto.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         User user = RegisterDto.toEntity(registerDto);
         userRepository.save(user);
+    }
+
+    public User getUserByUid(String uid){
+        return userRepository.findByUid(uid).orElse(null);
     }
 }

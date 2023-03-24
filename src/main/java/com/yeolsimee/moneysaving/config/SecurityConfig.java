@@ -1,5 +1,8 @@
 package com.yeolsimee.moneysaving.config;
 
+import com.google.firebase.auth.*;
+import com.yeolsimee.moneysaving.app.user.service.*;
+import com.yeolsimee.moneysaving.filter.*;
 import lombok.*;
 import org.springframework.context.annotation.*;
 import org.springframework.http.*;
@@ -7,10 +10,11 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.configuration.*;
 import org.springframework.security.config.annotation.web.builders.*;
 import org.springframework.security.config.annotation.web.configuration.*;
-import org.springframework.security.core.userdetails.*;
+import org.springframework.security.config.http.*;
 import org.springframework.security.crypto.bcrypt.*;
 import org.springframework.security.crypto.password.*;
 import org.springframework.security.web.*;
+import org.springframework.security.web.authentication.*;
 import org.springframework.web.cors.*;
 
 @Configuration
@@ -18,7 +22,8 @@ import org.springframework.web.cors.*;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailService userDetailsService;
+    private final FirebaseAuth firebaseAuth;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -39,6 +44,9 @@ public class SecurityConfig {
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .csrf().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeHttpRequests((authorize) ->
                     authorize.antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                             .antMatchers(HttpMethod.POST, "/api/v1/signin").permitAll()
@@ -46,7 +54,7 @@ public class SecurityConfig {
                             .antMatchers(HttpMethod.GET, "/healthcheck").permitAll()
                             .anyRequest().authenticated()
             );
-
+        http.addFilterBefore(new FirebaseTokenFilter(userDetailsService, firebaseAuth), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean

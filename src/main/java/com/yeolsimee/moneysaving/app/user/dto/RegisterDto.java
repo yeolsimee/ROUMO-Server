@@ -16,6 +16,7 @@ import lombok.*;
  */
 
 @Data
+@Builder
 public class RegisterDto {
 
     private String name;
@@ -32,17 +33,16 @@ public class RegisterDto {
 
     private String address;
 
+    private String uid;
+
     public static User toEntity(RegisterDto registerDto) {
 
         return User.builder()
                 .username(registerDto.getUsername())
                 .name(registerDto.getName())
-                .password(registerDto.getPassword())
                 .email(registerDto.getEmail())
-                .phoneNumber(registerDto.getPhoneNumber())
-                .birthday(registerDto.getBirthday())
-                .address(registerDto.getAddress())
                 .role(Role.ROLE_USER)
+                .uid(registerDto.getUid())
                 .build();
     }
 }
