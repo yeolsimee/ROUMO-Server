@@ -24,6 +24,12 @@ jobs:
           touch ./application-prod.yml
           echo "${{ secrets.APPLICATION_PROD_YML }}" >> ./application-prod.yml
         shell: bash
+      - name: make firebase-adminsdk.json
+        run: |
+          cd ./src/main/resources
+          touch ./moneysaving-server-firebase-adminsdk.json
+          echo "${{ secrets.FIREBASE_ADMINSDK_JSON }}" >> ./moneysaving-server-firebase-adminsdk.json
+        shell: bash
       - name: Build with Gradle
         run: ./gradlew bootJar
       - name: Login to NCP Container Registry

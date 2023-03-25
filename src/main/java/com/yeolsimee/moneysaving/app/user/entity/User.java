@@ -35,30 +35,21 @@ public class User extends BaseEntity implements UserDetails  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String username;
 
-    @Column(nullable = false)
+    @Column
     private String email;
-
-    @Column(nullable = false)
-    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    @Column(nullable = false)
-    private String phoneNumber;
-
-    @Column(nullable = false)
-    private String birthday;
-
-    @Column(nullable = false)
-    private String address;
+    @Column
+    private String uid;
 
     public User(String name, String username, String email, String password, Role role, String phoneNumber, String birthday, String address) {
         this.name = name;
@@ -79,6 +70,11 @@ public class User extends BaseEntity implements UserDetails  {
     }
 
 
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
 
     @Override
     public boolean isAccountNonExpired() {
