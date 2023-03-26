@@ -26,7 +26,7 @@ class RoutineTest {
     @DisplayName("루틴 생성하기")
     void createRoutine() {
 
-        사용자 = new User(1L,"name", "username", "email", "password", Role.ROLE_USER, "phoneNumber", "birthday", "address");
+        사용자 = new User("name", "username", "email", Role.ROLE_USER,"uid");
 
         루틴_이름 = "코딩하기";
         루틴_카테고리 = new Category("컴퓨터");

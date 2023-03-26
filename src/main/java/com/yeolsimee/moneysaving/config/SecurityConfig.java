@@ -53,6 +53,7 @@ public class SecurityConfig {
                             .antMatchers(HttpMethod.POST, "/api/v1/routine").permitAll()
                             .antMatchers(HttpMethod.POST, "/api/v1/signup").permitAll()
                             .antMatchers(HttpMethod.GET, "/healthcheck").permitAll()
+                            .antMatchers(HttpMethod.POST, "/createCustomToken").permitAll()
                             .anyRequest().authenticated()
             );
         http.addFilterBefore(new FirebaseTokenFilter(userDetailsService, firebaseAuth), UsernamePasswordAuthenticationFilter.class);

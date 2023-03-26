@@ -51,15 +51,12 @@ public class User extends BaseEntity implements UserDetails  {
     @Column
     private String uid;
 
-    public User(String name, String username, String email, String password, Role role, String phoneNumber, String birthday, String address) {
+    public User(String name, String username, String email, Role role, String uid) {
         this.name = name;
         this.username = username;
         this.email = email;
-        this.password = password;
         this.role = role;
-        this.phoneNumber = phoneNumber;
-        this.birthday = birthday;
-        this.address = address;
+        this.uid = uid;
     }
 
     @Override

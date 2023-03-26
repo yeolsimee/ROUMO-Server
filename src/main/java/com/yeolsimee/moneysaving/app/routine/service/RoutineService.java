@@ -5,8 +5,8 @@ import com.yeolsimee.moneysaving.app.routine.entity.Category;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.routine.entity.RoutineDay;
 import com.yeolsimee.moneysaving.app.routine.repository.RoutineRepository;
-import com.yeolsimee.moneysaving.app.user.entity.Role;
 import com.yeolsimee.moneysaving.app.user.entity.User;
+import com.yeolsimee.moneysaving.app.user.service.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +22,13 @@ public class RoutineService {
     private final RoutineRepository routineRepository;
     private final CategoryService categoryService;
     private final RoutineDayService routineDayService;
+    private final CustomUserDetailService customUserDetailService;
+
 
     @Transactional
     public RoutineResponse createRoutine(RoutineRequest routineRequest, Long userId) {
-        //임시 유저
-        User user = new User("name", "username", "email", "password", Role.ROLE_USER, "phoneNumber", "birthday", "address");
-
+        User user = customUserDetailService.getUserByUserId(userId);
         Category category = findOrCreateCategory(routineRequest, userId);
-
         Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user));
         routine.addRoutineDays();
         return RoutineResponse.from(routine);
