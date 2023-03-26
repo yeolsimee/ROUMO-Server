@@ -36,8 +36,7 @@ public class FirebaseConfig {
     public FirebaseApp firebaseApp() throws IOException {
         System.out.println(firebaseSdkPath);
         log.info("Initializing Firebase.");
-        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(firebaseSdkPath);
-
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(firebaseSdkPath);
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(resourceAsStream))
                 .build();
