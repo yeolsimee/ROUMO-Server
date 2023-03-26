@@ -23,7 +23,11 @@ public enum ResponseMessage {
     COMMON_ILLEGAL_STATUS("잘못된 상태값입니다."),
 
     // USER 에러코드
-    AUTH_USER("사용자 정보가 없습니다.");
+    AUTH_USER("사용자 정보가 없습니다."),
+
+    // ROUTINE 에러코드
+    NOT_VALID_ROUTINE("해당 루틴이 없습니다."),
+    ;
 
     final String message;
 }

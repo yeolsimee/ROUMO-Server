@@ -24,7 +24,7 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "Users")
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"username"}),
         @UniqueConstraint(columnNames = {"email"})
@@ -51,12 +51,22 @@ public class User extends BaseEntity implements UserDetails  {
     @Column
     private String uid;
 
+    public User(String name, String username, String email, Role role, String uid) {
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.role = role;
+        this.uid = uid;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(role.getValue()));
         return authorities;
     }
+
+
 
     @Override
     public String getPassword() {

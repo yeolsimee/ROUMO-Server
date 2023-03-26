@@ -1,19 +1,23 @@
 package com.yeolsimee.moneysaving.filter;
 
-import com.google.firebase.auth.*;
-import com.yeolsimee.moneysaving.app.user.dto.*;
-import com.yeolsimee.moneysaving.app.user.service.*;
-import lombok.*;
-import org.apache.http.*;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.context.*;
-import org.springframework.security.core.userdetails.*;
-import org.springframework.web.filter.*;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
+import com.yeolsimee.moneysaving.app.user.dto.RegisterDto;
+import com.yeolsimee.moneysaving.app.user.service.CustomUserDetailService;
+import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 public class FirebaseTokenFilter extends OncePerRequestFilter {
@@ -23,6 +27,16 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        //activeprofile이 없을 경우(test환경)에 작동
+        if (isProfileActive(System.getProperty("spring.profiles.active"))) {
+            UserDetails user = customUserDetailService.getUserByUid(request.getHeader("uid"));
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    user, null, user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return;
+        }
+
         FirebaseToken decodedToken;
         String authToken = request.getHeader("x-auth");
         if (authToken == null) {
@@ -58,7 +72,11 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
     private void setUnauthorizedResponse(HttpServletResponse response, String code) throws IOException {
 
         response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-        response.setContentType("application/json");
+        response.setContentType("application/json; charset=UTF-8");
         response.getWriter().write("{\"code\":\""+code+"\"}");
+    }
+
+    private boolean isProfileActive(String activeProfile) {
+        return (activeProfile == null || activeProfile.equals(""));
     }
 }

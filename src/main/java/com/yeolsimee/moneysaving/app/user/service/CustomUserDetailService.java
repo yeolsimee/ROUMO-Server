@@ -1,5 +1,7 @@
 package com.yeolsimee.moneysaving.app.user.service;
 
+import com.yeolsimee.moneysaving.app.common.exception.EntityNotFoundException;
+import com.yeolsimee.moneysaving.app.common.response.ResponseMessage;
 import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import com.yeolsimee.moneysaving.app.user.repository.*;
@@ -39,5 +41,9 @@ public class CustomUserDetailService implements UserDetailsService {
 
     public User getUserByUid(String uid){
         return userRepository.findByUid(uid).orElse(null);
+    }
+
+    public User getUserByUserId(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.AUTH_USER));
     }
 }
