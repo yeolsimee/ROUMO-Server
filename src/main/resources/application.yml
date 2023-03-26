@@ -13,4 +13,4 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
 
 app:
-  firebase-configuration-file: src/main/resources/moneysaving-server-firebase-adminsdk.json
+  firebase-configuration-file: moneysaving-server-firebase-adminsdk.json
