@@ -1,13 +1,13 @@
 package com.yeolsimee.moneysaving.app.user.service;
 
-import com.yeolsimee.moneysaving.app.common.exception.EntityNotFoundException;
-import com.yeolsimee.moneysaving.app.common.response.ResponseMessage;
+import com.google.firebase.auth.*;
+import com.yeolsimee.moneysaving.app.common.exception.*;
+import com.yeolsimee.moneysaving.app.common.response.*;
 import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import com.yeolsimee.moneysaving.app.user.repository.*;
 import lombok.*;
 import org.springframework.security.core.userdetails.*;
-import org.springframework.security.crypto.password.*;
 import org.springframework.stereotype.*;
 
 /**
@@ -26,17 +26,20 @@ import org.springframework.stereotype.*;
 public class CustomUserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElse(null);
     }
 
-    public void signup(RegisterDto registerDto) {
-        registerDto.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-        User user = RegisterDto.toEntity(registerDto);
-        userRepository.save(user);
+    public User signup(FirebaseToken firebaseToken) {
+
+        User user = RegisterDto.toEntity(RegisterDto.builder()
+                .username(firebaseToken.getEmail())
+                .name(firebaseToken.getName())
+                .uid(firebaseToken.getUid())
+                .build());
+        return userRepository.save(user);
     }
 
     public User getUserByUid(String uid){

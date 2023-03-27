@@ -1,13 +1,8 @@
 package com.yeolsimee.moneysaving.app.user.controller;
 
 import com.yeolsimee.moneysaving.app.common.response.service.*;
-import com.yeolsimee.moneysaving.app.user.dto.*;
-import com.yeolsimee.moneysaving.app.user.service.*;
 import lombok.*;
 import org.springframework.http.*;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.*;
-import org.springframework.security.core.context.*;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -26,24 +21,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final AuthenticationManager authenticationManager;
-
     private final ResponseService responseService;
 
-    private final CustomUserDetailService customUserDetailService;
-
-    @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody LoginDto loginDto){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getUsername(), loginDto.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return ResponseEntity.ok(responseService.getSuccessResult());
-    }
-
-    @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody RegisterDto registerDto){
-        customUserDetailService.signup(registerDto);
+    @PostMapping("/login")
+    public ResponseEntity<?> login(){
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
 

@@ -23,15 +23,9 @@ public class RegisterDto {
 
     private String username;
 
-    private String email;
-
-    private String password;
-
     private String phoneNumber;
 
     private String birthday;
-
-    private String address;
 
     private String uid;
 
@@ -40,7 +34,6 @@ public class RegisterDto {
         return User.builder()
                 .username(registerDto.getUsername())
                 .name(registerDto.getName())
-                .email(registerDto.getEmail())
                 .role(Role.ROLE_USER)
                 .uid(registerDto.getUid())
                 .build();

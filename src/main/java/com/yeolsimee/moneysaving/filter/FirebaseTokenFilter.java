@@ -1,23 +1,18 @@
 package com.yeolsimee.moneysaving.filter;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseToken;
-import com.yeolsimee.moneysaving.app.user.dto.RegisterDto;
-import com.yeolsimee.moneysaving.app.user.service.CustomUserDetailService;
-import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.filter.OncePerRequestFilter;
+import com.google.firebase.auth.*;
+import com.yeolsimee.moneysaving.app.user.service.*;
+import lombok.*;
+import org.apache.http.*;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.context.*;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.web.filter.*;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.NoSuchElementException;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class FirebaseTokenFilter extends OncePerRequestFilter {
@@ -47,16 +42,19 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         try{
             decodedToken = firebaseAuth.verifyIdToken(authToken);
         } catch (FirebaseAuthException e) {
-            setUnauthorizedResponse(response, "토큰 복호화에 실패했습니다.");
+            if(e.getAuthErrorCode() == AuthErrorCode.EXPIRED_ID_TOKEN) {
+                setUnauthorizedResponse(response, "토큰시간이 만료되었습니다.");
+            }else{
+                setUnauthorizedResponse(response, "토큰 복호화에 실패했습니다.");
+            }
             return;
         }
 
         // User를 가져와 SecurityContext에 저장한다.
         try{
             UserDetails user = customUserDetailService.getUserByUid(decodedToken.getUid());
-            if(user == null){
-                customUserDetailService.signup(RegisterDto.builder().build());
-                user = customUserDetailService.getUserByUid(decodedToken.getUid());
+            if(user == null) {
+                user = customUserDetailService.signup(decodedToken);
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     user, null, user.getAuthorities());
