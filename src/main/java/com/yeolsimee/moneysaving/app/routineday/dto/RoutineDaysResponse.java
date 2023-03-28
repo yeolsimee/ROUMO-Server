@@ -1,4 +1,4 @@
-package com.yeolsimee.moneysaving.app.routine.dto;
+package com.yeolsimee.moneysaving.app.routineday.dto;
 
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import lombok.Builder;

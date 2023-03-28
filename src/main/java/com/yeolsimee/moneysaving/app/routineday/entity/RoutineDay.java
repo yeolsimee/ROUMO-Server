@@ -1,6 +1,7 @@
-package com.yeolsimee.moneysaving.app.routine.entity;
+package com.yeolsimee.moneysaving.app.routineday.entity;
 
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
+import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;

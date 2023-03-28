@@ -1,6 +1,6 @@
-package com.yeolsimee.moneysaving.app.routine.repository;
+package com.yeolsimee.moneysaving.app.routineday.repository;
 
-import com.yeolsimee.moneysaving.app.routine.entity.RoutineDay;
+import com.yeolsimee.moneysaving.app.routineday.entity.RoutineDay;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

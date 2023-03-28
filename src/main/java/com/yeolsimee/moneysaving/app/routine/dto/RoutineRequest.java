@@ -1,5 +1,6 @@
 package com.yeolsimee.moneysaving.app.routine.dto;
 
+import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.routine.entity.*;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.Data;

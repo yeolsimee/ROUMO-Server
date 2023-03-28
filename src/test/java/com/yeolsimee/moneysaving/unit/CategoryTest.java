@@ -1,6 +1,6 @@
 package com.yeolsimee.moneysaving.unit;
 
-import com.yeolsimee.moneysaving.app.routine.entity.Category;
+import com.yeolsimee.moneysaving.app.category.entity.Category;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

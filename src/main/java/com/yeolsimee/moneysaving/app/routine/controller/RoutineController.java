@@ -1,7 +1,6 @@
 package com.yeolsimee.moneysaving.app.routine.controller;
 
 import com.yeolsimee.moneysaving.app.common.response.service.ResponseService;
-import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysRequest;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
 import com.yeolsimee.moneysaving.app.routine.service.RoutineService;
@@ -23,15 +22,5 @@ public class RoutineController {
     public ResponseEntity<?> createRoutine(@RequestBody RoutineRequest routineRequest, @AuthenticationPrincipal User user){
         RoutineResponse routineResponse = routineService.createRoutine(routineRequest, user.getId());
         return ResponseEntity.ok(responseService.getSingleResult(routineResponse));
-    }
-
-    @GetMapping("/routinedays")
-    public ResponseEntity<?> findAllMyRoutineDays( @RequestBody RoutineDaysRequest routineDaysRequest, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDays(user.getId(), routineDaysRequest)));
-    }
-
-    @GetMapping("/routineday/{pickDay}")
-    public ResponseEntity<?> findMyRoutineDay( @PathVariable String pickDay, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDay(user.getId(), pickDay)));
     }
 }

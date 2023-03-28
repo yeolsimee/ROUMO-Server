@@ -1,6 +1,8 @@
-package com.yeolsimee.moneysaving.app.routine.entity;
+package com.yeolsimee.moneysaving.app.category.entity;
 
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
+import com.yeolsimee.moneysaving.app.routine.entity.Routine;
+import com.yeolsimee.moneysaving.app.routineday.entity.RoutineDays;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

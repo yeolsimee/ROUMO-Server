@@ -1,4 +1,4 @@
-package com.yeolsimee.moneysaving.app.routine.entity;
+package com.yeolsimee.moneysaving.app.routineday.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Embeddable
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class RoutineDays {
     @OneToMany(mappedBy = "routine", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<RoutineDay> routineDays = new ArrayList<>();
