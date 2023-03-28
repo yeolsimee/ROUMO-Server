@@ -34,4 +34,14 @@ public class RoutineSteps {
                 .when().get("/api/v1/routinedays")
                 .then().log().all().extract();
     }
+
+    public static ExtractableResponse<Response> 특정날짜의_나의_루틴_정보_조회_요청(String uid, String pickday) {
+
+        return RestAssured
+                .given().log().all()
+                .header("uid", uid)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/v1/routineday/{pickday}", pickday)
+                .then().log().all().extract();
+    }
 }
