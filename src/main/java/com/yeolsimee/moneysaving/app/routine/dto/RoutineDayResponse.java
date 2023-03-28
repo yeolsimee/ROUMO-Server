@@ -50,14 +50,14 @@ class CategoryData {
 @Data
 @Builder
 class RoutineData{
-    private String routineId;
+    private String routineDayId;
     private String routineName;
     private String routineCheckYN;
     private String routineTimeZone;
     private String alarmTime;
     public static RoutineData of(Routine routine, String routineDay) {
         return RoutineData.builder()
-                .routineId(String.valueOf(routine.getId()))
+                .routineDayId(String.valueOf(routine.getRoutineDay(routineDay).getId()))
                 .routineName(routine.getRoutineName())
                 .routineCheckYN(String.valueOf(routine.getRoutineDay(routineDay).getRoutineCheckYn()))
                 .routineTimeZone(String.valueOf(routine.getRoutineTimeZone()))
