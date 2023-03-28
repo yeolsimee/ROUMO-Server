@@ -28,7 +28,7 @@ public class RoutineSteps {
 
         return RestAssured
                 .given().log().all()
-                .header("uid",uid)
+                .header("uid", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(params)
                 .when().get("/api/v1/routinedays")
@@ -42,6 +42,17 @@ public class RoutineSteps {
                 .header("uid", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/v1/routineday/{pickday}", pickday)
+                .then().log().all().extract();
+    }
+
+    public static ExtractableResponse<Response> 루틴_체크_하기(String uid, String routineDayId, String routineCheckYN) {
+
+        return RestAssured
+                .given().log().all()
+                .header("uid", uid)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(routineCheckYN)
+                .when().put("/api/v1/routinecheck/{routineDayId}", routineDayId)
                 .then().log().all().extract();
     }
 }

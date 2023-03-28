@@ -34,4 +34,8 @@ public class RoutineDay extends BaseEntity {
         this.routineDay = routineDay;
         this.routineCheckYn = routineCheckYn;
     }
+
+    public void changeRoutineCheckYn(RoutineCheckYN routineCheckYN){
+        this.routineCheckYn = routineCheckYN;
+    }
 }

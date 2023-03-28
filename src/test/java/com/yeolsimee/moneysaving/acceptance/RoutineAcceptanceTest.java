@@ -77,6 +77,25 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         );
     }
 
+    @DisplayName("루틴 체크 하기")
+    @Test
+    void checkMyRoutine() {
+        // when
+        루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
+
+        ExtractableResponse<Response> responseRoutineInformation = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY);
+        String routineDayId = responseRoutineInformation.jsonPath().getString("data.categoryDatas.routineDatas.routineDayId").replace("[", "").replace("]", "");
+
+        // then
+        ExtractableResponse<Response> response = 루틴_체크_하기(UID, routineDayId, "Y");
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getString("data.routineCheckYN")).isEqualTo("Y"),
+                () -> assertThat(response.jsonPath().getString("data.routineDayId")).contains(routineDayId)
+        );
+    }
+
     private Map<String, Object> createRoutineCreateParams(String routineName, String categoryName, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
         Map<String, Object> params = new HashMap<>();
         params.put("routineName", routineName);
