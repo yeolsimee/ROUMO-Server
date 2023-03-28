@@ -26,8 +26,7 @@ import java.util.*;
 @NoArgsConstructor
 @Entity(name = "Users")
 @Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"username"}),
-        @UniqueConstraint(columnNames = {"email"})
+        @UniqueConstraint(columnNames = {"username"})
 })
 public class User extends BaseEntity implements UserDetails  {
 
@@ -41,9 +40,6 @@ public class User extends BaseEntity implements UserDetails  {
     @Column
     private String username;
 
-    @Column
-    private String email;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -54,7 +50,6 @@ public class User extends BaseEntity implements UserDetails  {
     public User(String name, String username, String email, Role role, String uid) {
         this.name = name;
         this.username = username;
-        this.email = email;
         this.role = role;
         this.uid = uid;
     }

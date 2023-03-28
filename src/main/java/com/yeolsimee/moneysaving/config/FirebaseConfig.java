@@ -34,7 +34,6 @@ public class FirebaseConfig {
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        System.out.println(firebaseSdkPath);
         log.info("Initializing Firebase.");
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(firebaseSdkPath);
         FirebaseOptions options = new FirebaseOptions.Builder()
