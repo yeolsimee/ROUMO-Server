@@ -1,6 +1,9 @@
 package com.yeolsimee.moneysaving.app.routine.entity;
 
+import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
+import com.yeolsimee.moneysaving.app.routineday.entity.RoutineDay;
+import com.yeolsimee.moneysaving.app.routineday.entity.RoutineDays;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +16,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.yeolsimee.moneysaving.app.routine.entity.RoutineCheckYN.N;
+import static com.yeolsimee.moneysaving.app.routineday.entity.RoutineCheckYN.N;
 
 
 @Entity

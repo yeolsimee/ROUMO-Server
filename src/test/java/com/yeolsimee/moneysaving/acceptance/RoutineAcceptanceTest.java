@@ -6,13 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.yeolsimee.moneysaving.acceptance.RoutineSteps.나의_루틴_전체_조회_요청;
-import static com.yeolsimee.moneysaving.acceptance.RoutineSteps.루틴_생성_요청;
+import static com.yeolsimee.moneysaving.acceptance.RoutineSteps.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("루틴 관련 기능")
@@ -29,6 +29,7 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
     public static final String START_DATE = "20230320";
     public static final String END_DATE = "20231016";
     public static final String ROUTINE_TIME_ZONE = "1";
+    public static final String PICKDAY = "20231224";
 
     @BeforeEach
     public void setUp() {
@@ -40,7 +41,10 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         // when
         ExtractableResponse<Response> response = 루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getString("data.routineName")).isEqualTo(ROUTINE_NAME)
+        );
     }
 
     @DisplayName("특정 기간동안의 나의 루틴 날짜 전체 조회하기")
@@ -51,7 +55,45 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
 
         ExtractableResponse<Response> response = 나의_루틴_전체_조회_요청(UID, START_DATE, END_DATE);
         // then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getList("data.routineDays")).contains("20231016", "20231015")
+        );
+    }
+
+    @DisplayName("특정 날짜의 나의 루틴 정보 조회하기")
+    @Test
+    void findMyRoutineInformation() {
+        // when
+        루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
+
+        ExtractableResponse<Response> response = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY);
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getString("data.routineDay")).isEqualTo(PICKDAY),
+                () -> assertThat(response.jsonPath().getString("data.categoryDatas.categoryName")).contains(ROUTINE_CATEGORY),
+                () -> assertThat(response.jsonPath().getString("data.categoryDatas.routineDatas.routineName")).contains(ROUTINE_NAME)
+        );
+    }
+
+    @DisplayName("루틴 체크 하기")
+    @Test
+    void checkMyRoutine() {
+        // when
+        루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
+
+        ExtractableResponse<Response> responseRoutineInformation = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY);
+        String routineDayId = responseRoutineInformation.jsonPath().getString("data.categoryDatas.routineDatas.routineDayId").replace("[", "").replace("]", "");
+
+        // then
+        ExtractableResponse<Response> response = 루틴_체크_하기(UID, routineDayId, "Y");
+
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getString("data.routineCheckYN")).isEqualTo("Y"),
+                () -> assertThat(response.jsonPath().getString("data.routineDayId")).contains(routineDayId)
+        );
     }
 
     private Map<String, Object> createRoutineCreateParams(String routineName, String categoryName, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {

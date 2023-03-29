@@ -1,8 +1,7 @@
-package com.yeolsimee.moneysaving.app.routine.service;
+package com.yeolsimee.moneysaving.app.category.service;
 
-import com.yeolsimee.moneysaving.app.routine.entity.Category;
-import com.yeolsimee.moneysaving.app.routine.entity.Routine;
-import com.yeolsimee.moneysaving.app.routine.repository.CategoryRepository;
+import com.yeolsimee.moneysaving.app.category.entity.Category;
+import com.yeolsimee.moneysaving.app.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

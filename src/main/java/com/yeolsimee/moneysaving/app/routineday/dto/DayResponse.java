@@ -1,6 +1,6 @@
-package com.yeolsimee.moneysaving.app.routine.dto;
+package com.yeolsimee.moneysaving.app.routineday.dto;
 
-import com.yeolsimee.moneysaving.app.routine.entity.Category;
+import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import lombok.Builder;
 import lombok.Data;
@@ -10,16 +10,16 @@ import java.util.List;
 
 @Data
 @Builder
-public class RoutineDayResponse {
+public class DayResponse {
     private String routineDay;
     private List<CategoryData> categoryDatas;
 
-    public static RoutineDayResponse of(List<Category> categories, String routineDay) {
+    public static DayResponse of(List<Category> categories, String routineDay) {
         List<CategoryData> categoryDataList = new ArrayList<>();
         for (Category category : categories) {
             categoryDataList.add(CategoryData.of(category, routineDay));
         }
-        return RoutineDayResponse.builder()
+        return DayResponse.builder()
                 .routineDay(routineDay)
                 .categoryDatas(categoryDataList)
                 .build();
@@ -50,14 +50,14 @@ class CategoryData {
 @Data
 @Builder
 class RoutineData{
-    private String routineId;
+    private String routineDayId;
     private String routineName;
     private String routineCheckYN;
     private String routineTimeZone;
     private String alarmTime;
     public static RoutineData of(Routine routine, String routineDay) {
         return RoutineData.builder()
-                .routineId(String.valueOf(routine.getId()))
+                .routineDayId(String.valueOf(routine.getRoutineDay(routineDay).getId()))
                 .routineName(routine.getRoutineName())
                 .routineCheckYN(String.valueOf(routine.getRoutineDay(routineDay).getRoutineCheckYn()))
                 .routineTimeZone(String.valueOf(routine.getRoutineTimeZone()))

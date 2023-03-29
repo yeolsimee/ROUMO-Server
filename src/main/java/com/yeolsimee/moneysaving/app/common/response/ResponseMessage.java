@@ -27,6 +27,9 @@ public enum ResponseMessage {
 
     // ROUTINE 에러코드
     NOT_VALID_ROUTINE("해당 루틴이 없습니다."),
+
+    // ROUTINEDAY 에러코드
+    NOT_VALID_ROUTINE_DAY("해당 루틴데이가 없습니다."),
     ;
 
     final String message;
