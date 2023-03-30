@@ -30,6 +30,7 @@ public enum ResponseMessage {
 
     // ROUTINEDAY 에러코드
     NOT_VALID_ROUTINE_DAY("해당 루틴데이가 없습니다."),
+    ROUTINE_DAY_TIME_LENGTH_NOT_FOUR("해당 루틴데이의 시간 숫자가 4개가 아닙니다."),
     ;
 
     final String message;
