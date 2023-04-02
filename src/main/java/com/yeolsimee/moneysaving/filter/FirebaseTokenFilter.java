@@ -1,6 +1,8 @@
 package com.yeolsimee.moneysaving.filter;
 
 import com.google.firebase.auth.*;
+import com.yeolsimee.moneysaving.app.user.dto.*;
+import com.yeolsimee.moneysaving.app.user.entity.User;
 import com.yeolsimee.moneysaving.app.user.service.*;
 import lombok.*;
 import org.apache.http.*;
@@ -53,9 +55,12 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
         // User를 가져와 SecurityContext에 저장한다.
         try{
-            UserDetails user = customUserDetailService.getUserByUid(decodedToken.getUid());
+            User user = customUserDetailService.getUserByUid(decodedToken.getUid());
             if(user == null) {
                 user = customUserDetailService.signup(decodedToken);
+                request.setAttribute("loginInfo", LoginDto.builder().name(user.getName()).isNewUser("Y").build());
+            }else{
+                request.setAttribute("loginInfo", LoginDto.builder().name(user.getName()).isNewUser("F").build());
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     user, null, user.getAuthorities());

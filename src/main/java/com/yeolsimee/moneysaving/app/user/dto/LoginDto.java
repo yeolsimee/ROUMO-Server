@@ -15,9 +15,10 @@ import lombok.*;
  */
 
 @Data
+@Builder
 public class LoginDto {
 
-    private String username;
+    private String name;
 
-    private String password;
+    private String isNewUser;
 }
