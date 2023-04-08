@@ -42,7 +42,7 @@ public class RoutineRequest {
                 .routineType(RoutineType.valueOf(routineRequest.getRoutineType()))
                 .alarmStatus(AlarmStatus.valueOf(routineRequest.getAlarmStatus()))
                 .alarmTime(routineRequest.getAlarmTime())
-                .routineTimeZone(RoutineTimeZone.idOfRoutineTimeZone(routineRequest.routineTimeZone))
+                .routineTimeZone(RoutineTimeZone.idOfRoutineTimeZone(routineRequest.getRoutineTimeZone()))
                 .build();
     }
 

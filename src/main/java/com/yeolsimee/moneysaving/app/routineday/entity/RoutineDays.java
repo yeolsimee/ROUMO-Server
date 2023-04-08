@@ -37,4 +37,8 @@ public class RoutineDays {
     public boolean isRoutineDayByPickday(String pickday) {
         return routineDays.stream().anyMatch(routineDay -> routineDay.getRoutineDay().contains(pickday));
     }
+
+    public void deleteRoutineDayAfterToday(String today){
+        routineDays.removeIf(routineDay -> Integer.parseInt(routineDay.getRoutineDay()) >= Integer.parseInt(today));
+    }
 }
