@@ -45,10 +45,6 @@ public class RoutineService {
         return RoutineResponse.from(routine);
     }
 
-    public RoutineDaysResponse findRoutineDays(Long userId, RoutineDaysRequest routineDaysRequest) {
-        List<Routine> findedRoutines = routineRepository.findByUserId(userId);
-        return RoutineDaysResponse.from(findedRoutines, routineDaysRequest);
-    }
     @Transactional
     public void deleteRoutine(long id, Long routineId) {
         Routine routine = routineRepository.findById(routineId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));

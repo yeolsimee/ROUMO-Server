@@ -87,7 +87,7 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getList("data.routineDays")).contains("20231016", "20231015")
+                () -> assertThat(response.jsonPath().getList("data.routineDays.day")).contains("20231016", "20231015")
         );
     }
 

@@ -63,12 +63,14 @@ public class RoutineSteps {
     }
 
     public static ExtractableResponse<Response> 루틴_체크_하기(String uid, String routineDayId, String routineCheckYN) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("routineCheckYN", routineCheckYN);
 
         return RestAssured
                 .given().log().all()
                 .header("uid", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(routineCheckYN)
+                .body(params)
                 .when().put("/api/v1/routinecheck/{routineDayId}", routineDayId)
                 .then().log().all().extract();
     }

@@ -2,7 +2,7 @@ package com.yeolsimee.moneysaving.app.routineday.controller;
 
 import com.yeolsimee.moneysaving.app.common.response.service.ResponseService;
 import com.yeolsimee.moneysaving.app.routineday.dto.RoutineDaysRequest;
-import com.yeolsimee.moneysaving.app.routine.service.RoutineService;
+import com.yeolsimee.moneysaving.app.routineday.dto.UpdateRoutineCheckRequest;
 import com.yeolsimee.moneysaving.app.routineday.service.RoutineDayService;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,11 @@ import org.springframework.web.bind.annotation.*;
 public class RoutineDayController {
 
     private final ResponseService responseService;
-    private final RoutineService routineService;
     private final RoutineDayService routineDayService;
 
     @GetMapping("/routinedays")
     public ResponseEntity<?> findAllMyRoutineDays(@RequestBody RoutineDaysRequest routineDaysRequest, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDays(user.getId(), routineDaysRequest)));
+        return ResponseEntity.ok(responseService.getSingleResult(routineDayService.findRoutineDays(user.getId(), routineDaysRequest)));
     }
 
     @GetMapping("/routineday/{pickDay}")
@@ -30,7 +29,7 @@ public class RoutineDayController {
     }
 
     @PutMapping("/routinecheck/{routineDayId}")
-    public ResponseEntity<?> updateRoutineCheck(@PathVariable String routineDayId, @RequestBody String routineCheckYN, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(responseService.getSingleResult(routineDayService.updateRoutineCheck(routineDayId, routineCheckYN)));
+    public ResponseEntity<?> updateRoutineCheck(@PathVariable String routineDayId, @RequestBody UpdateRoutineCheckRequest updateRoutineCheckRequest, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(responseService.getSingleResult(routineDayService.updateRoutineCheck(routineDayId, updateRoutineCheckRequest)));
     }
 }
