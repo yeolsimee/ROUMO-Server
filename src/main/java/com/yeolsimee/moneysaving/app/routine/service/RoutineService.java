@@ -31,7 +31,7 @@ public class RoutineService {
     public RoutineResponse createRoutine(RoutineRequest routineRequest, Long userId) {
         User user = customUserDetailService.getUserByUserId(userId);
         Category category = findOrCreateCategory(routineRequest, userId);
-        Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user));
+        Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N"));
         routine.addRoutineDays();
         return RoutineResponse.from(routine);
     }
@@ -48,6 +48,12 @@ public class RoutineService {
     public RoutineDaysResponse findRoutineDays(Long userId, RoutineDaysRequest routineDaysRequest) {
         List<Routine> findedRoutines = routineRepository.findByUserId(userId);
         return RoutineDaysResponse.from(findedRoutines, routineDaysRequest);
+    }
+    @Transactional
+    public void deleteRoutine(long id, Long routineId) {
+        Routine routine = routineRepository.findById(routineId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
+        routine.deleteRoutineDay();
+        routine.changeRoutineDeleteYN("Y");
     }
 
     private Category findOrCreateCategory(RoutineRequest routineRequest, Long userId) {

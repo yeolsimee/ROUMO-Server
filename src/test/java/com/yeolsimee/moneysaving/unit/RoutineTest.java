@@ -39,7 +39,7 @@ class RoutineTest {
         루틴_알람시간 = "12";
         루틴_시간대 = RoutineTimeZone.AM;
 
-        Routine routine = new Routine(사용자, 루틴_이름, 루틴_카테고리, 루틴_요일, 루틴_공개범위, 루틴_알람상태, 루틴_알람시간, 루틴_시간대);
+        Routine routine = new Routine(사용자, 루틴_이름, 루틴_카테고리, 루틴_요일, 루틴_공개범위, 루틴_알람상태, 루틴_알람시간, 루틴_시간대, "N");
 
         assertThat(routine.getUser()).isEqualTo(사용자);
     }

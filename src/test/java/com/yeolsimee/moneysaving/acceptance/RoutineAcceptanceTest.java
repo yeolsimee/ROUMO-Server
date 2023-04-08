@@ -25,7 +25,7 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
     public static final List<String> EMPTY_WEEK_TYPES = List.of();
     public static final String ROUTINE_TYPE = "PUBLIC";
     public static final String ALARM_STATUS = "ON";
-    public static final String ALARM_TIME = "14";
+    public static final String ALARM_TIME = "1422";
     public static final String START_DATE = "20230320";
     public static final String END_DATE = "20231016";
     public static final String ROUTINE_TIME_ZONE = "1";
@@ -59,6 +59,21 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.jsonPath().getString("data.routineName")).isEqualTo("수정된_루틴_이름")
+        );
+    }
+
+    @DisplayName("루틴을 삭제 한다.")
+    @Test
+    void deleteRoutine() {
+        // when
+        ExtractableResponse<Response> createResponse = 루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
+        String routineId = createResponse.jsonPath().getString("data.routineId");
+
+        ExtractableResponse<Response> response = 루틴_삭제_요청(UID, routineId);
+
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
 

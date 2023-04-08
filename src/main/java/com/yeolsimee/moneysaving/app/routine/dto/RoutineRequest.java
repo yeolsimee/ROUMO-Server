@@ -30,7 +30,7 @@ public class RoutineRequest {
         this.routineTimeZone = routineTimeZone;
     }
 
-    public static Routine toEntity(RoutineRequest routineRequest, Category category, User user) {
+    public static Routine toEntity(RoutineRequest routineRequest, Category category, User user, String routineDeleteYN) {
         List<WeekType> weekTypes = routineRequest.getWeekTypes()
                 .stream().map(WeekType::valueOf)
                 .collect(Collectors.toList());
@@ -43,6 +43,7 @@ public class RoutineRequest {
                 .alarmStatus(AlarmStatus.valueOf(routineRequest.getAlarmStatus()))
                 .alarmTime(routineRequest.getAlarmTime())
                 .routineTimeZone(RoutineTimeZone.idOfRoutineTimeZone(routineRequest.getRoutineTimeZone()))
+                .routineDeleteYN(routineDeleteYN)
                 .build();
     }
 

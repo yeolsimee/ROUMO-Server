@@ -30,6 +30,13 @@ public class RoutineSteps {
                 .when().put("/api/v1/routine/{routineId}", routineId)
                 .then().log().all().extract();
     }
+    public static ExtractableResponse<Response> 루틴_삭제_요청(String uid, String routineId) {
+        return RestAssured
+                .given().log().all()
+                .header("uid", uid)
+                .when().delete("/api/v1/routine/{routineId}", routineId)
+                .then().log().all().extract();
+    }
 
     public static ExtractableResponse<Response> 나의_루틴_전체_조회_요청(String uid, String startDate, String endDate) {
         Map<String, Object> params = new HashMap<>();
