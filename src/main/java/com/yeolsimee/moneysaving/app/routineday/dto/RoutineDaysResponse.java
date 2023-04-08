@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 @Data
@@ -16,12 +17,14 @@ public class RoutineDaysResponse {
 
     public static RoutineDaysResponse from(List<RoutineDay> routineDays) {
 
-        Map<String, long[]> collect = routineDays.stream()
+        Map<String, long[]> map = routineDays.stream()
                 .collect(Collectors.groupingBy(RoutineDay::getRoutineDay, Collectors.reducing(new long[]{0, 0},
                         rd -> new long[]{rd.getRoutineCheckYn() == RoutineCheckYN.Y ? 1 : 0, 1},
                         (a, b) -> new long[]{a[0] + b[0], a[1] + b[1]})));
 
-        List<RoutineDaysResponseData> results = collect.entrySet().stream()
+        Map<String, long[]> sortedMap = new TreeMap<>(map);
+
+        List<RoutineDaysResponseData> results = sortedMap.entrySet().stream()
                 .map(entry -> new RoutineDaysResponseData(entry.getKey(), entry.getValue()[0] * 100.0 / entry.getValue()[1]))
                 .collect(Collectors.toList());
 
