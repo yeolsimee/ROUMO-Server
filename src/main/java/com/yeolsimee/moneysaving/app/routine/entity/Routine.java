@@ -2,6 +2,7 @@ package com.yeolsimee.moneysaving.app.routine.entity;
 
 import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
+import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
 import com.yeolsimee.moneysaving.app.routineday.entity.RoutineDay;
 import com.yeolsimee.moneysaving.app.routineday.entity.RoutineDays;
 import com.yeolsimee.moneysaving.app.user.entity.User;
@@ -15,6 +16,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.yeolsimee.moneysaving.app.routineday.entity.RoutineCheckYN.N;
 
@@ -68,12 +70,32 @@ public class Routine extends BaseEntity {
     }
 
     public void addRoutineDays() {
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        createOneYearRoutineDays(today, formatter);
+        createOneYearRoutineDays();
     }
 
-    private void createOneYearRoutineDays(LocalDate today, DateTimeFormatter formatter) {
+    public void updateRoutine(RoutineRequest routineRequest, Category category) {
+        List<WeekType> weekTypeList = routineRequest.getWeekTypes().stream()
+                .map(s -> WeekType.valueOf(s))
+                .collect(Collectors.toList());
+
+        this.routineName = routineRequest.getRoutineName();
+        this.category = category;
+        this.weekTypes = weekTypeList;
+        this.routineType = RoutineType.valueOf(routineRequest.getRoutineType());
+        this.alarmStatus = AlarmStatus.valueOf(routineRequest.getAlarmStatus());
+        this.alarmTime = routineRequest.getAlarmTime();
+        this.routineTimeZone = RoutineTimeZone.idOfRoutineTimeZone(routineRequest.getRoutineTimeZone());
+    }
+
+    public void updateRoutineDay() {
+        deleteRoutineDayAfterToday();
+        createOneYearRoutineDays();
+    }
+
+    private void createOneYearRoutineDays() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
         if (weekTypes.isEmpty()) {
             routineDays.add(new RoutineDay(user, this, today.format(formatter), N));
             return;
@@ -110,6 +132,12 @@ public class Routine extends BaseEntity {
                 continue;
             }
         }
+    }
+
+    private void deleteRoutineDayAfterToday() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        routineDays.deleteRoutineDayAfterToday(today.format(formatter));
     }
 }
 

@@ -2,6 +2,7 @@ package com.yeolsimee.moneysaving.app.routineday.dto;
 
 import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
+import com.yeolsimee.moneysaving.util.TimeUtils;
 import lombok.Builder;
 import lombok.Data;
 
@@ -54,14 +55,16 @@ class RoutineData{
     private String routineName;
     private String routineCheckYN;
     private String routineTimeZone;
-    private String alarmTime;
+    private String alarmTimeHour;
+    private String alarmTimeMinute;
     public static RoutineData of(Routine routine, String routineDay) {
         return RoutineData.builder()
                 .routineDayId(String.valueOf(routine.getRoutineDay(routineDay).getId()))
                 .routineName(routine.getRoutineName())
                 .routineCheckYN(String.valueOf(routine.getRoutineDay(routineDay).getRoutineCheckYn()))
                 .routineTimeZone(String.valueOf(routine.getRoutineTimeZone()))
-                .alarmTime(routine.getAlarmTime())
+                .alarmTimeHour(TimeUtils.convertAlarmTimeToHourMinute(routine.getAlarmTime()).get("timeHour"))
+                .alarmTimeMinute(TimeUtils.convertAlarmTimeToHourMinute(routine.getAlarmTime()).get("timeMinute"))
                 .build();
     }
 }

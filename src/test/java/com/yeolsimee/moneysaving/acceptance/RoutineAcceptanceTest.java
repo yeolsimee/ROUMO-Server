@@ -47,6 +47,21 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         );
     }
 
+    @DisplayName("루틴을 수정 한다.")
+    @Test
+    void updateRoutine() {
+        // when
+        ExtractableResponse<Response> createResponse = 루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
+        String routineId = createResponse.jsonPath().getString("data.routineId");
+
+        ExtractableResponse<Response> response = 루틴_수정_요청(UID, routineId, createRoutineUpdateParams("수정된_루틴_이름", "수정된_루틴_카테고리", List.of("MONDAY", "SUNDAY"), "PUBLIC", "ON", "12", "3"));
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getString("data.routineName")).isEqualTo("수정된_루틴_이름")
+        );
+    }
+
     @DisplayName("특정 기간동안의 나의 루틴 날짜 전체 조회하기")
     @Test
     void findAllMyRoutineDays() {
@@ -97,6 +112,18 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
     }
 
     private Map<String, Object> createRoutineCreateParams(String routineName, String categoryName, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("routineName", routineName);
+        params.put("categoryName", categoryName);
+        params.put("weekTypes", weekTypes);
+        params.put("routineType", routineType);
+        params.put("alarmStatus", alarmStatus);
+        params.put("alarmTime", alarmTime);
+        params.put("routineTimeZone", routineTimeZone);
+        return params;
+    }
+
+    private Map<String, Object> createRoutineUpdateParams(String routineName, String categoryName, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
         Map<String, Object> params = new HashMap<>();
         params.put("routineName", routineName);
         params.put("categoryName", categoryName);
