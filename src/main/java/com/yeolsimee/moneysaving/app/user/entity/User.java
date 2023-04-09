@@ -1,6 +1,7 @@
 package com.yeolsimee.moneysaving.app.user.entity;
 
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
+import com.yeolsimee.moneysaving.app.routineday.entity.*;
 import lombok.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.*;
@@ -32,13 +33,23 @@ public class User extends BaseEntity implements UserDetails  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String username;
+
+    @Column
+    private String nickname;
+
+    @Column
+    private String gender;
+
+    @Column
+    private String birthday;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -60,8 +71,6 @@ public class User extends BaseEntity implements UserDetails  {
         authorities.add(new SimpleGrantedAuthority(role.getValue()));
         return authorities;
     }
-
-
 
     @Override
     public String getPassword() {
