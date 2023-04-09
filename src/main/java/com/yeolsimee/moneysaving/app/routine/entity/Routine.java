@@ -30,6 +30,7 @@ public class Routine extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String routineName;
+    private String routineDeleteYN;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -50,7 +51,7 @@ public class Routine extends BaseEntity {
     private RoutineTimeZone routineTimeZone;
 
     @Builder
-    public Routine(User user, String routineName, Category category, List<WeekType> weekTypes, RoutineType routineType, AlarmStatus alarmStatus, String alarmTime, RoutineTimeZone routineTimeZone) {
+    public Routine(User user, String routineName, Category category, List<WeekType> weekTypes, RoutineType routineType, AlarmStatus alarmStatus, String alarmTime, RoutineTimeZone routineTimeZone, String routineDeleteYN) {
         this.user = user;
         this.routineName = routineName;
         this.category = category;
@@ -59,6 +60,7 @@ public class Routine extends BaseEntity {
         this.alarmStatus = alarmStatus;
         this.alarmTime = alarmTime;
         this.routineTimeZone = routineTimeZone;
+        this.routineDeleteYN = routineDeleteYN;
     }
 
     public List<RoutineDay> getRoutineDays() {
@@ -138,6 +140,14 @@ public class Routine extends BaseEntity {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         routineDays.deleteRoutineDayAfterToday(today.format(formatter));
+    }
+
+    public void deleteRoutineDay() {
+        deleteRoutineDayAfterToday();
+    }
+
+    public void changeRoutineDeleteYN(String routineDeleteYN) {
+        this.routineDeleteYN = routineDeleteYN;
     }
 }
 

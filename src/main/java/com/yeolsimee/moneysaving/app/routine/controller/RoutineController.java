@@ -29,4 +29,10 @@ public class RoutineController {
         RoutineResponse routineResponse = routineService.updateRoutine(routineRequest, user.getId(), routineId);
         return ResponseEntity.ok(responseService.getSingleResult(routineResponse));
     }
+
+    @DeleteMapping("/routine/{routineId}")
+    public ResponseEntity<?> deleteRoutine(@AuthenticationPrincipal User user, @PathVariable Long routineId){
+        routineService.deleteRoutine(user.getId(), routineId);
+        return ResponseEntity.ok(responseService.getSuccessResult("루틴이 삭제되었습니다."));
+    }
 }
