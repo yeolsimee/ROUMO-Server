@@ -21,7 +21,7 @@ import org.springframework.stereotype.*;
  * -----------------------------------------------------------
  * 2023/03/01        jeon-eunseong       최초 생성
  */
-@Service("customUserDetailService")
+@Service("userService")
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
