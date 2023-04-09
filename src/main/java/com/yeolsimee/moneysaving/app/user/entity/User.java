@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.*;
 import org.springframework.security.core.userdetails.*;
+import org.springframework.util.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -95,5 +96,9 @@ public class User extends BaseEntity implements UserDetails  {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public boolean isNotInputUserInfo(){
+        return StringUtils.hasLength(nickname) || StringUtils.hasLength(gender) || StringUtils.hasLength(birthday);
     }
 }

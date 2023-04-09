@@ -1,6 +1,7 @@
 package com.yeolsimee.moneysaving.app.user.controller;
 
 import com.yeolsimee.moneysaving.app.common.response.service.*;
+import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.*;
 import com.yeolsimee.moneysaving.app.user.service.*;
 import lombok.*;
@@ -26,18 +27,19 @@ import javax.servlet.http.*;
 public class UserController {
 
     private final ResponseService responseService;
-    private final UserService customUserDetailService;
+    private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(){
-        return ResponseEntity.ok(responseService.getSuccessResult());
+    public ResponseEntity<?> login(HttpServletRequest request){
+        LoginDto loginDto = (LoginDto)request.getAttribute("loginInfo");
+        return ResponseEntity.ok(
+                responseService.getSingleResult(loginDto));
     }
 
     @GetMapping("/userInfo")
     public ResponseEntity<?> userInfo(HttpServletRequest request){
-        User user = customUserDetailService.getUserByUid(request.getHeader("x-auth"));
+        User user = userService.getUserByUid(request.getHeader("x-auth"));
         return ResponseEntity.ok(responseService.getSingleResult(user));
     }
-
 
 }
