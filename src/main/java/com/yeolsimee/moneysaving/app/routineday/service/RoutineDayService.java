@@ -3,8 +3,7 @@ package com.yeolsimee.moneysaving.app.routineday.service;
 import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.common.exception.EntityNotFoundException;
 import com.yeolsimee.moneysaving.app.common.response.ResponseMessage;
-import com.yeolsimee.moneysaving.app.routineday.dto.DayResponse;
-import com.yeolsimee.moneysaving.app.routineday.dto.RoutineDayResponse;
+import com.yeolsimee.moneysaving.app.routineday.dto.*;
 import com.yeolsimee.moneysaving.app.routineday.entity.RoutineCheckYN;
 import com.yeolsimee.moneysaving.app.routineday.entity.RoutineDay;
 import com.yeolsimee.moneysaving.app.routineday.repository.RoutineDayRespository;
@@ -38,9 +37,15 @@ public class RoutineDayService {
         return routineDayRespository.findAllByRoutineDay(routineDay);
     }
 
-    public RoutineDayResponse updateRoutineCheck(String routineDayId, String routineCheckYN) {
+    @Transactional
+    public RoutineDayResponse updateRoutineCheck(String routineDayId, UpdateRoutineCheckRequest updateRoutineCheckRequest) {
         RoutineDay routineDay = routineDayRespository.findById(Long.valueOf(routineDayId)).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE_DAY));
-        routineDay.changeRoutineCheckYn(RoutineCheckYN.valueOf(routineCheckYN));
+        routineDay.changeRoutineCheckYn(RoutineCheckYN.valueOf(updateRoutineCheckRequest.getRoutineCheckYN()));
         return RoutineDayResponse.from(routineDay);
+    }
+
+    public RoutineDaysResponse findRoutineDays(Long userId, RoutineDaysRequest routineDaysRequest) {
+        List<RoutineDay> routineDays = routineDayRespository.findByUserIdWithDate(userId, routineDaysRequest.getStartDate(), routineDaysRequest.getEndDate());
+        return RoutineDaysResponse.from(routineDays);
     }
 }
