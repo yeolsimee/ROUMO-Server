@@ -19,14 +19,14 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FirebaseTokenFilter extends OncePerRequestFilter {
 
-    private final CustomUserDetailService customUserDetailService;
+    private final UserService userService;
     private final FirebaseAuth firebaseAuth;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //activeprofile이 없을 경우(test환경)에 작동
         if (isProfileActive(System.getProperty("spring.profiles.active"))) {
-            UserDetails user = customUserDetailService.getUserByUid(request.getHeader("uid"));
+            UserDetails user = userService.getUserByUid(request.getHeader("uid"));
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     user, null, user.getAuthorities());
@@ -55,9 +55,9 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
         // User를 가져와 SecurityContext에 저장한다.
         try{
-            User user = customUserDetailService.getUserByUid(decodedToken.getUid());
+            User user = userService.getUserByUid(decodedToken.getUid());
             if(user == null) {
-                user = customUserDetailService.signup(decodedToken);
+                user = userService.signup(decodedToken);
                 request.setAttribute("loginInfo", LoginDto.builder().name(user.getName()).isNewUser("Y").build());
             }else{
                 request.setAttribute("loginInfo", LoginDto.builder().name(user.getName()).isNewUser("F").build());

@@ -12,7 +12,7 @@ import org.springframework.stereotype.*;
 
 /**
  * packageName    : com.yeolsimee.moneysaving.app.user.service
- * fileName       : CustomUserDetailService
+ * fileName       : UserService
  * author         : jeon-eunseong
  * date           : 2023/03/01
  * description    :
@@ -23,7 +23,7 @@ import org.springframework.stereotype.*;
  */
 @Service("customUserDetailService")
 @RequiredArgsConstructor
-public class CustomUserDetailService implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
