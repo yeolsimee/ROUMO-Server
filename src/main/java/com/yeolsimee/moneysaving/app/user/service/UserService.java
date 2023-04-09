@@ -34,7 +34,7 @@ public class UserService implements UserDetailsService {
 
     public User signup(FirebaseToken firebaseToken) {
 
-        User user = RegisterDto.toEntity(RegisterDto.builder()
+        User user = UserInfoRequest.toEntity(UserInfoRequest.builder()
                 .username(firebaseToken.getEmail())
                 .name(firebaseToken.getName())
                 .uid(firebaseToken.getUid())

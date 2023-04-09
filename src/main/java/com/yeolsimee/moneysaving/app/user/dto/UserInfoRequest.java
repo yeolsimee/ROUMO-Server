@@ -5,7 +5,7 @@ import lombok.*;
 
 /**
  * packageName    : com.yeolsimee.moneysaving.app.user.dto
- * fileName       : RegisterDto
+ * fileName       : UserInfoRequest
  * author         : jeon-eunseong
  * date           : 2023/03/01`
  * description    :
@@ -17,7 +17,7 @@ import lombok.*;
 
 @Data
 @Builder
-public class RegisterDto {
+public class UserInfoRequest {
 
     private String name;
 
@@ -29,13 +29,13 @@ public class RegisterDto {
 
     private String uid;
 
-    public static User toEntity(RegisterDto registerDto) {
+    public static User toEntity(UserInfoRequest userInfoRequest) {
 
         return User.builder()
-                .username(registerDto.getUsername())
-                .name(registerDto.getName())
+                .username(userInfoRequest.getUsername())
+                .name(userInfoRequest.getName())
                 .role(Role.ROLE_USER)
-                .uid(registerDto.getUid())
+                .uid(userInfoRequest.getUid())
                 .build();
     }
 }
