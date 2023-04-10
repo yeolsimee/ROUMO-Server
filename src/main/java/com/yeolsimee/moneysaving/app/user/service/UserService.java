@@ -12,7 +12,7 @@ import org.springframework.stereotype.*;
 
 /**
  * packageName    : com.yeolsimee.moneysaving.app.user.service
- * fileName       : CustomUserDetailService
+ * fileName       : UserService
  * author         : jeon-eunseong
  * date           : 2023/03/01
  * description    :
@@ -21,9 +21,9 @@ import org.springframework.stereotype.*;
  * -----------------------------------------------------------
  * 2023/03/01        jeon-eunseong       최초 생성
  */
-@Service("customUserDetailService")
+@Service("userService")
 @RequiredArgsConstructor
-public class CustomUserDetailService implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -34,7 +34,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     public User signup(FirebaseToken firebaseToken) {
 
-        User user = RegisterDto.toEntity(RegisterDto.builder()
+        User user = UserInfoRequest.toEntity(UserInfoRequest.builder()
                 .username(firebaseToken.getEmail())
                 .name(firebaseToken.getName())
                 .uid(firebaseToken.getUid())

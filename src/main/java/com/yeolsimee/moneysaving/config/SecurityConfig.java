@@ -22,7 +22,7 @@ import org.springframework.web.cors.*;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailService userDetailsService;
+    private final UserService userDetailsService;
     private final FirebaseAuth firebaseAuth;
 
     @Bean

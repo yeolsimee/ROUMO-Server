@@ -1,10 +1,12 @@
 package com.yeolsimee.moneysaving.app.user.entity;
 
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
+import com.yeolsimee.moneysaving.app.routineday.entity.*;
 import lombok.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.*;
 import org.springframework.security.core.userdetails.*;
+import org.springframework.util.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -32,13 +34,23 @@ public class User extends BaseEntity implements UserDetails  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String username;
+
+    @Column
+    private String nickname;
+
+    @Column
+    private String gender;
+
+    @Column
+    private String birthday;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -60,8 +72,6 @@ public class User extends BaseEntity implements UserDetails  {
         authorities.add(new SimpleGrantedAuthority(role.getValue()));
         return authorities;
     }
-
-
 
     @Override
     public String getPassword() {
@@ -87,4 +97,9 @@ public class User extends BaseEntity implements UserDetails  {
     public boolean isEnabled() {
         return true;
     }
+
+    public boolean isNotInputUserInfo(){
+        return StringUtils.hasLength(nickname) || StringUtils.hasLength(gender) || StringUtils.hasLength(birthday);
+    }
+
 }
