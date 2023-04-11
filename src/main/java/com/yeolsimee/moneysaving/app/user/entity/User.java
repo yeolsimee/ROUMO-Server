@@ -1,5 +1,6 @@
 package com.yeolsimee.moneysaving.app.user.entity;
 
+import com.yeolsimee.moneysaving.app.category.entity.*;
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
 import com.yeolsimee.moneysaving.app.routineday.entity.*;
 import lombok.*;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.util.*;
 
 import javax.persistence.*;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -58,6 +60,9 @@ public class User extends BaseEntity implements UserDetails  {
 
     @Column
     private String uid;
+
+    @OneToMany
+    private List<Category> categoryList;
 
     public User(String name, String username, String email, Role role, String uid) {
         this.name = name;
