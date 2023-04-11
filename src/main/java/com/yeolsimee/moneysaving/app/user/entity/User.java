@@ -52,6 +52,9 @@ public class User extends BaseEntity implements UserDetails  {
     @Column
     private String birthday;
 
+    @Column
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;

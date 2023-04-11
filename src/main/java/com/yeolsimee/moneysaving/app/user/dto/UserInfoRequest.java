@@ -23,9 +23,13 @@ public class UserInfoRequest {
 
     private String username;
 
+    private String nickname;
+
     private String phoneNumber;
 
     private String birthday;
+
+    private String gender;
 
     private String uid;
 
@@ -37,5 +41,23 @@ public class UserInfoRequest {
                 .role(Role.ROLE_USER)
                 .uid(userInfoRequest.getUid())
                 .build();
+    }
+
+    public static User updateUserInfo(UserInfoRequest userInfoRequest, User user){
+
+        return User.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .username(user.getUsername())
+                .nickname(userInfoRequest.getNickname())
+                .gender(user.getGender())
+                .birthday(userInfoRequest.getBirthday())
+                .phoneNumber(userInfoRequest.getPhoneNumber())
+                .role(Role.ROLE_USER)
+                .uid(userInfoRequest.getUid())
+                .build();
+
+
+
     }
 }
