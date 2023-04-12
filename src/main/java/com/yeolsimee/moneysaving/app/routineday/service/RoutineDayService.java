@@ -44,8 +44,8 @@ public class RoutineDayService {
         return RoutineDayResponse.from(routineDay);
     }
 
-    public RoutineDaysResponse findRoutineDays(Long userId, RoutineDaysRequest routineDaysRequest) {
-        List<RoutineDay> routineDays = routineDayRespository.findByUserIdWithDate(userId, routineDaysRequest.getStartDate(), routineDaysRequest.getEndDate());
+    public RoutineDaysResponse findRoutineDays(Long userId, String startDate, String endDate) {
+        List<RoutineDay> routineDays = routineDayRespository.findByUserIdWithDate(userId, startDate, endDate);
         return RoutineDaysResponse.from(routineDays);
     }
 }

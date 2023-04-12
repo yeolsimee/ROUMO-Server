@@ -47,7 +47,7 @@ public class RoutineSteps {
                 .given().log().all()
                 .header("uid", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(params)
+                .params(params)
                 .when().get("/api/v1/routinedays")
                 .then().log().all().extract();
     }
