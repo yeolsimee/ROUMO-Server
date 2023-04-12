@@ -1,7 +1,6 @@
 package com.yeolsimee.moneysaving.app.routineday.controller;
 
 import com.yeolsimee.moneysaving.app.common.response.service.ResponseService;
-import com.yeolsimee.moneysaving.app.routineday.dto.RoutineDaysRequest;
 import com.yeolsimee.moneysaving.app.routineday.dto.UpdateRoutineCheckRequest;
 import com.yeolsimee.moneysaving.app.routineday.service.RoutineDayService;
 import com.yeolsimee.moneysaving.app.user.entity.User;
@@ -19,8 +18,8 @@ public class RoutineDayController {
     private final RoutineDayService routineDayService;
 
     @GetMapping("/routinedays")
-    public ResponseEntity<?> findAllMyRoutineDays(@RequestBody RoutineDaysRequest routineDaysRequest, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(responseService.getSingleResult(routineDayService.findRoutineDays(user.getId(), routineDaysRequest)));
+    public ResponseEntity<?> findAllMyRoutineDays(@RequestParam String startDate, @RequestParam String endDate, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(responseService.getSingleResult(routineDayService.findRoutineDays(user.getId(), startDate, endDate)));
     }
 
     @GetMapping("/routineday/{pickDay}")
