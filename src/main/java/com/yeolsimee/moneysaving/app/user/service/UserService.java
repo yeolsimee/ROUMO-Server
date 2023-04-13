@@ -7,6 +7,7 @@ import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import com.yeolsimee.moneysaving.app.user.repository.*;
 import lombok.*;
+import org.springframework.security.core.context.*;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.*;
 
@@ -48,5 +49,11 @@ public class UserService implements UserDetailsService {
 
     public User getUserByUserId(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.AUTH_USER));
+    }
+
+    public void updateUserInfo(UserInfoRequest userInfoRequest) {
+        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        user = UserInfoRequest.updateUserInfo(userInfoRequest, user);
+        userRepository.save(user);
     }
 }

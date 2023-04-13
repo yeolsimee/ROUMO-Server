@@ -42,4 +42,10 @@ public class UserController {
         return ResponseEntity.ok(responseService.getSingleResult(user));
     }
 
+    @PostMapping("/userInfo")
+    public ResponseEntity<?> updateUserInfo(@RequestBody UserInfoRequest userInfoRequest){
+        userService.updateUserInfo(userInfoRequest);
+        return ResponseEntity.ok(responseService.getSuccessResult());
+    }
+
 }
