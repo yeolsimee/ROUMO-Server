@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -28,36 +30,34 @@ public class RoutineService {
     @Transactional
     public RoutineResponse createRoutine(RoutineRequest routineRequest, Long userId) {
         User user = userService.getUserByUserId(userId);
-        Category category = findOrCreateCategory(routineRequest, userId);
-        Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N"));
-        routine.addRoutineDays();
+        Category category = categoryService.findCategoryById(Long.valueOf(routineRequest.getCategoryId()));
+        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, ""));
         return RoutineResponse.from(routine);
     }
 
     @Transactional
     public RoutineResponse updateRoutine(RoutineRequest routineRequest, Long userId, Long routineId) {
-        Category category = findOrCreateCategory(routineRequest, userId);
         Routine routine = routineRepository.findById(routineId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
-        routine.updateRoutine(routineRequest, category);
-        routine.updateRoutineDay();
-        return RoutineResponse.from(routine);
+        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String yesterday = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+        if (routine.getRoutineStartDate() == today) {
+            routineRepository.delete(routine);
+        } else {
+            routine.changeEndDate(yesterday);
+        }
+
+        User user = userService.getUserByUserId(userId);
+        Category category = categoryService.findCategoryById(Long.valueOf(routineRequest.getCategoryId()));
+        Routine newRoutine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, ""));
+        return RoutineResponse.from(newRoutine);
     }
 
     @Transactional
     public void deleteRoutine(long id, Long routineId) {
         Routine routine = routineRepository.findById(routineId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
-        routine.deleteRoutineDay();
         routine.changeRoutineDeleteYN("Y");
     }
 
-    private Category findOrCreateCategory(RoutineRequest routineRequest, Long userId) {
-        List<Routine> routines = routineRepository.findByUserId(userId);
-
-        Category category = routines.stream()
-                .map(routine -> routine.getCategory())
-                .filter(myCategory -> myCategory.getCategoryName().contains(routineRequest.getCategoryName()))
-                .findFirst()
-                .orElse(categoryService.createCategory(routineRequest.getCategoryName()));
-        return category;
-    }
 }
