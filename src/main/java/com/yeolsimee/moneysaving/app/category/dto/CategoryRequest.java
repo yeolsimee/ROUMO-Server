@@ -7,8 +7,6 @@ import lombok.*;
 @Data
 public class CategoryRequest {
 
-    private long id;
-
     private long userId;
 
     private String categoryName;
@@ -16,7 +14,6 @@ public class CategoryRequest {
     public static Category toEntity(CategoryRequest categoryRequest, User user) {
 
         return Category.builder()
-                .id(categoryRequest.getId())
                 .user(user)
                 .categoryName(categoryRequest.getCategoryName())
                 .build();

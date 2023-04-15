@@ -33,10 +33,11 @@ public class CategoryService {
     }
 
     @Transactional
-    public void insert(CategoryRequest categoryRequest){
+    public CategoryResponse insert(CategoryRequest categoryRequest){
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Category category = CategoryRequest.toEntity(categoryRequest, user);
         categoryRepository.save(category);
+        return CategoryResponse.of(category);
     }
 
     @Transactional

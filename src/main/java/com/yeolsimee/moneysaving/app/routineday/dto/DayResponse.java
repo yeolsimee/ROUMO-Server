@@ -35,10 +35,11 @@ class CategoryData {
 
     public static CategoryData of(Category category, String routineDay) {
         List<RoutineData> routineDataList = new ArrayList<>();
-        List<Routine> routines = category.getRoutines();
-        for (Routine routine : routines) {
-            routineDataList.add(RoutineData.of(routine, routineDay));
-        }
+        //todo: 변경 해야 됨
+//        List<Routine> routines = category.getRoutines();
+//        for (Routine routine : routines) {
+//            routineDataList.add(RoutineData.of(routine, routineDay));
+//        }
         return CategoryData.builder()
                 .categoryId(String.valueOf(category.getId()))
                 .categoryName(category.getCategoryName())
