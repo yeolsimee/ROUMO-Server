@@ -42,7 +42,7 @@ public class RoutineService {
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String yesterday = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
-        if (routine.getRoutineStartDate() == today) {
+        if (routine.getRoutineStartDate().equals(today)) {
             routineRepository.delete(routine);
         } else {
             routine.changeEndDate(yesterday);
@@ -55,9 +55,21 @@ public class RoutineService {
     }
 
     @Transactional
-    public void deleteRoutine(long id, Long routineId) {
-        Routine routine = routineRepository.findById(routineId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
-        routine.changeRoutineDeleteYN("Y");
+    public void deleteRoutine(Long userId, Long routineId) {
+        Routine routine = routineRepository.findByIdAndUserId(routineId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
+        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String yesterday = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+        if (routine.getRoutineStartDate().equals(today)) {
+            routineRepository.delete(routine);
+        } else {
+            routine.changeEndDate(yesterday);
+            routine.changeRoutineDeleteYN("Y");
+        }
     }
 
+    public RoutineResponse findRoutineByRoutineId(Long userId, Long routineId) {
+        Routine routine = routineRepository.findByIdAndUserId(routineId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
+        return RoutineResponse.from(routine);
+    }
 }

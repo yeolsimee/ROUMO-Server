@@ -23,7 +23,11 @@ public class RoutineController {
         RoutineResponse routineResponse = routineService.createRoutine(routineRequest, user.getId());
         return ResponseEntity.ok(responseService.getSingleResult(routineResponse));
     }
-
+    @GetMapping("/routine/{routineId}")
+    public ResponseEntity<?> getRoutine(@AuthenticationPrincipal User user, @PathVariable Long routineId){
+        RoutineResponse routineResponse = routineService.findRoutineByRoutineId(user.getId(), routineId);
+        return ResponseEntity.ok(responseService.getSingleResult(routineResponse));
+    }
     @PutMapping("/routine/{routineId}")
     public ResponseEntity<?> updateRoutine(@RequestBody RoutineRequest routineRequest, @AuthenticationPrincipal User user, @PathVariable Long routineId){
         RoutineResponse routineResponse = routineService.updateRoutine(routineRequest, user.getId(), routineId);

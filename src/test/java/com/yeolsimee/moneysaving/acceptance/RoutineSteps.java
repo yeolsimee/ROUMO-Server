@@ -38,6 +38,14 @@ public class RoutineSteps {
                 .then().log().all().extract();
     }
 
+    public static ExtractableResponse<Response> 루틴_조회_요청(String uid, String routineId) {
+        return RestAssured
+                .given().log().all()
+                .header("uid", uid)
+                .when().get("/api/v1/routine/{routineId}", routineId)
+                .then().log().all().extract();
+    }
+
     public static ExtractableResponse<Response> 나의_루틴_전체_조회_요청(String uid, String startDate, String endDate) {
         Map<String, Object> params = new HashMap<>();
         params.put("startDate", startDate);

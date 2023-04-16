@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import static com.yeolsimee.moneysaving.acceptance.CategorySteps.카테고리_생성_요청;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,11 +74,15 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         ExtractableResponse<Response> createResponse = 루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY_ID, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
         String routineId = createResponse.jsonPath().getString("data.routineId");
 
-        ExtractableResponse<Response> response = 루틴_삭제_요청(UID, routineId);
+        루틴_삭제_요청(UID, routineId);
+
+        ExtractableResponse<Response> response = 루틴_조회_요청(UID, routineId);
 
         // then
         assertAll(
-                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getString("code")).isEqualTo("400")
+
         );
     }
 
