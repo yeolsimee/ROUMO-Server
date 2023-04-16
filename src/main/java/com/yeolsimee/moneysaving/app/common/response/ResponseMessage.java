@@ -34,6 +34,9 @@ public enum ResponseMessage {
 
     // Category 에러코드
     NOT_VALID_CATEGORY("해당 카테고리가 없습니다."),
+
+    // Util 에러코드
+    NOT_PARSE_WEEKTYPE("요일값으로 parsing이 안됩니다."),
     ;
 
     final String message;

@@ -1,4 +1,4 @@
-package com.yeolsimee.moneysaving.app.routineday.dto;
+package com.yeolsimee.moneysaving.app.routinehistory.dto;
 
 import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;

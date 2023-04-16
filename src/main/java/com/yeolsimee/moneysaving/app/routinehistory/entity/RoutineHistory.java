@@ -1,9 +1,10 @@
-package com.yeolsimee.moneysaving.app.routineday.entity;
+package com.yeolsimee.moneysaving.app.routinehistory.entity;
 
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RoutineDay extends BaseEntity {
+public class RoutineHistory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +29,8 @@ public class RoutineDay extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public RoutineDay(User user, Routine routine, String routineDay, RoutineCheckYN routineCheckYn) {
+    @Builder
+    public RoutineHistory(User user, Routine routine, String routineDay, RoutineCheckYN routineCheckYn) {
         this.user = user;
         this.routine = routine;
         this.routineDay = routineDay;

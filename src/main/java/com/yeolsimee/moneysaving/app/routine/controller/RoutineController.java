@@ -25,7 +25,7 @@ public class RoutineController {
     }
     @GetMapping("/routine/{routineId}")
     public ResponseEntity<?> getRoutine(@AuthenticationPrincipal User user, @PathVariable Long routineId){
-        RoutineResponse routineResponse = routineService.findRoutineByRoutineId(user.getId(), routineId);
+        RoutineResponse routineResponse = routineService.findRoutineByUserIdAndRoutineId(user.getId(), routineId);
         return ResponseEntity.ok(responseService.getSingleResult(routineResponse));
     }
     @PutMapping("/routine/{routineId}")
@@ -39,4 +39,9 @@ public class RoutineController {
         routineService.deleteRoutine(user.getId(), routineId);
         return ResponseEntity.ok(responseService.getSuccessResult("루틴이 삭제되었습니다."));
     }
+    @GetMapping("/routinedays")
+    public ResponseEntity<?> findAllMyRoutineDays(@RequestParam String startDate, @RequestParam String endDate, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDays(user.getId(), startDate, endDate)));
+    }
+
 }

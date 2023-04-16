@@ -1,20 +1,29 @@
 package com.yeolsimee.moneysaving.app.routine.service;
 
+import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.category.service.CategoryService;
+import com.yeolsimee.moneysaving.app.common.exception.BaseException;
 import com.yeolsimee.moneysaving.app.common.exception.EntityNotFoundException;
 import com.yeolsimee.moneysaving.app.common.response.ResponseMessage;
-import com.yeolsimee.moneysaving.app.routine.dto.*;
-import com.yeolsimee.moneysaving.app.category.entity.Category;
+import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysResponse;
+import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
+import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
+import com.yeolsimee.moneysaving.app.routine.entity.WeekType;
 import com.yeolsimee.moneysaving.app.routine.repository.RoutineRepository;
+import com.yeolsimee.moneysaving.app.routinehistory.entity.RoutineCheckYN;
+import com.yeolsimee.moneysaving.app.routinehistory.repository.RoutineHistoryRepository;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import com.yeolsimee.moneysaving.app.user.service.UserService;
+import com.yeolsimee.moneysaving.util.TimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +32,7 @@ import java.util.List;
 public class RoutineService {
 
     private final RoutineRepository routineRepository;
+    private final RoutineHistoryRepository routineHistoryRepository;
     private final CategoryService categoryService;
     private final UserService userService;
 
@@ -32,7 +42,7 @@ public class RoutineService {
         User user = userService.getUserByUserId(userId);
         Category category = categoryService.findCategoryById(Long.valueOf(routineRequest.getCategoryId()));
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, ""));
+        Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, "99999999"));
         return RoutineResponse.from(routine);
     }
 
@@ -68,8 +78,50 @@ public class RoutineService {
         }
     }
 
-    public RoutineResponse findRoutineByRoutineId(Long userId, Long routineId) {
+    public RoutineResponse findRoutineByUserIdAndRoutineId(Long userId, Long routineId) {
         Routine routine = routineRepository.findByIdAndUserId(routineId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
         return RoutineResponse.from(routine);
+    }
+
+    public List<RoutineDaysResponse> findRoutineDays(Long userId, String startDate, String endDate) {
+        List<String> dayList = TimeUtils.makeDateList(startDate, endDate);
+
+        List<RoutineDaysResponse> routineDaysResponse = new ArrayList<>();
+
+        for (String day : dayList) {
+            WeekType week;
+            try {
+                week = TimeUtils.convertDayToWeekType(day);
+            } catch (ParseException e) {
+                throw new BaseException(ResponseMessage.NOT_PARSE_WEEKTYPE);
+            }
+            // 하루의 전체 루틴 갯수
+            double routineAchievementRate = findDayRoutineAchievementRate(userId, day, week, "Y");
+            RoutineDaysResponse routineDayResponse = RoutineDaysResponse.from(day, routineAchievementRate);
+            routineDaysResponse.add(routineDayResponse);
+        }
+
+        return routineDaysResponse;
+    }
+
+    public Routine findRoutineByRoutineId(Long routineId) {
+        Routine routine = routineRepository.findById(routineId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
+        return routine;
+    }
+
+    public Integer findDayRoutineNum(Long userId, String day, WeekType weekType) {
+        return routineRepository.findDayRoutineNum(userId, day, weekType);
+    }
+
+    public double findDayRoutineAchievementRate(Long userId, String day, WeekType weekType, String routineCheckYN) {
+        double routineAchievementRate = 0;
+        double dayRoutineNum = findDayRoutineNum(userId, day, weekType);
+        double dayCheckedRoutineNum = routineHistoryRepository.findDayCheckedRoutineNum(userId, day, RoutineCheckYN.valueOf(routineCheckYN));
+        if (dayRoutineNum == 0) {
+            routineAchievementRate = 0;
+        }else{
+            routineAchievementRate = dayCheckedRoutineNum / dayRoutineNum;
+        }
+        return routineAchievementRate;
     }
 }

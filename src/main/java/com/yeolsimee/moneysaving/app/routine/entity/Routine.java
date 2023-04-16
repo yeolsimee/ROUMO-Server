@@ -3,13 +3,11 @@ package com.yeolsimee.moneysaving.app.routine.entity;
 import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
-import com.yeolsimee.moneysaving.app.routineday.entity.RoutineDay;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.List;

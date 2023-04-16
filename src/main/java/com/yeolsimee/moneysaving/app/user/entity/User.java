@@ -2,7 +2,6 @@ package com.yeolsimee.moneysaving.app.user.entity;
 
 import com.yeolsimee.moneysaving.app.category.entity.*;
 import com.yeolsimee.moneysaving.app.common.entity.BaseEntity;
-import com.yeolsimee.moneysaving.app.routineday.entity.*;
 import lombok.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.*;
@@ -10,7 +9,6 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.util.*;
 
 import javax.persistence.*;
-import java.io.*;
 import java.util.*;
 
 /**
