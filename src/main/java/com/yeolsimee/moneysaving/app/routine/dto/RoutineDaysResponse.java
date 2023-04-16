@@ -3,16 +3,16 @@ package com.yeolsimee.moneysaving.app.routine.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 public class RoutineDaysResponse {
-    private String day;
-    private Double routineAchievementRate;
+    private List<RoutineDaysData> routineDays;
 
-    public static RoutineDaysResponse from(String day, Double routineAchievementRate) {
+    public static RoutineDaysResponse from(List<RoutineDaysData> routineDays) {
         return RoutineDaysResponse.builder()
-                .day(day)
-                .routineAchievementRate(routineAchievementRate)
+                .routineDays(routineDays)
                 .build();
     }
 }
