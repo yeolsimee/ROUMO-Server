@@ -27,8 +27,8 @@ public class RoutineHistoryService {
     public RoutineHistoryResponse changeOrCreateRoutineCheck(Long userId, RoutineCheckRequest routineCheckRequest) {
         RoutineHistory routineHistory = null;
         User user = userService.getUserByUserId(userId);
-        Routine routine = routineService.findRoutineByRoutineId(Long.valueOf(routineCheckRequest.getRoutineId()));
-        Optional<RoutineHistory> findedRoutineHistory = routineHistoryRepository.findRoutineHistory(userId, Long.valueOf(routineCheckRequest.getRoutineId()), routineCheckRequest.getRoutineDay());
+        Routine routine = routineService.findRoutineByRoutineId(routineCheckRequest.getRoutineId());
+        Optional<RoutineHistory> findedRoutineHistory = routineHistoryRepository.findRoutineHistory(userId, routineCheckRequest.getRoutineId(), routineCheckRequest.getRoutineDay());
 
         if (findedRoutineHistory.isPresent()) {
             findedRoutineHistory.get().changeRoutineCheckYn(RoutineCheckYN.valueOf(routineCheckRequest.getRoutineCheckYN()));

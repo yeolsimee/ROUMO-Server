@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class RoutineCheckRequest {
-    private String routineId;
+    private Long routineId;
     private String routineDay;
     private String routineCheckYN;
     public static RoutineHistory toEntity(RoutineCheckRequest routineCheckRequest, User user, Routine routine) {
