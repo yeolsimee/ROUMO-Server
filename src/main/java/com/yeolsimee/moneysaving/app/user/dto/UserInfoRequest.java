@@ -40,6 +40,7 @@ public class UserInfoRequest {
                 .name(userInfoRequest.getName())
                 .role(Role.ROLE_USER)
                 .uid(userInfoRequest.getUid())
+                .withdrawYn("N")
                 .build();
     }
 

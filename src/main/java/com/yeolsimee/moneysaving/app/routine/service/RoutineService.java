@@ -20,6 +20,7 @@ import com.yeolsimee.moneysaving.app.user.service.UserService;
 import com.yeolsimee.moneysaving.util.RoutineUtils;
 import com.yeolsimee.moneysaving.util.TimeUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,6 +118,17 @@ public class RoutineService {
         Routine routine = routineRepository.findById(routineId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
         return routine;
     }
+
+    public void deleteRoutineByUser(){
+        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Routine> routineList = routineRepository.findByUserId(user.getId());
+        routineList.forEach(routine -> {
+            routine.changeRoutineDeleteYN("Y");
+            routine.deleteRoutineDay();
+        });
+        routineRepository.saveAll(routineList);
+    }
+
 
     private String findDayRoutineAchievement(Long userId, String routineDay, WeekType weekType, String routineCheckYN) {
         String routineAchievement = "NONE";

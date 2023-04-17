@@ -62,6 +62,9 @@ public class User extends BaseEntity implements UserDetails  {
     @Column
     private String uid;
 
+    @Column
+    private String withdrawYn;
+
     @OneToMany
     private List<Category> categoryList;
 
@@ -106,6 +109,10 @@ public class User extends BaseEntity implements UserDetails  {
 
     public boolean isNotInputUserInfo(){
         return StringUtils.hasLength(nickname) || StringUtils.hasLength(gender) || StringUtils.hasLength(birthday);
+    }
+
+    public void updateWithDraw(){
+        this.withdrawYn = "Y";
     }
 
 }

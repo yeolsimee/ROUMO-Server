@@ -59,6 +59,9 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
             String isNewUser = "Y";
             if(user == null || user.isNotInputUserInfo()) {
                 user = userService.signup(decodedToken);
+            }else if(Objects.equals(user.getWithdrawYn(), "Y")){
+                setUnauthorizedResponse(response, "탈퇴한 회원입니다.");
+                return;
             }else{
                 isNewUser = "N" ;
             }

@@ -1,6 +1,7 @@
 package com.yeolsimee.moneysaving.app.user.controller;
 
 import com.yeolsimee.moneysaving.app.common.response.service.*;
+import com.yeolsimee.moneysaving.app.routine.service.*;
 import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.*;
 import com.yeolsimee.moneysaving.app.user.service.*;
@@ -27,6 +28,7 @@ import javax.servlet.http.*;
 public class UserController {
 
     private final ResponseService responseService;
+    private final RoutineService routineService;
     private final UserService userService;
 
     @PostMapping("/login")
@@ -45,6 +47,13 @@ public class UserController {
     @PostMapping("/userInfo")
     public ResponseEntity<?> updateUserInfo(@RequestBody UserInfoRequest userInfoRequest){
         userService.updateUserInfo(userInfoRequest);
+        return ResponseEntity.ok(responseService.getSuccessResult());
+    }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<?> withdraw(){
+        userService.withdraw();
+        routineService.deleteRoutineByUser();
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
 

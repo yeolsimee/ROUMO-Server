@@ -3,6 +3,7 @@ package com.yeolsimee.moneysaving.app.user.service;
 import com.google.firebase.auth.*;
 import com.yeolsimee.moneysaving.app.common.exception.*;
 import com.yeolsimee.moneysaving.app.common.response.*;
+import com.yeolsimee.moneysaving.app.routine.service.*;
 import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import com.yeolsimee.moneysaving.app.user.repository.*;
@@ -10,6 +11,8 @@ import lombok.*;
 import org.springframework.security.core.context.*;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.*;
+
+import javax.transaction.*;
 
 /**
  * packageName    : com.yeolsimee.moneysaving.app.user.service
@@ -54,6 +57,13 @@ public class UserService implements UserDetailsService {
     public void updateUserInfo(UserInfoRequest userInfoRequest) {
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user = UserInfoRequest.updateUserInfo(userInfoRequest, user);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void withdraw() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        user.updateWithDraw();
         userRepository.save(user);
     }
 }
