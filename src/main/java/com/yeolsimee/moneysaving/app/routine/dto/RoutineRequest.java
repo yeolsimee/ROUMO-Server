@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class RoutineRequest {
     private String routineName;
 
-    private String categoryId;
+    private Long categoryId;
 
     private List<String> weekTypes;
     private String routineType;
@@ -20,7 +20,7 @@ public class RoutineRequest {
     private String alarmTime;
     private String routineTimeZone;
 
-    public RoutineRequest(String routineName, String categoryId, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
+    public RoutineRequest(String routineName, Long categoryId, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
         this.routineName = routineName;
         this.categoryId = categoryId;
         this.weekTypes = weekTypes;

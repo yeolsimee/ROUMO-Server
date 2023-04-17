@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class RoutineResponse {
     private Long routineId;
     private String routineName;
-    private String category;
+    private String categoryName;
     private List<String> weekTypes;
     private String routineType;
     private String alarmStatus;
@@ -26,7 +26,7 @@ public class RoutineResponse {
         return RoutineResponse.builder()
                 .routineId(routine.getId())
                 .routineName(routine.getRoutineName())
-                .category(routine.getCategory().getCategoryName())
+                .categoryName(routine.getCategory().getCategoryName())
                 .weekTypes(weekTypes)
                 .routineType(String.valueOf(routine.getRoutineType()))
                 .alarmStatus(String.valueOf(routine.getAlarmStatus()))

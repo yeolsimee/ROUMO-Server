@@ -43,7 +43,7 @@ public class RoutineService {
     @Transactional
     public RoutineResponse createRoutine(RoutineRequest routineRequest, Long userId) {
         User user = userService.getUserByUserId(userId);
-        Category category = categoryService.findCategoryById(Long.valueOf(routineRequest.getCategoryId()));
+        Category category = categoryService.findCategoryById(routineRequest.getCategoryId());
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, "99999999"));
         return RoutineResponse.from(routine);
@@ -62,7 +62,7 @@ public class RoutineService {
         }
 
         User user = userService.getUserByUserId(userId);
-        Category category = categoryService.findCategoryById(Long.valueOf(routineRequest.getCategoryId()));
+        Category category = categoryService.findCategoryById(routineRequest.getCategoryId());
         Routine newRoutine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, ""));
         return RoutineResponse.from(newRoutine);
     }

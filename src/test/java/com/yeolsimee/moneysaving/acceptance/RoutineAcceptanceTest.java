@@ -7,17 +7,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-import static com.yeolsimee.moneysaving.acceptance.CategorySteps.카테고리_생성_요청;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.yeolsimee.moneysaving.acceptance.CategorySteps.카테고리_생성_요청;
 import static com.yeolsimee.moneysaving.acceptance.RoutineSteps.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("루틴 관련 기능")
 public class RoutineAcceptanceTest extends AcceptanceTest{
