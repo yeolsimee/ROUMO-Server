@@ -12,6 +12,7 @@ import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.routine.entity.WeekType;
 import com.yeolsimee.moneysaving.app.routine.repository.RoutineRepository;
+import com.yeolsimee.moneysaving.app.routinehistory.dto.DayResponse;
 import com.yeolsimee.moneysaving.app.routinehistory.entity.RoutineCheckYN;
 import com.yeolsimee.moneysaving.app.routinehistory.repository.RoutineHistoryRepository;
 import com.yeolsimee.moneysaving.app.user.entity.User;
@@ -90,18 +91,26 @@ public class RoutineService {
 
         List<RoutineDaysData> routineDaysDatas = new ArrayList<>();
 
-        for (String day : dayList) {
-            WeekType week;
+        for (String routineDay : dayList) {
             try {
-                week = TimeUtils.convertDayToWeekType(day);
+                WeekType week = TimeUtils.convertDayToWeekType(routineDay);
+                String routineAchievement = findDayRoutineAchievement(userId, routineDay, week, "Y");
+                RoutineDaysData routineDaysData = RoutineDaysData.from(routineDay, routineAchievement);
+                routineDaysDatas.add(routineDaysData);
             } catch (ParseException e) {
                 throw new BaseException(ResponseMessage.NOT_PARSE_WEEKTYPE);
             }
-            String routineAchievement = findDayRoutineAchievement(userId, day, week, "Y");
-            RoutineDaysData routineDaysData = RoutineDaysData.from(day, routineAchievement);
-            routineDaysDatas.add(routineDaysData);
         }
         return RoutineDaysResponse.from(routineDaysDatas);
+    }
+
+    public DayResponse findRoutineDay(Long userId, String routineDay) {
+        try {
+            WeekType weekType = TimeUtils.convertDayToWeekType(routineDay);
+            return routineRepository.findRoutineDay(userId, routineDay, weekType);
+        } catch (ParseException e) {
+            throw new BaseException(ResponseMessage.NOT_PARSE_WEEKTYPE);
+        }
     }
 
     public Routine findRoutineByRoutineId(Long routineId) {
@@ -109,18 +118,18 @@ public class RoutineService {
         return routine;
     }
 
-    public Integer findDayRoutineNum(Long userId, String day, WeekType weekType) {
-        return routineRepository.findDayRoutineNum(userId, day, weekType);
-    }
-
-    public String findDayRoutineAchievement(Long userId, String day, WeekType weekType, String routineCheckYN) {
+    private String findDayRoutineAchievement(Long userId, String routineDay, WeekType weekType, String routineCheckYN) {
         String routineAchievement = "NONE";
-        double dayRoutineNum = findDayRoutineNum(userId, day, weekType);
-        double dayCheckedRoutineNum = routineHistoryRepository.findDayCheckedRoutineNum(userId, day, RoutineCheckYN.valueOf(routineCheckYN));
+        double dayRoutineNum = findDayRoutineNum(userId, routineDay, weekType);
+        double dayCheckedRoutineNum = routineHistoryRepository.findDayCheckedRoutineNum(userId, routineDay, RoutineCheckYN.valueOf(routineCheckYN));
         if (dayRoutineNum != 0) {
             double routineAchievementRate = dayCheckedRoutineNum / dayRoutineNum;
             routineAchievement = RoutineUtils.convertRoutineAchievementRateToRoutineAchievement(routineAchievementRate);
         }
         return routineAchievement;
+    }
+
+    private Integer findDayRoutineNum(Long userId, String routineDay, WeekType weekType) {
+        return routineRepository.findDayRoutineNum(userId, routineDay, weekType);
     }
 }
