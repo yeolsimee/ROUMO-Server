@@ -124,7 +124,6 @@ public class RoutineService {
         List<Routine> routineList = routineRepository.findByUserId(user.getId());
         routineList.forEach(routine -> {
             routine.changeRoutineDeleteYN("Y");
-            routine.deleteRoutineDay();
         });
         routineRepository.saveAll(routineList);
     }
