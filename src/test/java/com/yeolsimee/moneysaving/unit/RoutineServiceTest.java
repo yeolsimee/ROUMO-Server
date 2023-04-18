@@ -1,5 +1,7 @@
 package com.yeolsimee.moneysaving.unit;
 
+import com.yeolsimee.moneysaving.app.category.entity.Category;
+import com.yeolsimee.moneysaving.app.category.service.CategoryService;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
 import com.yeolsimee.moneysaving.app.routine.service.RoutineService;
@@ -19,21 +21,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RoutineServiceTest {
     private Long 사용자;
     private String 루틴_이름;
-    private String 루틴_카테고리;
+    private Long 루틴_카테고리_아이디;
     private List<String> 루틴_요일 = new ArrayList<>();
     private String 루틴_공개범위;
     private String 루틴_알람상태;
     private String 루틴_알람시간;
     private String 루틴_시간대;
+    private String 카테고리_이름;
     @Autowired
     RoutineService routineService;
-
+    @Autowired
+    CategoryService categoryService;
     @Test
     public void routineCreate() {
         //given
         사용자 = 1L;
         루틴_이름 = "코딩하기";
-        루틴_카테고리 = "컴퓨터";
+        루틴_카테고리_아이디 = 1L;
         루틴_요일.add("MONDAY");
         루틴_요일.add("WEDNESDAY");
         루틴_요일.add("SUNDAY");
@@ -41,8 +45,11 @@ public class RoutineServiceTest {
         루틴_알람상태 = "ON";
         루틴_알람시간 = "12";
         루틴_시간대 = "1";
+        카테고리_이름 = "컴퓨터 하기";
 
-        RoutineRequest routineRequest = new RoutineRequest(루틴_이름, 루틴_카테고리, 루틴_요일, 루틴_공개범위, 루틴_알람상태, 루틴_알람시간, 루틴_시간대);
+        categoryService.createCategory(카테고리_이름);
+
+        RoutineRequest routineRequest = new RoutineRequest(루틴_이름, 루틴_카테고리_아이디, 루틴_요일, 루틴_공개범위, 루틴_알람상태, 루틴_알람시간, 루틴_시간대);
 
         //when
         RoutineResponse routineResponse = routineService.createRoutine(routineRequest, 사용자);

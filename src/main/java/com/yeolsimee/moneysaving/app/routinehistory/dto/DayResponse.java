@@ -1,4 +1,4 @@
-package com.yeolsimee.moneysaving.app.routineday.dto;
+package com.yeolsimee.moneysaving.app.routinehistory.dto;
 
 import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
@@ -31,19 +31,18 @@ public class DayResponse {
 class CategoryData {
     private String categoryId;
     private String categoryName;
-    private String remainingRoutineNum;
     private List<RoutineData> routineDatas;
 
     public static CategoryData of(Category category, String routineDay) {
         List<RoutineData> routineDataList = new ArrayList<>();
-        List<Routine> routines = category.getRoutines();
-        for (Routine routine : routines) {
-            routineDataList.add(RoutineData.of(routine, routineDay));
-        }
+        //todo: 변경 해야 됨
+//        List<Routine> routines = category.getRoutines();
+//        for (Routine routine : routines) {
+//            routineDataList.add(RoutineData.of(routine, routineDay));
+//        }
         return CategoryData.builder()
                 .categoryId(String.valueOf(category.getId()))
                 .categoryName(category.getCategoryName())
-                .remainingRoutineNum(String.valueOf(category.remainingRoutineNum(routineDay)))
                 .routineDatas(routineDataList)
                 .build();
     }
@@ -51,7 +50,7 @@ class CategoryData {
 @Data
 @Builder
 class RoutineData{
-    private String routineDayId;
+    private String routineId;
     private String routineName;
     private String routineCheckYN;
     private String routineTimeZone;
@@ -59,9 +58,10 @@ class RoutineData{
     private String alarmTimeMinute;
     public static RoutineData of(Routine routine, String routineDay) {
         return RoutineData.builder()
-                .routineDayId(String.valueOf(routine.getRoutineDay(routineDay).getId()))
+                .routineId(String.valueOf(routine.getId()))
                 .routineName(routine.getRoutineName())
-                .routineCheckYN(String.valueOf(routine.getRoutineDay(routineDay).getRoutineCheckYn()))
+                //todo: 추후에 수정 필요
+//                .routineCheckYN(String.valueOf(routine.getRoutineDay(routineDay).getRoutineCheckYn()))
                 .routineTimeZone(String.valueOf(routine.getRoutineTimeZone()))
                 .alarmTimeHour(TimeUtils.convertAlarmTimeToHourMinute(routine.getAlarmTime()).get("timeHour"))
                 .alarmTimeMinute(TimeUtils.convertAlarmTimeToHourMinute(routine.getAlarmTime()).get("timeMinute"))

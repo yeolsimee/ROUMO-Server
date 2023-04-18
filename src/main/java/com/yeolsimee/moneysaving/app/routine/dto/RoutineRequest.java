@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class RoutineRequest {
     private String routineName;
 
-    private String categoryName;
+    private Long categoryId;
 
     private List<String> weekTypes;
     private String routineType;
@@ -20,9 +20,9 @@ public class RoutineRequest {
     private String alarmTime;
     private String routineTimeZone;
 
-    public RoutineRequest(String routineName, String categoryName, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
+    public RoutineRequest(String routineName, Long categoryId, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
         this.routineName = routineName;
-        this.categoryName = categoryName;
+        this.categoryId = categoryId;
         this.weekTypes = weekTypes;
         this.routineType = routineType;
         this.alarmStatus = alarmStatus;
@@ -30,7 +30,7 @@ public class RoutineRequest {
         this.routineTimeZone = routineTimeZone;
     }
 
-    public static Routine toEntity(RoutineRequest routineRequest, Category category, User user, String routineDeleteYN) {
+    public static Routine toEntity(RoutineRequest routineRequest, Category category, User user, String routineDeleteYN, String routineStartDate, String routineEndDate) {
         List<WeekType> weekTypes = routineRequest.getWeekTypes()
                 .stream().map(WeekType::valueOf)
                 .collect(Collectors.toList());
@@ -44,6 +44,8 @@ public class RoutineRequest {
                 .alarmTime(routineRequest.getAlarmTime())
                 .routineTimeZone(RoutineTimeZone.idOfRoutineTimeZone(routineRequest.getRoutineTimeZone()))
                 .routineDeleteYN(routineDeleteYN)
+                .routineStartDate(routineStartDate)
+                .routineEndDate(routineEndDate)
                 .build();
     }
 

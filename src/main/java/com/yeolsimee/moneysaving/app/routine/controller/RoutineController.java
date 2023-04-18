@@ -19,13 +19,19 @@ public class RoutineController {
     private final RoutineService routineService;
 
     @PostMapping("/routine")
-    public ResponseEntity<?> createRoutine(@RequestBody RoutineRequest routineRequest, @AuthenticationPrincipal User user){
+    public ResponseEntity<?> createRoutine(@AuthenticationPrincipal User user, @RequestBody RoutineRequest routineRequest) {
         RoutineResponse routineResponse = routineService.createRoutine(routineRequest, user.getId());
         return ResponseEntity.ok(responseService.getSingleResult(routineResponse));
     }
 
+    @GetMapping("/routine/{routineId}")
+    public ResponseEntity<?> getRoutine(@AuthenticationPrincipal User user, @PathVariable Long routineId){
+        RoutineResponse routineResponse = routineService.findRoutineByUserIdAndRoutineId(user.getId(), routineId);
+        return ResponseEntity.ok(responseService.getSingleResult(routineResponse));
+    }
+
     @PutMapping("/routine/{routineId}")
-    public ResponseEntity<?> updateRoutine(@RequestBody RoutineRequest routineRequest, @AuthenticationPrincipal User user, @PathVariable Long routineId){
+    public ResponseEntity<?> updateRoutine(@AuthenticationPrincipal User user, @PathVariable Long routineId, @RequestBody RoutineRequest routineRequest) {
         RoutineResponse routineResponse = routineService.updateRoutine(routineRequest, user.getId(), routineId);
         return ResponseEntity.ok(responseService.getSingleResult(routineResponse));
     }
@@ -34,5 +40,15 @@ public class RoutineController {
     public ResponseEntity<?> deleteRoutine(@AuthenticationPrincipal User user, @PathVariable Long routineId){
         routineService.deleteRoutine(user.getId(), routineId);
         return ResponseEntity.ok(responseService.getSuccessResult("루틴이 삭제되었습니다."));
+    }
+
+    @GetMapping("/routinedays")
+    public ResponseEntity<?> findAllMyRoutineDays(@AuthenticationPrincipal User user, @RequestParam String startDate, @RequestParam String endDate) {
+        return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDays(user.getId(), startDate, endDate)));
+    }
+
+    @GetMapping("/routineday/{routineday}")
+    public ResponseEntity<?> findMyRoutineDay(@AuthenticationPrincipal User user, @PathVariable String routineday) {
+        return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDay(user.getId(), routineday)));
     }
 }
