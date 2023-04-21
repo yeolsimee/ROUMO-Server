@@ -9,7 +9,7 @@ import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysData;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysResponse;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
-import com.yeolsimee.moneysaving.app.routine.dto.dayresponse.DayResponse;
+import com.yeolsimee.moneysaving.app.routine.dto.dayresponse.RoutineData;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.routine.entity.WeekType;
 import com.yeolsimee.moneysaving.app.routine.repository.RoutineRepository;
@@ -104,7 +104,7 @@ public class RoutineService {
         return RoutineDaysResponse.from(routineDaysDatas);
     }
 
-    public DayResponse findRoutineDay(Long userId, String routineDay) {
+    public List<RoutineData> findRoutineDay(Long userId, String routineDay) {
         try {
             WeekType weekType = TimeUtils.convertDayToWeekType(routineDay);
             return routineRepository.findRoutineDay(userId, routineDay, weekType);
