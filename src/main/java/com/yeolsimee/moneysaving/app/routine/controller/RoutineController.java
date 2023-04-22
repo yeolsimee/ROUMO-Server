@@ -47,8 +47,8 @@ public class RoutineController {
         return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDays(user.getId(), startDate, endDate)));
     }
 
-    @GetMapping("/routineday/{routineday}")
-    public ResponseEntity<?> findMyRoutineDay(@AuthenticationPrincipal User user, @PathVariable String routineday) {
-        return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDay(user.getId(), routineday)));
+    @GetMapping("/routineday")
+    public ResponseEntity<?> findMyRoutineDay(@AuthenticationPrincipal User user, @RequestParam String date, @RequestParam String checkedRoutineShow) {
+        return ResponseEntity.ok(responseService.getSingleResult(routineService.findRoutineDay(user.getId(), date, checkedRoutineShow)));
     }
 }

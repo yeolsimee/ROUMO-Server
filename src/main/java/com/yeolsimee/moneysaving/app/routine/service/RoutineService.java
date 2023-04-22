@@ -106,10 +106,10 @@ public class RoutineService {
         return RoutineDaysResponse.from(routineDaysDatas);
     }
 
-    public DayResponse findRoutineDay(Long userId, String routineDay) {
+    public DayResponse findRoutineDay(Long userId, String date, String checkedRoutineShow) {
         try {
-            WeekType weekType = TimeUtils.convertDayToWeekType(routineDay);
-            return routineRepository.findRoutineDay(userId, routineDay, weekType);
+            WeekType weekType = TimeUtils.convertDayToWeekType(date);
+            return routineRepository.findRoutineDay(userId, date, weekType, checkedRoutineShow);
         } catch (ParseException e) {
             throw new BaseException(ResponseMessage.NOT_PARSE_WEEKTYPE);
         }

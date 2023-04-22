@@ -24,7 +24,7 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public DayResponse findRoutineDay(Long userId, String routineDay, WeekType weekType) {
+    public DayResponse findRoutineDay(Long userId, String date, WeekType weekType, String checkedRoutineShow) {
 
         List<CategoryData> categoryData = queryFactory.select(new QCategoryData(
                         category.id,
@@ -32,25 +32,27 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                 ).from(category)
                 .leftJoin(routine).on(category.id.eq(routine.category.id))
                 .join(routine.user, user)
+                .leftJoin(routineHistory).on(routineHistory.routine.id.eq(routine.id))
                 .groupBy(category)
                 .where(
                         user.id.eq(userId),
-                        routine.routineStartDate.loe(routineDay),
-                        routine.routineEndDate.goe(routineDay),
+                        routine.routineStartDate.loe(date),
+                        routine.routineEndDate.goe(date),
+                        checkedRoutineShow.equals("N") ? routineHistory.routineCheckYn.isNull().or(routineHistory.routineCheckYn.eq(RoutineCheckYN.N)) : null,
                         Expressions.anyOf(routine.weekTypes.any().eq(weekType),
                                 routine.weekTypes.isEmpty())
                 )
                 .fetch();
 
         for (CategoryData categoryData1 : categoryData) {
-            categoryData1.setRoutineDatas(findRoutineDatas(categoryData1.getCategoryId(), routineDay, weekType));
+            categoryData1.setRoutineDatas(findRoutineDatas(categoryData1.getCategoryId(), date, weekType, checkedRoutineShow));
         }
 
-        return DayResponse.of(routineDay, categoryData);
+        return DayResponse.of(date, categoryData);
     }
 
     @Override
-    public List<RoutineData> findRoutineDatas(Long categoryId, String routineDay, WeekType weekType) {
+    public List<RoutineData> findRoutineDatas(Long categoryId, String date, WeekType weekType, String checkedRoutineShow) {
         Expression<String> routineCheckYnType = new CaseBuilder()
                 .when(routineHistory.routineCheckYn.eq(RoutineCheckYN.Y)).then("Y")
                 .otherwise(Expressions.asString("N"));
@@ -60,7 +62,7 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                 .from(routineHistory)
                 .where(
                         routineHistory.routine.eq(routine),
-                        routineHistory.routineDay.eq(routineDay)
+                        routineHistory.routineDay.eq(date)
                 );
 
         return queryFactory.select(new QRoutineData(
@@ -76,10 +78,12 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                 ))
                 .from(category)
                 .leftJoin(routine).on(category.id.eq(routine.category.id))
+                .leftJoin(routineHistory).on(routineHistory.routine.id.eq(routine.id))
                 .where(
                         category.id.eq(categoryId),
-                        routine.routineStartDate.loe(routineDay),
-                        routine.routineEndDate.goe(routineDay),
+                        routine.routineStartDate.loe(date),
+                        routine.routineEndDate.goe(date),
+                        checkedRoutineShow.equals("N") ? routineHistory.routineCheckYn.isNull().or(routineHistory.routineCheckYn.eq(RoutineCheckYN.N)) : null,
                         Expressions.anyOf(routine.weekTypes.any().eq(weekType),
                                 routine.weekTypes.isEmpty()))
                 .fetch();
