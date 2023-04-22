@@ -26,33 +26,6 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
     @Override
     public DayResponse findRoutineDay(Long userId, String routineDay, WeekType weekType) {
 
-        Expression<String> routineCheckYnType = new CaseBuilder()
-                .when(routineHistory.routineCheckYn.eq(RoutineCheckYN.Y)).then("Y")
-                .otherwise(Expressions.asString("N"));
-
-        JPQLQuery<String> routineCheckYN = JPAExpressions
-                .select(routineCheckYnType)
-                .from(routineHistory)
-                .where(
-                        routineHistory.routine.eq(routine),
-                        routineHistory.routineDay.eq(routineDay)
-                );
-
-        JPQLQuery<RoutineData> routineData = JPAExpressions
-                .select(new QRoutineData(
-                        routine.id,
-                        routine.routineName,
-                        Expressions.stringTemplate(
-                                "coalesce({0}, 'N')",
-                                routineCheckYN
-                        ),
-                        routine.routineTimeZone,
-                        routine.alarmTime.substring(0, 2),
-                        routine.alarmTime.substring(2, 4)
-                ))
-                .from(routine);
-
-
         List<CategoryData> categoryData = queryFactory.select(new QCategoryData(
                         category.id,
                         category.categoryName)
