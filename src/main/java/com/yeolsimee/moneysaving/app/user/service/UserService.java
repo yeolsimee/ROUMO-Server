@@ -7,9 +7,12 @@ import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import com.yeolsimee.moneysaving.app.user.repository.*;
 import lombok.*;
+import org.apache.commons.lang3.*;
 import org.springframework.security.core.context.*;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.*;
+
+import java.util.*;
 
 /**
  * packageName    : com.yeolsimee.moneysaving.app.user.service
@@ -37,7 +40,7 @@ public class UserService implements UserDetailsService {
 
         User user = UserInfoRequest.toEntity(UserInfoRequest.builder()
                 .username(firebaseToken.getEmail())
-                .name(firebaseToken.getName())
+                .name(Optional.ofNullable(firebaseToken.getName()).orElseGet(() -> RandomStringUtils.random(10, true, false)))
                 .uid(firebaseToken.getUid())
                 .build());
         return userRepository.save(user);
