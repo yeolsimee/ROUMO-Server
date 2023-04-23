@@ -22,7 +22,7 @@ public class CategoryController {
 
     @PostMapping("/category/insert")
     public ResponseEntity<?> insert(@RequestBody CategoryRequest categoryRequest){
-        return ResponseEntity.ok(categoryService.insert(categoryRequest));
+        return ResponseEntity.ok(responseService.getSingleResult(categoryService.insert(categoryRequest)));
     }
 
     @PostMapping("/category/update")
