@@ -9,6 +9,8 @@ import java.util.List;
 public class CategoryData {
     private Long categoryId;
     private String categoryName;
+
+    private Double routineCheckedRate;
     private List<RoutineData> routineDatas;
 
     @QueryProjection

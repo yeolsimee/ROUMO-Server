@@ -40,12 +40,12 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                         routine.routineEndDate.goe(date),
                         checkedRoutineShow.equals("N") ? routineHistory.routineCheckYn.isNull().or(routineHistory.routineCheckYn.eq(RoutineCheckYN.N)) : null,
                         Expressions.anyOf(routine.weekTypes.any().eq(weekType),
-                                routine.weekTypes.isEmpty())
-                )
+                                routine.weekTypes.isEmpty()))
                 .fetch();
 
-        for (CategoryData categoryData1 : categoryData) {
-            categoryData1.setRoutineDatas(findRoutineDatas(categoryData1.getCategoryId(), date, weekType, checkedRoutineShow));
+        for (CategoryData category : categoryData) {
+            category.setRoutineDatas(findRoutineDatas(category.getCategoryId(), date, weekType, checkedRoutineShow));
+            category.setRoutineCheckedRate(findRoutineCheckedRate(category.getCategoryId(), date, weekType));
         }
 
         return DayResponse.of(date, categoryData);
@@ -87,5 +87,48 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                         Expressions.anyOf(routine.weekTypes.any().eq(weekType),
                                 routine.weekTypes.isEmpty()))
                 .fetch();
+    }
+
+    public Double findRoutineCheckedRate(Long categoryId, String date, WeekType weekType) {
+
+        Long totalCount = queryFactory
+                .select(routine.count())
+                .from(category)
+                .leftJoin(routine).on(category.id.eq(routine.category.id))
+                .leftJoin(routineHistory).on(routineHistory.routine.id.eq(routine.id))
+                .groupBy(category)
+                .where(
+                        category.id.eq(categoryId),
+                        routine.routineStartDate.loe(date),
+                        routine.routineEndDate.goe(date),
+                        Expressions.anyOf(routine.weekTypes.any().eq(weekType),
+                                routine.weekTypes.isEmpty())
+                ).fetchOne();
+
+        Long checkedCount = queryFactory
+                .select(
+                        routineHistory.count()
+                )
+                .from(category)
+                .leftJoin(routine).on(category.id.eq(routine.category.id))
+                .leftJoin(routineHistory).on(routineHistory.routine.id.eq(routine.id))
+                .groupBy(category)
+                .where(
+                        category.id.eq(categoryId),
+                        routine.routineStartDate.loe(date),
+                        routine.routineEndDate.goe(date),
+                        Expressions.anyOf(routine.weekTypes.any().eq(weekType),
+                                routine.weekTypes.isEmpty()),
+                        routineHistory.routineCheckYn.eq(RoutineCheckYN.Y),
+                        routineHistory.routineDay.eq(date)
+                ).fetchOne();
+
+        if (checkedCount == null) {
+            checkedCount = 0L;
+        }
+
+        Double routineCheckedRate = ((double)checkedCount / (double) totalCount) * 100.0;
+
+        return routineCheckedRate;
     }
 }
