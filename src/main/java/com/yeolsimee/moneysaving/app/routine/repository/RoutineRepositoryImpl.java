@@ -11,6 +11,8 @@ import com.yeolsimee.moneysaving.app.routine.entity.WeekType;
 import com.yeolsimee.moneysaving.app.routinehistory.entity.RoutineCheckYN;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.yeolsimee.moneysaving.app.category.entity.QCategory.category;
@@ -47,6 +49,14 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
             category.setRoutineDatas(findRoutineDatas(category.getCategoryId(), date, weekType, checkedRoutineShow));
             category.setRoutineCheckedRate(findRoutineCheckedRate(category.getCategoryId(), date, weekType));
         }
+
+        Collections.sort(categoryData, Comparator.comparingDouble(dto -> {
+            if (dto.getRoutineCheckedRate() == 100) {
+                return Double.MAX_VALUE;
+            } else {
+                return dto.getRoutineCheckedRate();
+            }
+        }));
 
         return DayResponse.of(date, categoryData);
     }
