@@ -9,10 +9,12 @@ import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysData;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysResponse;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
+import com.yeolsimee.moneysaving.app.routine.dto.dayresponse.CategoryData;
+import com.yeolsimee.moneysaving.app.routine.dto.dayresponse.DayResponse;
+import com.yeolsimee.moneysaving.app.routine.dto.dayresponse.RoutineData;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.routine.entity.WeekType;
 import com.yeolsimee.moneysaving.app.routine.repository.RoutineRepository;
-import com.yeolsimee.moneysaving.app.routinehistory.dto.DayResponse;
 import com.yeolsimee.moneysaving.app.routinehistory.entity.RoutineCheckYN;
 import com.yeolsimee.moneysaving.app.routinehistory.repository.RoutineHistoryRepository;
 import com.yeolsimee.moneysaving.app.user.entity.User;
@@ -104,10 +106,10 @@ public class RoutineService {
         return RoutineDaysResponse.from(routineDaysDatas);
     }
 
-    public DayResponse findRoutineDay(Long userId, String routineDay) {
+    public DayResponse findRoutineDay(Long userId, String date, String checkedRoutineShow) {
         try {
-            WeekType weekType = TimeUtils.convertDayToWeekType(routineDay);
-            return routineRepository.findRoutineDay(userId, routineDay, weekType);
+            WeekType weekType = TimeUtils.convertDayToWeekType(date);
+            return routineRepository.findRoutineDay(userId, date, weekType, checkedRoutineShow);
         } catch (ParseException e) {
             throw new BaseException(ResponseMessage.NOT_PARSE_WEEKTYPE);
         }
