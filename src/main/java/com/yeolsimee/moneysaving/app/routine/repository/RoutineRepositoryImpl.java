@@ -84,7 +84,8 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                         ),
                         routine.routineTimeZone,
                         routine.alarmTime.substring(0, 2),
-                        routine.alarmTime.substring(2, 4)
+                        routine.alarmTime.substring(2, 4),
+                        routine.alarmStatus.stringValue()
                 ))
                 .from(category)
                 .leftJoin(routine).on(category.id.eq(routine.category.id))
