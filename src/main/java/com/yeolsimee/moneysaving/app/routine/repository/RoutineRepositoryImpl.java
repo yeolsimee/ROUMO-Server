@@ -47,20 +47,13 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
 
         for (CategoryData category : categoryData) {
             List<RoutineData> routineDatas = findRoutineDatas(category.getCategoryId(), date, weekType, checkedRoutineShow);
-            //루틴 시간대로 정렬
+
             routineDatas.sort(Comparator.comparing(RoutineData::getRoutineTimeZone));
+            routineDatas.sort(Comparator.comparing(RoutineData::getRoutineCheckYN));
+
             category.setRoutineDatas(routineDatas);
             category.setRoutineCheckedRate(findRoutineCheckedRate(category.getCategoryId(), date, weekType));
         }
-        
-        //해당 카테고리의 루틴 체크가 100프로면 마지막으로 정렬
-        Collections.sort(categoryData, Comparator.comparingDouble(dto -> {
-            if (dto.getRoutineCheckedRate() == 100) {
-                return Double.MAX_VALUE;
-            } else {
-                return dto.getRoutineCheckedRate();
-            }
-        }));
 
         return DayResponse.of(date, categoryData);
     }
