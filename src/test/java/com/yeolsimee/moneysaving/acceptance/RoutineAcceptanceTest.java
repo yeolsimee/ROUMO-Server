@@ -31,6 +31,7 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
     public static final String END_DATE = "20231016";
     public static final String ROUTINE_TIME_ZONE = "1";
     public static final String PICKDAY = "20231224";
+    public static final String CHECKED_ROUTINE_SHOW  = "Y";
 
     @BeforeEach
     public void setUp() {
@@ -103,7 +104,7 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         // when
         루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY_ID, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
 
-        ExtractableResponse<Response> response = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY);
+        ExtractableResponse<Response> response = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY, CHECKED_ROUTINE_SHOW);
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
@@ -119,7 +120,7 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         // when
         루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY_ID, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
 
-        ExtractableResponse<Response> responseRoutineInformation = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY);
+        ExtractableResponse<Response> responseRoutineInformation = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY, CHECKED_ROUTINE_SHOW);
         String routineDayId = responseRoutineInformation.jsonPath().getString("data.categoryDatas.routineDatas.routineDayId").replace("[", "").replace("]", "");
 
         // then
