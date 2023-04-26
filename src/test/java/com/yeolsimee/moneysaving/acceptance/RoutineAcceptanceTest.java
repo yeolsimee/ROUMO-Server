@@ -129,8 +129,10 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getString("data.routineCheckYN")).isEqualTo("Y"),
-                () -> assertThat(response.jsonPath().getString("data.routineDay")).contains(routineDay)
+                () -> assertThat(response.jsonPath().getString("data.routineDay")).isEqualTo(PICKDAY),
+                () -> assertThat(response.jsonPath().getString("data.categoryDatas.categoryId")).contains(ROUTINE_CATEGORY_ID),
+                () -> assertThat(response.jsonPath().getString("data.categoryDatas.routineDatas.routineName")).contains(ROUTINE_NAME),
+        () -> assertThat(response.jsonPath().getString("data.categoryDatas.routineDatas.routineCheckYN").replace("[", "").replace("]", "")).isEqualTo("Y")
         );
     }
 

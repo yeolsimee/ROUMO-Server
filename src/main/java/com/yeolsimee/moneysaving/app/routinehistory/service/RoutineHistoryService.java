@@ -1,9 +1,9 @@
 package com.yeolsimee.moneysaving.app.routinehistory.service;
 
+import com.yeolsimee.moneysaving.app.routine.dto.dayresponse.DayResponse;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.routine.service.RoutineService;
 import com.yeolsimee.moneysaving.app.routinehistory.dto.RoutineCheckRequest;
-import com.yeolsimee.moneysaving.app.routinehistory.dto.RoutineHistoryResponse;
 import com.yeolsimee.moneysaving.app.routinehistory.entity.RoutineCheckYN;
 import com.yeolsimee.moneysaving.app.routinehistory.entity.RoutineHistory;
 import com.yeolsimee.moneysaving.app.routinehistory.repository.RoutineHistoryRepository;
@@ -24,7 +24,7 @@ public class RoutineHistoryService {
     private final RoutineService routineService;
 
     @Transactional
-    public RoutineHistoryResponse changeOrCreateRoutineCheck(Long userId, RoutineCheckRequest routineCheckRequest) {
+    public DayResponse changeOrCreateRoutineCheck(Long userId, RoutineCheckRequest routineCheckRequest) {
         RoutineHistory routineHistory = null;
         User user = userService.getUserByUserId(userId);
         Routine routine = routineService.findRoutineByRoutineId(routineCheckRequest.getRoutineId());
@@ -37,7 +37,7 @@ public class RoutineHistoryService {
             routineHistory = RoutineCheckRequest.toEntity(routineCheckRequest, user, routine);
             routineHistoryRepository.save(routineHistory);
         }
-
-        return RoutineHistoryResponse.from(routineHistory);
+        DayResponse routineDay = routineService.findRoutineDay(userId, routineHistory.getRoutineDay(), "Y");
+        return routineDay;
     }
 }
