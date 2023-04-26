@@ -70,16 +70,18 @@ public class RoutineSteps {
                 .then().log().all().extract();
     }
 
-    public static ExtractableResponse<Response> 루틴_체크_하기(String uid, String routineDayId, String routineCheckYN) {
+    public static ExtractableResponse<Response> 루틴_체크_하기(String uid, String routineDay, String routineCheckYN, String routineId) {
         Map<String, Object> params = new HashMap<>();
         params.put("routineCheckYN", routineCheckYN);
+        params.put("routineDay", routineDay);
+        params.put("routineId", routineId);
 
         return RestAssured
                 .given().log().all()
                 .header("uid", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(params)
-                .when().put("/api/v1/routinecheck/{routineDayId}", routineDayId)
+                .when().post("/api/v1/routinecheck")
                 .then().log().all().extract();
     }
 }
