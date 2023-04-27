@@ -31,6 +31,7 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
     public static final String END_DATE = "20231016";
     public static final String ROUTINE_TIME_ZONE = "1";
     public static final String PICKDAY = "20231224";
+    public static final String CHECKED_ROUTINE_SHOW  = "Y";
 
     @BeforeEach
     public void setUp() {
@@ -103,7 +104,7 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         // when
         루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY_ID, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
 
-        ExtractableResponse<Response> response = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY);
+        ExtractableResponse<Response> response = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY, CHECKED_ROUTINE_SHOW);
         // then
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
@@ -119,16 +120,19 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         // when
         루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY_ID, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
 
-        ExtractableResponse<Response> responseRoutineInformation = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY);
-        String routineDayId = responseRoutineInformation.jsonPath().getString("data.categoryDatas.routineDatas.routineDayId").replace("[", "").replace("]", "");
+        ExtractableResponse<Response> responseRoutineInformation = 특정날짜의_나의_루틴_정보_조회_요청(UID, PICKDAY, CHECKED_ROUTINE_SHOW);
+        String routineDay = responseRoutineInformation.jsonPath().getString("data.routineDay");
+        String routineId = responseRoutineInformation.jsonPath().getString("data.categoryDatas.routineDatas.routineId").replace("[", "").replace("]", "");
 
         // then
-        ExtractableResponse<Response> response = 루틴_체크_하기(UID, routineDayId, "Y");
+        ExtractableResponse<Response> response = 루틴_체크_하기(UID, routineDay, "Y", routineId);
 
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getString("data.routineCheckYN")).isEqualTo("Y"),
-                () -> assertThat(response.jsonPath().getString("data.routineDayId")).contains(routineDayId)
+                () -> assertThat(response.jsonPath().getString("data.routineDay")).isEqualTo(PICKDAY),
+                () -> assertThat(response.jsonPath().getString("data.categoryDatas.categoryId")).contains(ROUTINE_CATEGORY_ID),
+                () -> assertThat(response.jsonPath().getString("data.categoryDatas.routineDatas.routineName")).contains(ROUTINE_NAME),
+        () -> assertThat(response.jsonPath().getString("data.categoryDatas.routineDatas.routineCheckYN").replace("[", "").replace("]", "")).isEqualTo("Y")
         );
     }
 

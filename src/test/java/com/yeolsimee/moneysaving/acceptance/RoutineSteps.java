@@ -60,26 +60,28 @@ public class RoutineSteps {
                 .then().log().all().extract();
     }
 
-    public static ExtractableResponse<Response> 특정날짜의_나의_루틴_정보_조회_요청(String uid, String pickday) {
+    public static ExtractableResponse<Response> 특정날짜의_나의_루틴_정보_조회_요청(String uid, String date, String checkedRoutineShow ) {
 
         return RestAssured
                 .given().log().all()
                 .header("uid", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/v1/routineday/{pickday}", pickday)
+                .when().get("/api/v1/routineday?date={date}&checkedRoutineShow={checkedRoutineShow}", date, checkedRoutineShow)
                 .then().log().all().extract();
     }
 
-    public static ExtractableResponse<Response> 루틴_체크_하기(String uid, String routineDayId, String routineCheckYN) {
+    public static ExtractableResponse<Response> 루틴_체크_하기(String uid, String routineDay, String routineCheckYN, String routineId) {
         Map<String, Object> params = new HashMap<>();
         params.put("routineCheckYN", routineCheckYN);
+        params.put("routineDay", routineDay);
+        params.put("routineId", routineId);
 
         return RestAssured
                 .given().log().all()
                 .header("uid", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(params)
-                .when().put("/api/v1/routinecheck/{routineDayId}", routineDayId)
+                .when().post("/api/v1/routinecheck")
                 .then().log().all().extract();
     }
 }
