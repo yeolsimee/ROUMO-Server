@@ -13,6 +13,7 @@ public class RoutineResponse {
     private Long routineId;
     private String routineName;
     private String categoryName;
+    private Long categoryId;
     private List<String> weekTypes;
     private String routineType;
     private String alarmStatus;
@@ -26,6 +27,7 @@ public class RoutineResponse {
         return RoutineResponse.builder()
                 .routineId(routine.getId())
                 .routineName(routine.getRoutineName())
+                .categoryId(routine.getCategory().getId())
                 .categoryName(routine.getCategory().getCategoryName())
                 .weekTypes(weekTypes)
                 .routineType(String.valueOf(routine.getRoutineType()))

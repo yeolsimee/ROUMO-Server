@@ -11,9 +11,7 @@ import java.util.stream.Collectors;
 @Data
 public class RoutineRequest {
     private String routineName;
-
     private Long categoryId;
-
     private List<String> weekTypes;
     private String routineType;
     private String alarmStatus;
