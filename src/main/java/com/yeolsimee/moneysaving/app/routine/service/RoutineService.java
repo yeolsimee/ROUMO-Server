@@ -47,7 +47,11 @@ public class RoutineService {
         User user = userService.getUserByUserId(userId);
         Category category = categoryService.findCategoryById(routineRequest.getCategoryId());
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, "99999999"));
+        String routineEndDate = "99999999";
+        if (routineRequest.getWeekTypes().isEmpty()) {
+            routineEndDate = today;
+        }
+        Routine routine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, routineEndDate));
         return RoutineResponse.from(routine);
     }
 
