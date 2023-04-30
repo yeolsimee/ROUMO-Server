@@ -22,12 +22,16 @@ public class Category extends BaseEntity {
 
     @ManyToOne(targetEntity = User.class)
     private User user;
-
+    private String categoryDeleteYN;
     public Category(String categoryName) {
         this.categoryName = categoryName;
     }
 
     public static Category of(String categoryName) {
         return new Category(categoryName);
+    }
+
+    public void changeCategoryDeleteYN(String categoryDeleteYN) {
+        this.categoryDeleteYN = categoryDeleteYN;
     }
 }

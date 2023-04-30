@@ -3,8 +3,10 @@ package com.yeolsimee.moneysaving.app.category.controller;
 import com.yeolsimee.moneysaving.app.category.dto.*;
 import com.yeolsimee.moneysaving.app.category.service.*;
 import com.yeolsimee.moneysaving.app.common.response.service.*;
+import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.*;
 import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,9 +33,9 @@ public class CategoryController {
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
 
-    @PostMapping("/category/delete")
-    public ResponseEntity<?> delete(@RequestBody CategoryRequest categoryRequest){
-        categoryService.delete(categoryRequest);
+    @PostMapping("/category/delete/{categoryId}")
+    public ResponseEntity<?> delete(@PathVariable Long categoryId, @AuthenticationPrincipal User user){
+        categoryService.deleteCategory(categoryId, user.getId());
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
 
