@@ -119,9 +119,8 @@ public class RoutineService {
         }
     }
 
-    public Routine findRoutineByRoutineId(Long routineId) {
-        Routine routine = routineRepository.findById(routineId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
-        return routine;
+    public Routine findRoutineByRoutineIdAndUserId(Long routineId, Long userId) {
+        return routineRepository.findByIdAndUserId(routineId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
     }
 
     private String findDayRoutineAchievement(Long userId, String routineDay, WeekType weekType, String routineCheckYN) {
