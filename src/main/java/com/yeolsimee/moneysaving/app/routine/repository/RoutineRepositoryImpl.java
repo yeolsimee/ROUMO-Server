@@ -69,7 +69,8 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                 .from(routineHistory)
                 .where(
                         routineHistory.routine.eq(routine),
-                        routineHistory.routineDay.eq(date)
+                        routineHistory.routineDay.eq(date),
+                        checkedRoutineShow.equals("N") ? routineHistory.routineCheckYn.isNull().or(routineHistory.routineCheckYn.eq(RoutineCheckYN.N)) : null
                 );
 
         return queryFactory.select(new QRoutineData(
@@ -86,12 +87,10 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                 ))
                 .from(category)
                 .leftJoin(routine).on(category.id.eq(routine.category.id))
-                .leftJoin(routineHistory).on(routineHistory.routine.id.eq(routine.id))
                 .where(
                         category.id.eq(categoryId),
                         routine.routineStartDate.loe(date),
                         routine.routineEndDate.goe(date),
-                        checkedRoutineShow.equals("N") ? routineHistory.routineCheckYn.isNull().or(routineHistory.routineCheckYn.eq(RoutineCheckYN.N)) : null,
                         Expressions.anyOf(routine.weekTypes.any().eq(weekType),
                                 routine.weekTypes.isEmpty()))
                 .fetch();
@@ -103,7 +102,6 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                 .select(routine.count())
                 .from(category)
                 .leftJoin(routine).on(category.id.eq(routine.category.id))
-                .leftJoin(routineHistory).on(routineHistory.routine.id.eq(routine.id))
                 .groupBy(category)
                 .where(
                         category.id.eq(categoryId),
