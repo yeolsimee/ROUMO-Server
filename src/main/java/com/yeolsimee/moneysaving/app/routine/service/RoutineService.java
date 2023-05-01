@@ -62,7 +62,11 @@ public class RoutineService {
 
         User user = userService.getUserByUserId(userId);
         Category category = categoryRepository.findByIdAndUserId(routineRequest.getCategoryId(), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
-        Routine newRoutine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, ""));
+        String routineEndDate = "99999999";
+        if (routineRequest.getWeekTypes().isEmpty()) {
+            routineEndDate = today;
+        }
+        Routine newRoutine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, routineEndDate));
         return RoutineResponse.from(newRoutine);
     }
 
