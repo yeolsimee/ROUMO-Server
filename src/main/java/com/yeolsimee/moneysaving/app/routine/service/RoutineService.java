@@ -72,6 +72,7 @@ public class RoutineService {
 
     public void deleteRoutineOrChangeEndDate(Routine routine, String today) {
         if (routine.getRoutineStartDate().equals(today)) {
+            routineHistoryRepository.deleteByRoutineId(routine.getId());
             routineRepository.delete(routine);
         } else {
             String yesterday = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
