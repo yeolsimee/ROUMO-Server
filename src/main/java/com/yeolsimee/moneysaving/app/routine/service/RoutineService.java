@@ -1,7 +1,7 @@
 package com.yeolsimee.moneysaving.app.routine.service;
 
 import com.yeolsimee.moneysaving.app.category.entity.Category;
-import com.yeolsimee.moneysaving.app.category.service.CategoryService;
+import com.yeolsimee.moneysaving.app.category.repository.CategoryRepository;
 import com.yeolsimee.moneysaving.app.common.exception.BaseException;
 import com.yeolsimee.moneysaving.app.common.exception.EntityNotFoundException;
 import com.yeolsimee.moneysaving.app.common.response.ResponseMessage;
@@ -9,9 +9,7 @@ import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysData;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineDaysResponse;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
-import com.yeolsimee.moneysaving.app.routine.dto.dayresponse.CategoryData;
 import com.yeolsimee.moneysaving.app.routine.dto.dayresponse.DayResponse;
-import com.yeolsimee.moneysaving.app.routine.dto.dayresponse.RoutineData;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.routine.entity.WeekType;
 import com.yeolsimee.moneysaving.app.routine.repository.RoutineRepository;
@@ -38,14 +36,14 @@ public class RoutineService {
 
     private final RoutineRepository routineRepository;
     private final RoutineHistoryRepository routineHistoryRepository;
-    private final CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
     private final UserService userService;
 
 
     @Transactional
     public RoutineResponse createRoutine(RoutineRequest routineRequest, Long userId) {
         User user = userService.getUserByUserId(userId);
-        Category category = categoryService.findCategoryById(routineRequest.getCategoryId());
+        Category category = categoryRepository.findByIdAndUserId(routineRequest.getCategoryId(), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String routineEndDate = "99999999";
         if (routineRequest.getWeekTypes().isEmpty()) {
@@ -59,32 +57,30 @@ public class RoutineService {
     public RoutineResponse updateRoutine(RoutineRequest routineRequest, Long userId, Long routineId) {
         Routine routine = routineRepository.findById(routineId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String yesterday = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
+        deleteRoutineOrChangeEndDate(routine, today);
+
+        User user = userService.getUserByUserId(userId);
+        Category category = categoryRepository.findByIdAndUserId(routineRequest.getCategoryId(), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        Routine newRoutine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, ""));
+        return RoutineResponse.from(newRoutine);
+    }
+
+    public void deleteRoutineOrChangeEndDate(Routine routine, String today) {
         if (routine.getRoutineStartDate().equals(today)) {
             routineRepository.delete(routine);
         } else {
+            String yesterday = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
             routine.changeEndDate(yesterday);
+            routine.changeRoutineDeleteYN("Y");
         }
-
-        User user = userService.getUserByUserId(userId);
-        Category category = categoryService.findCategoryById(routineRequest.getCategoryId());
-        Routine newRoutine = routineRepository.save(RoutineRequest.toEntity(routineRequest, category, user, "N", today, ""));
-        return RoutineResponse.from(newRoutine);
     }
 
     @Transactional
     public void deleteRoutine(Long userId, Long routineId) {
         Routine routine = routineRepository.findByIdAndUserId(routineId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String yesterday = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-
-        if (routine.getRoutineStartDate().equals(today)) {
-            routineRepository.delete(routine);
-        } else {
-            routine.changeEndDate(yesterday);
-            routine.changeRoutineDeleteYN("Y");
-        }
+        deleteRoutineOrChangeEndDate(routine, today);
     }
 
     public RoutineResponse findRoutineByUserIdAndRoutineId(Long userId, Long routineId) {
@@ -119,7 +115,7 @@ public class RoutineService {
         }
     }
 
-    public Routine findRoutineByRoutineIdAndUserId(Long routineId, Long userId) {
+    public Routine findRoutineByRoutineIdAndUserId(Long routineId,Long userId) {
         return routineRepository.findByIdAndUserId(routineId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
     }
 
@@ -136,5 +132,9 @@ public class RoutineService {
 
     private Integer findDayRoutineNum(Long userId, String routineDay, WeekType weekType) {
         return routineRepository.findDayRoutineNum(userId, routineDay, weekType);
+    }
+
+    public List<Routine> findRoutineByCategoryId(Long categoryId) {
+        return routineRepository.findByRoutineByCategoryId(categoryId);
     }
 }
