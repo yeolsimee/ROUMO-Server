@@ -11,7 +11,6 @@ import com.yeolsimee.moneysaving.app.routine.entity.WeekType;
 import com.yeolsimee.moneysaving.app.routinehistory.entity.RoutineCheckYN;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
