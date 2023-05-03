@@ -7,14 +7,14 @@ import java.util.stream.Stream;
 public enum RoutineTimeZone {
     ALL_DAY("1"),
     ANY_TIME("2"),
-    MORNING("3"),
-    AFTERNOON("4"),
-    EVENING("5"),
-    NIGHT("6"),
-    BEFORE_BED_TIME("7"),
-    AFTER_BED_TIME("8"),
-    AM("9"),
-    PM("10");
+    AFTER_BED_TIME("3"),
+    MORNING("4"),
+    AM("5"),
+    AFTERNOON("6"),
+    PM("7"),
+    EVENING("8"),
+    NIGHT("9"),
+    BEFORE_BED_TIME("10");
     private String routineTimeZoneId;
 
     RoutineTimeZone(String routineTimeZoneId) {
