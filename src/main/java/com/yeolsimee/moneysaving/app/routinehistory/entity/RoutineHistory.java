@@ -21,7 +21,7 @@ public class RoutineHistory extends BaseEntity {
     private String routineDay;
     @Enumerated(EnumType.STRING)
     private RoutineCheckYN routineCheckYn;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "routine_id")
     private Routine routine;
 
