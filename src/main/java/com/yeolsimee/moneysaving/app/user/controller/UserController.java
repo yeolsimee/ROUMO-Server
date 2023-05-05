@@ -49,6 +49,7 @@ public class UserController {
 
     @PostMapping("/isnewuser/update")
     public ResponseEntity<?> updateIsNewUser(@AuthenticationPrincipal User user, @RequestBody UserInfoRequest userInfoRequest) {
-        return ResponseEntity.ok(userService.updateIsNewUser(user, userInfoRequest));
+        UserInfoResponse userInfoResponse = userService.updateIsNewUser(user, userInfoRequest);
+        return ResponseEntity.ok(responseService.getSingleResult(userInfoResponse));
     }
 }
