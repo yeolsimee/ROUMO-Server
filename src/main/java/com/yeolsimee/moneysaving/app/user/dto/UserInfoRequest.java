@@ -33,6 +33,8 @@ public class UserInfoRequest {
 
     private String uid;
 
+    private String isNewUser;
+
     public static User toEntity(UserInfoRequest userInfoRequest) {
 
         return User.builder()
@@ -40,6 +42,7 @@ public class UserInfoRequest {
                 .name(userInfoRequest.getName())
                 .role(Role.ROLE_USER)
                 .uid(userInfoRequest.getUid())
+                .isNewUser(userInfoRequest.getIsNewUser())
                 .build();
     }
 
