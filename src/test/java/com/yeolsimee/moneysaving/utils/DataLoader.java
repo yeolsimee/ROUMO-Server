@@ -17,11 +17,11 @@ public class DataLoader {
     }
 
     public void loadData() {
-        userRepository.save(new User("김아무개1", "아무개1", "kim1@gmail.com", Role.ROLE_USER,"uid1"));
-        userRepository.save(new User("김아무개2", "아무개2", "kim2@gmail.com", Role.ROLE_USER,"uid2"));
-        userRepository.save(new User("김아무개3", "아무개3", "kim3@gmail.com", Role.ROLE_USER,"uid3"));
-        userRepository.save(new User("김아무개4", "아무개4", "kim4@gmail.com", Role.ROLE_USER,"uid4"));
-        userRepository.save(new User("김아무개5", "아무개5", "kim5@gmail.com", Role.ROLE_USER,"uid5"));
-        userRepository.save(new User("김아무개6", "아무개6", "kim6@gmail.com", Role.ROLE_USER,"uid6"));
+        userRepository.save(new User("김아무개1", "아무개1", Role.ROLE_USER,"uid1"));
+        userRepository.save(new User("김아무개2", "아무개2", Role.ROLE_USER,"uid2"));
+        userRepository.save(new User("김아무개3", "아무개3", Role.ROLE_USER,"uid3"));
+        userRepository.save(new User("김아무개4", "아무개4", Role.ROLE_USER,"uid4"));
+        userRepository.save(new User("김아무개5", "아무개5", Role.ROLE_USER,"uid5"));
+        userRepository.save(new User("김아무개6", "아무개6", Role.ROLE_USER,"uid6"));
     }
 }
