@@ -55,6 +55,9 @@ public class User extends BaseEntity implements UserDetails  {
     @Column
     private String phoneNumber;
 
+    @Column
+    private String isNewUser;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -65,7 +68,7 @@ public class User extends BaseEntity implements UserDetails  {
     @OneToMany
     private List<Category> categoryList;
 
-    public User(String name, String username, String email, Role role, String uid) {
+    public User(String name, String username, Role role, String uid) {
         this.name = name;
         this.username = username;
         this.role = role;
@@ -108,4 +111,7 @@ public class User extends BaseEntity implements UserDetails  {
         return StringUtils.hasLength(nickname) || StringUtils.hasLength(gender) || StringUtils.hasLength(birthday);
     }
 
+    public void changeIsNewUser(String isNewUser) {
+        this.isNewUser = isNewUser;
+    }
 }

@@ -56,13 +56,11 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         // User를 가져와 SecurityContext에 저장한다.
         try{
             User user = userService.getUserByUid(decodedToken.getUid());
-            String isNewUser = "Y";
+
             if(user == null || user.isNotInputUserInfo()) {
                 user = userService.signup(decodedToken);
-            }else{
-                isNewUser = "N" ;
             }
-            request.setAttribute("loginInfo", LoginDto.builder().name(user.getName()).isNewUser(isNewUser).build());
+
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

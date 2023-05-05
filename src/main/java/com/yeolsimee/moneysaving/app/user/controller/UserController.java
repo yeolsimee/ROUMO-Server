@@ -6,6 +6,7 @@ import com.yeolsimee.moneysaving.app.user.entity.*;
 import com.yeolsimee.moneysaving.app.user.service.*;
 import lombok.*;
 import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.*;
@@ -30,10 +31,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(HttpServletRequest request){
-        LoginDto loginDto = (LoginDto)request.getAttribute("loginInfo");
-        return ResponseEntity.ok(
-                responseService.getSingleResult(loginDto));
+    public ResponseEntity<?> login(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(responseService.getSingleResult(UserInfoResponse.of(user)));
     }
 
     @GetMapping("/userInfo")
@@ -48,4 +47,8 @@ public class UserController {
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
 
+    @PostMapping("/isnewuser/update")
+    public ResponseEntity<?> updateIsNewUser(@AuthenticationPrincipal User user, @RequestBody UserInfoRequest userInfoRequest) {
+        return ResponseEntity.ok(userService.updateIsNewUser(user, userInfoRequest));
+    }
 }

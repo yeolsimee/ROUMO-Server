@@ -42,6 +42,7 @@ public class UserService implements UserDetailsService {
                 .username(firebaseToken.getEmail())
                 .name(Optional.ofNullable(firebaseToken.getName()).orElseGet(() -> RandomStringUtils.random(10, true, false)))
                 .uid(firebaseToken.getUid())
+                .isNewUser("Y")
                 .build());
         return userRepository.save(user);
     }
@@ -58,5 +59,10 @@ public class UserService implements UserDetailsService {
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         user = UserInfoRequest.updateUserInfo(userInfoRequest, user);
         userRepository.save(user);
+    }
+
+    public UserInfoResponse updateIsNewUser(User user, UserInfoRequest userInfoRequest) {
+        user.changeIsNewUser(userInfoRequest.getIsNewUser());
+        return UserInfoResponse.of(user);
     }
 }
