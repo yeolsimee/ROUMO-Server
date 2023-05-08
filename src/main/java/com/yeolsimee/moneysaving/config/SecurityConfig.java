@@ -1,7 +1,6 @@
 package com.yeolsimee.moneysaving.config;
 
-import com.google.firebase.auth.*;
-import com.yeolsimee.moneysaving.app.user.service.*;
+import com.yeolsimee.moneysaving.config.jwt.*;
 import com.yeolsimee.moneysaving.filter.*;
 import lombok.*;
 import org.springframework.context.annotation.*;
@@ -16,14 +15,14 @@ import org.springframework.security.crypto.password.*;
 import org.springframework.security.web.*;
 import org.springframework.security.web.authentication.*;
 import org.springframework.web.cors.*;
+import org.springframework.web.filter.*;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserService userDetailsService;
-    private final FirebaseAuth firebaseAuth;
+    private final JwtTokenProvider tokenProvider;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -49,13 +48,14 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests((authorize) ->
                     authorize.antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+                            .antMatchers(HttpMethod.POST, "/api/v1/login/**").permitAll()
                             .antMatchers(HttpMethod.POST, "/api/v1/signin").permitAll()
                             .antMatchers(HttpMethod.POST, "/api/v1/routine").permitAll()
                             .antMatchers(HttpMethod.GET, "/healthcheck").permitAll()
                             .antMatchers(HttpMethod.PUT, "/api/v1/routinecheck/*").permitAll()
                             .anyRequest().authenticated()
             );
-        http.addFilterBefore(new FirebaseTokenFilter(userDetailsService, firebaseAuth), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean

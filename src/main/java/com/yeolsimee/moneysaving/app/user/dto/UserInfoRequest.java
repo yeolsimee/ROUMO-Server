@@ -38,10 +38,9 @@ public class UserInfoRequest {
     public static User toEntity(UserInfoRequest userInfoRequest) {
 
         return User.builder()
-                .username(userInfoRequest.getUsername())
+                .username(userInfoRequest.getUid())
                 .name(userInfoRequest.getName())
                 .role(Role.ROLE_USER)
-                .uid(userInfoRequest.getUid())
                 .isNewUser(userInfoRequest.getIsNewUser())
                 .build();
     }
@@ -57,7 +56,6 @@ public class UserInfoRequest {
                 .birthday(userInfoRequest.getBirthday())
                 .phoneNumber(userInfoRequest.getPhoneNumber())
                 .role(Role.ROLE_USER)
-                .uid(userInfoRequest.getUid())
                 .build();
 
 

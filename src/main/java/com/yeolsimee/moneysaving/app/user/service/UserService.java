@@ -4,6 +4,7 @@ import com.google.firebase.auth.*;
 import com.yeolsimee.moneysaving.app.common.exception.*;
 import com.yeolsimee.moneysaving.app.common.response.*;
 import com.yeolsimee.moneysaving.app.user.dto.*;
+import com.yeolsimee.moneysaving.app.user.entity.*;
 import com.yeolsimee.moneysaving.app.user.entity.User;
 import com.yeolsimee.moneysaving.app.user.repository.*;
 import lombok.*;
@@ -30,6 +31,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
+    private final FirebaseAuth firebaseAuth;
     private final UserRepository userRepository;
 
     @Override
@@ -37,19 +39,22 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElse(null);
     }
 
-    public User signup(FirebaseToken firebaseToken) {
+    public User signUp(String uid) throws FirebaseAuthException {
 
-        User user = UserInfoRequest.toEntity(UserInfoRequest.builder()
-                .username(firebaseToken.getEmail())
-                .name(Optional.ofNullable(firebaseToken.getName()).orElseGet(() -> RandomStringUtils.random(10, true, false)))
-                .uid(firebaseToken.getUid())
+        UserRecord userRecord = firebaseAuth.getUser(uid);
+
+        User user = User.builder()
+                .username(userRecord.getUid())
+                .name(Optional.ofNullable(userRecord.getDisplayName()).orElseGet(() -> RandomStringUtils.random(10, true, false)))
                 .isNewUser("Y")
-                .build());
+                .role(Role.ROLE_USER)
+                .build();
+
         return userRepository.save(user);
     }
 
     public User getUserByUid(String uid){
-        return userRepository.findByUid(uid).orElse(null);
+        return userRepository.findByUsername(uid).orElse(null);
     }
 
     public User getUserByUserId(Long userId) {

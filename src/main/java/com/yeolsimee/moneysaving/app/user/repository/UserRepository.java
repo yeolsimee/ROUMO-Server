@@ -17,7 +17,5 @@ import java.util.*;
  * 2023/03/01        jeon-eunseong       최초 생성
  */
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsername(String username);
-
-    Optional<User> findByUid(String uid);
+    Optional<User> findByUsername(String uid);
 }
