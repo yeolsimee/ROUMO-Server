@@ -11,6 +11,7 @@ import org.apache.commons.lang3.*;
 import org.springframework.security.core.context.*;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -61,8 +62,10 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    @Transactional
     public UserInfoResponse updateIsNewUser(User user, UserInfoRequest userInfoRequest) {
         user.changeIsNewUser(userInfoRequest.getIsNewUser());
+        userRepository.save(user);
         return UserInfoResponse.of(user);
     }
 }
