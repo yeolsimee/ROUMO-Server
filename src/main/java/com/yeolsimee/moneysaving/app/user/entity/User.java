@@ -37,7 +37,7 @@ public class User extends BaseEntity implements UserDetails  {
     @Column(name = "user_id")
     private long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
     @Column(nullable = false)
@@ -62,17 +62,13 @@ public class User extends BaseEntity implements UserDetails  {
     @Column(nullable = false)
     private Role role;
 
-    @Column
-    private String uid;
-
     @OneToMany
     private List<Category> categoryList;
 
-    public User(String name, String username, Role role, String uid) {
+    public User(String name, String username, Role role) {
         this.name = name;
         this.username = username;
         this.role = role;
-        this.uid = uid;
     }
 
     @Override
