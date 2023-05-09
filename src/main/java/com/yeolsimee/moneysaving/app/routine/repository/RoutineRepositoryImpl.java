@@ -25,7 +25,7 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public DayResponse findRoutineDay(Long userId, String date, WeekType weekType, String checkedRoutineShow) {
+    public DayResponse findRoutineDay(String userName, String date, WeekType weekType, String checkedRoutineShow) {
 
         List<CategoryData> categoryData = queryFactory.select(new QCategoryData(
                         category.id,
@@ -36,7 +36,7 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                 .leftJoin(routineHistory).on(routineHistory.routine.id.eq(routine.id))
                 .groupBy(category)
                 .where(
-                        user.id.eq(userId),
+                        user.username.eq(userName),
                         routine.routineStartDate.loe(date),
                         routine.routineEndDate.goe(date),
                         checkedRoutineShow.equals("N") ? routineHistory.routineCheckYn.isNull().or(routineHistory.routineCheckYn.eq(RoutineCheckYN.N)) : null,

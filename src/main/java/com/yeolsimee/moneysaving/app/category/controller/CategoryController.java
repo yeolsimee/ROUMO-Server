@@ -3,10 +3,10 @@ package com.yeolsimee.moneysaving.app.category.controller;
 import com.yeolsimee.moneysaving.app.category.dto.*;
 import com.yeolsimee.moneysaving.app.category.service.*;
 import com.yeolsimee.moneysaving.app.common.response.service.*;
-import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.*;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,24 +18,24 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/category")
-    public ResponseEntity<?> list(){
-        return ResponseEntity.ok(responseService.getListResult(categoryService.list()));
+    public ResponseEntity<?> list(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(responseService.getListResult(categoryService.list(user.getUsername())));
     }
 
     @PostMapping("/category/insert")
-    public ResponseEntity<?> insert(@RequestBody CategoryRequest categoryRequest){
-        return ResponseEntity.ok(responseService.getSingleResult(categoryService.insert(categoryRequest)));
+    public ResponseEntity<?> insert(@AuthenticationPrincipal User user, @RequestBody CategoryRequest categoryRequest){
+        return ResponseEntity.ok(responseService.getSingleResult(categoryService.insert(categoryRequest, user.getUsername())));
     }
 
     @PostMapping("/category/update")
-    public ResponseEntity<?> update(@RequestBody CategoryRequest categoryRequest){
-        categoryService.update(categoryRequest);
+    public ResponseEntity<?> update(@AuthenticationPrincipal User user, @RequestBody CategoryRequest categoryRequest){
+        categoryService.update(categoryRequest, user.getUsername());
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
 
     @PostMapping("/category/delete/{categoryId}")
     public ResponseEntity<?> delete(@PathVariable Long categoryId, @AuthenticationPrincipal User user){
-        categoryService.deleteCategory(categoryId, user.getId());
+        categoryService.deleteCategory(categoryId, user.getUsername());
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
 

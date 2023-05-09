@@ -88,8 +88,8 @@ public class UserController {
     }
 
     @PostMapping("/isnewuser/update")
-    public ResponseEntity<?> updateIsNewUser(@AuthenticationPrincipal User user, @RequestBody UserInfoRequest userInfoRequest) {
-        UserInfoResponse userInfoResponse = userService.updateIsNewUser(user, userInfoRequest);
+    public ResponseEntity<?> updateIsNewUser(@AuthenticationPrincipal org.springframework.security.core.userdetails.User user, @RequestBody UserInfoRequest userInfoRequest) {
+        UserInfoResponse userInfoResponse = userService.updateIsNewUser(user.getUsername(), userInfoRequest);
         return ResponseEntity.ok(responseService.getSingleResult(userInfoResponse));
     }
 }

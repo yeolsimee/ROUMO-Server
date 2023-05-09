@@ -68,9 +68,9 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public UserInfoResponse updateIsNewUser(User user, UserInfoRequest userInfoRequest) {
+    public UserInfoResponse updateIsNewUser(String userName, UserInfoRequest userInfoRequest) {
+        User user = userRepository.findByUsername(userName).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.AUTH_USER));;
         user.changeIsNewUser(userInfoRequest.getIsNewUser());
-        userRepository.save(user);
         return UserInfoResponse.of(user);
     }
 }

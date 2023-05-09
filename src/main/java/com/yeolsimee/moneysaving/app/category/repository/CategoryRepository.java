@@ -12,7 +12,7 @@ import java.util.*;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findByUser_Id(@NonNull long userId);
-    @Query("select c from Category c where c.id = :categoryId and c.user.id = :userId")
-    Optional<Category> findByIdAndUserId(long categoryId, long userId);
+    @Query("select c from Category c where c.id = :categoryId and c.user.username = :userName")
+    Optional<Category> findByIdAndUserName(long categoryId, String userName);
 
 }

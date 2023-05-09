@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 public class RoutineServiceTest {
-    private Long 사용자;
+    private String 사용자_UID;
     private String 루틴_이름;
     private Long 루틴_카테고리_아이디;
     private List<String> 루틴_요일 = new ArrayList<>();
@@ -35,7 +35,7 @@ public class RoutineServiceTest {
     @Test
     public void routineCreate() {
         //given
-        사용자 = 1L;
+        사용자_UID = "TEST";
         루틴_이름 = "코딩하기";
         루틴_카테고리_아이디 = 1L;
         루틴_요일.add("MONDAY");
@@ -52,7 +52,7 @@ public class RoutineServiceTest {
         RoutineRequest routineRequest = new RoutineRequest(루틴_이름, 루틴_카테고리_아이디, 루틴_요일, 루틴_공개범위, 루틴_알람상태, 루틴_알람시간, 루틴_시간대);
 
         //when
-        RoutineResponse routineResponse = routineService.createRoutine(routineRequest, 사용자);
+        RoutineResponse routineResponse = routineService.createRoutine(routineRequest, 사용자_UID);
 
         //then
         assertThat(routineResponse).isNotNull();

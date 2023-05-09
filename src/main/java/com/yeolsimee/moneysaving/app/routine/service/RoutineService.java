@@ -43,9 +43,9 @@ public class RoutineService {
 
 
     @Transactional
-    public RoutineResponse createRoutine(RoutineRequest routineRequest, Long userId) {
-        User user = userService.getUserByUserId(userId);
-        Category category = categoryRepository.findByIdAndUserId(routineRequest.getCategoryId(), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+    public RoutineResponse createRoutine(RoutineRequest routineRequest, String userName) {
+        User user = userService.getUserByUid(userName);
+        Category category = categoryRepository.findByIdAndUserName(routineRequest.getCategoryId(), userName).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String routineEndDate = "99999999";
         if (routineRequest.getWeekTypes().isEmpty()) {
@@ -56,20 +56,20 @@ public class RoutineService {
     }
 
     @Transactional
-    public RoutineResponse updateRoutine(RoutineRequest routineRequest, Long userId, Long routineId) {
+    public RoutineResponse updateRoutine(RoutineRequest routineRequest, String userName, Long routineId) {
         Routine routine = routineRepository.findById(routineId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         RoutineCheckYN routineCheckYn = RoutineCheckYN.N;
 
-        Optional<RoutineHistory> routineHistoryOptional = routineHistoryRepository.findRoutineHistory(userId, routineId, today);
+        Optional<RoutineHistory> routineHistoryOptional = routineHistoryRepository.findRoutineHistory(userName, routineId, today);
         if (routineHistoryOptional.isPresent()) {
             routineCheckYn = routineHistoryOptional.get().getRoutineCheckYn();
         }
 
         deleteRoutineOrChangeEndDate(routine, today);
 
-        User user = userService.getUserByUserId(userId);
-        Category category = categoryRepository.findByIdAndUserId(routineRequest.getCategoryId(), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        User user = userService.getUserByUid(userName);
+        Category category = categoryRepository.findByIdAndUserName(routineRequest.getCategoryId(), userName).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
         String routineEndDate = "99999999";
 
         if (routineRequest.getWeekTypes().isEmpty()) {
@@ -102,18 +102,18 @@ public class RoutineService {
     }
 
     @Transactional
-    public void deleteRoutine(Long userId, Long routineId) {
-        Routine routine = routineRepository.findByIdAndUserId(routineId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
+    public void deleteRoutine(String userName, Long routineId) {
+        Routine routine = routineRepository.findByIdAndUserName(routineId, userName).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         deleteRoutineOrChangeEndDate(routine, today);
     }
 
-    public RoutineResponse findRoutineByUserIdAndRoutineId(Long userId, Long routineId) {
-        Routine routine = routineRepository.findByIdAndUserId(routineId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
+    public RoutineResponse findRoutineByUserNameAndRoutineId(String userName, Long routineId) {
+        Routine routine = routineRepository.findByIdAndUserName(routineId, userName).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
         return RoutineResponse.from(routine);
     }
 
-    public RoutineDaysResponse findRoutineDays(Long userId, String startDate, String endDate) {
+    public RoutineDaysResponse findRoutineDays(String userName, String startDate, String endDate) {
         List<String> dayList = TimeUtils.makeDateList(startDate, endDate);
 
         List<RoutineDaysData> routineDaysDatas = new ArrayList<>();
@@ -121,7 +121,7 @@ public class RoutineService {
         for (String routineDay : dayList) {
             try {
                 WeekType week = TimeUtils.convertDayToWeekType(routineDay);
-                String routineAchievement = findDayRoutineAchievement(userId, routineDay, week, "Y");
+                String routineAchievement = findDayRoutineAchievement(userName, routineDay, week, "Y");
                 RoutineDaysData routineDaysData = RoutineDaysData.from(routineDay, routineAchievement);
                 routineDaysDatas.add(routineDaysData);
             } catch (ParseException e) {
@@ -131,23 +131,23 @@ public class RoutineService {
         return RoutineDaysResponse.from(routineDaysDatas);
     }
 
-    public DayResponse findRoutineDay(Long userId, String date, String checkedRoutineShow) {
+    public DayResponse findRoutineDay(String userName, String date, String checkedRoutineShow) {
         try {
             WeekType weekType = TimeUtils.convertDayToWeekType(date);
-            return routineRepository.findRoutineDay(userId, date, weekType, checkedRoutineShow);
+            return routineRepository.findRoutineDay(userName, date, weekType, checkedRoutineShow);
         } catch (ParseException e) {
             throw new BaseException(ResponseMessage.NOT_PARSE_WEEKTYPE);
         }
     }
 
-    public Routine findRoutineByRoutineIdAndUserId(Long routineId, Long userId) {
-        return routineRepository.findByIdAndUserId(routineId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
+    public Routine findRoutineByRoutineIdAndUserName(Long routineId, String userName) {
+        return routineRepository.findByIdAndUserName(routineId, userName).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_ROUTINE));
     }
 
-    private String findDayRoutineAchievement(Long userId, String routineDay, WeekType weekType, String routineCheckYN) {
+    private String findDayRoutineAchievement(String userName, String routineDay, WeekType weekType, String routineCheckYN) {
         String routineAchievement = "NONE";
-        double dayRoutineNum = findDayRoutineNum(userId, routineDay, weekType);
-        double dayCheckedRoutineNum = routineHistoryRepository.findDayCheckedRoutineNum(userId, routineDay, RoutineCheckYN.valueOf(routineCheckYN));
+        double dayRoutineNum = findDayRoutineNum(userName, routineDay, weekType);
+        double dayCheckedRoutineNum = routineHistoryRepository.findDayCheckedRoutineNum(userName, routineDay, RoutineCheckYN.valueOf(routineCheckYN));
         if (dayRoutineNum != 0) {
             double routineAchievementRate = dayCheckedRoutineNum / dayRoutineNum;
             routineAchievement = RoutineUtils.convertRoutineAchievementRateToRoutineAchievement(routineAchievementRate);
@@ -155,8 +155,8 @@ public class RoutineService {
         return routineAchievement;
     }
 
-    private Integer findDayRoutineNum(Long userId, String routineDay, WeekType weekType) {
-        return routineRepository.findDayRoutineNum(userId, routineDay, weekType);
+    private Integer findDayRoutineNum(String userName, String routineDay, WeekType weekType) {
+        return routineRepository.findDayRoutineNum(userName, routineDay, weekType);
     }
 
     public List<Routine> findRoutineByCategoryId(Long categoryId) {

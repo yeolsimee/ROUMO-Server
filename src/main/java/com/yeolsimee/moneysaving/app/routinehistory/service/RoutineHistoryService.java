@@ -24,11 +24,11 @@ public class RoutineHistoryService {
     private final RoutineService routineService;
 
     @Transactional
-    public DayResponse changeOrCreateRoutineCheck(Long userId, RoutineCheckRequest routineCheckRequest) {
+    public DayResponse changeOrCreateRoutineCheck(String userName, RoutineCheckRequest routineCheckRequest) {
         RoutineHistory routineHistory = null;
-        User user = userService.getUserByUserId(userId);
-        Routine routine = routineService.findRoutineByRoutineIdAndUserId(routineCheckRequest.getRoutineId(), userId);
-        Optional<RoutineHistory> findedRoutineHistory = routineHistoryRepository.findRoutineHistory(userId, routineCheckRequest.getRoutineId(), routineCheckRequest.getRoutineDay());
+        User user = userService.getUserByUid(userName);
+        Routine routine = routineService.findRoutineByRoutineIdAndUserName(routineCheckRequest.getRoutineId(), userName);
+        Optional<RoutineHistory> findedRoutineHistory = routineHistoryRepository.findRoutineHistory(userName, routineCheckRequest.getRoutineId(), routineCheckRequest.getRoutineDay());
 
         if (findedRoutineHistory.isPresent()) {
             findedRoutineHistory.get().changeRoutineCheckYn(RoutineCheckYN.valueOf(routineCheckRequest.getRoutineCheckYN()));
@@ -37,7 +37,7 @@ public class RoutineHistoryService {
             routineHistory = RoutineCheckRequest.toEntity(routineCheckRequest, user, routine);
             routineHistoryRepository.save(routineHistory);
         }
-        DayResponse routineDay = routineService.findRoutineDay(userId, routineHistory.getRoutineDay(), "Y");
+        DayResponse routineDay = routineService.findRoutineDay(userName, routineHistory.getRoutineDay(), "Y");
         return routineDay;
     }
 }
