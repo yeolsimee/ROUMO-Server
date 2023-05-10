@@ -2,6 +2,7 @@ package com.yeolsimee.moneysaving.app.common.response;
 
 import com.yeolsimee.moneysaving.app.common.exception.BaseException;
 import com.yeolsimee.moneysaving.app.common.response.service.ResponseService;
+import io.jsonwebtoken.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
@@ -50,6 +51,14 @@ public class CommonControllerAdvice {
                 .forEach(c -> errors.put(((FieldError) c).getField(), c.getDefaultMessage()));
         errors.put("message", "요청 필드의 유효성 검사를 실패하였습니다.");
         return responseService.getFailResult(400, errors.toString());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(value = ExpiredJwtException.class)
+    public CommonResult ExpiredJwtException(ExpiredJwtException e) {
+        log.error(e.getMessage());
+        return responseService.getFailResult(401, ResponseMessage.EXPIRED_JWT_TOKEN.getMessage());
+
     }
 
     /**

@@ -37,6 +37,9 @@ public enum ResponseMessage {
 
     // Util 에러코드
     NOT_PARSE_WEEKTYPE("요일값으로 parsing이 안됩니다."),
+
+    //JWT 에러코드
+    EXPIRED_JWT_TOKEN("")
     ;
 
     final String message;
