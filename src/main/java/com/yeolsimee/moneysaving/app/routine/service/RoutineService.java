@@ -162,4 +162,10 @@ public class RoutineService {
     public List<Routine> findRoutineByCategoryId(Long categoryId) {
         return routineRepository.findByRoutineByCategoryId(categoryId);
     }
+
+    public List<RoutineResponse> findRoutinesByUserId(Long userId) {
+        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        List<Routine> routines = routineRepository.findByUserId(userId, today);
+        return RoutineResponse.fromRoutines(routines);
+    }
 }
