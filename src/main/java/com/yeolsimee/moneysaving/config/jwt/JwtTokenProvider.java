@@ -1,5 +1,8 @@
 package com.yeolsimee.moneysaving.config.jwt;
 
+import com.yeolsimee.moneysaving.app.user.entity.User;
+import com.yeolsimee.moneysaving.app.user.repository.*;
+import com.yeolsimee.moneysaving.app.user.service.*;
 import io.jsonwebtoken.security.SecurityException;
 import lombok.*;
 import com.google.auth.oauth2.*;
@@ -25,6 +28,8 @@ import java.util.stream.*;
 @RequiredArgsConstructor
 public class JwtTokenProvider implements InitializingBean {
 
+    private final UserService userService;
+
     @Value("${app.firebase-configuration-file}")
     private String firebaseSdkPath;
 
@@ -46,7 +51,7 @@ public class JwtTokenProvider implements InitializingBean {
 
     }
 
-    public String createToken(com.yeolsimee.moneysaving.app.user.entity.User user){
+    public String createToken(User user){
 
         String authorities = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -85,35 +90,14 @@ public class JwtTokenProvider implements InitializingBean {
                 .parseClaimsJws(accessToken)
                 .getBody();
 
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toSet());
+        User user = userService.getUserByUid(claims.getSubject().toString());
 
-        User principal = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, accessToken, authorities);
+        return new UsernamePasswordAuthenticationToken(user, accessToken, user.getAuthorities());
     }
 
-    public boolean validateToken(String token) throws IllegalArgumentException {
-
-        try{
+    public boolean validateToken(String token){
             Jwts.parserBuilder().setSigningKey(privateKey).build().parseClaimsJws(token);
             return true;
-        }catch (SecurityException | MalformedJwtException e1){
-            e1.printStackTrace();
-            log.error("잘못된 Jwt 서명입니다.");
-        }catch (ExpiredJwtException e2){
-            e2.printStackTrace();
-            log.error("만료된 Jwt 서명입니다.");
-        }catch (UnsupportedJwtException e3){
-            e3.printStackTrace();
-            log.error("지원되지 않는 Jwt 토큰입니다.");
-        }catch (IllegalArgumentException e4){
-            e4.printStackTrace();
-            log.error("JWT 토큰이 잘못되었습니다.");
-        }
-        return false;
     }
 
 }
