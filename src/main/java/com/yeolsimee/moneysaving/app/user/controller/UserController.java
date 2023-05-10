@@ -93,20 +93,17 @@ public class UserController {
             log.error("JWT 토큰이 잘못되었습니다.");
             throw new IllegalArgumentException("JWT 토큰이 잘못되었습니다.");
         }
-
         return ResponseEntity.ok(responseService.getSingleResult(result));
-
     }
 
-    @GetMapping("/userInfo")
-    public ResponseEntity<?> userInfo(HttpServletRequest request){
-        User user = userService.getUserByUid(request.getHeader(X_AUTH));
-        return ResponseEntity.ok(responseService.getSingleResult(user));
+    @GetMapping("/user")
+    public ResponseEntity<?> getUser(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(responseService.getSingleResult(UserInfoResponse.of(user)));
     }
 
-    @PostMapping("/userInfo")
-    public ResponseEntity<?> updateUserInfo(@RequestBody UserInfoRequest userInfoRequest){
-        userService.updateUserInfo(userInfoRequest);
+    @PostMapping("/user")
+    public ResponseEntity<?> updateUser(@AuthenticationPrincipal User user, @RequestBody UserInfoRequest userInfoRequest){
+        userService.updateUserInfo(userInfoRequest, user);
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
 
