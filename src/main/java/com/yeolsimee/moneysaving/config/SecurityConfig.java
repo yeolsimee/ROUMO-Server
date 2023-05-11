@@ -1,6 +1,7 @@
 package com.yeolsimee.moneysaving.config;
 
-import com.yeolsimee.moneysaving.config.jwt.*;
+import com.google.firebase.auth.*;
+import com.yeolsimee.moneysaving.app.user.service.*;
 import com.yeolsimee.moneysaving.filter.*;
 import lombok.*;
 import org.springframework.context.annotation.*;
@@ -15,14 +16,14 @@ import org.springframework.security.crypto.password.*;
 import org.springframework.security.web.*;
 import org.springframework.security.web.authentication.*;
 import org.springframework.web.cors.*;
-import org.springframework.web.filter.*;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtTokenProvider tokenProvider;
+    private final FirebaseAuth firebaseAuth;
+    private final UserService userService;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -55,7 +56,7 @@ public class SecurityConfig {
                             .antMatchers(HttpMethod.PUT, "/api/v1/routinecheck/*").permitAll()
                             .anyRequest().authenticated()
             );
-        http.addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtFilter(firebaseAuth, userService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean
