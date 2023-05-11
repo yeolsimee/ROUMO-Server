@@ -61,8 +61,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.AUTH_USER));
     }
 
-    public void updateUserInfo(UserInfoRequest userInfoRequest) {
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public void updateUserInfo(UserInfoRequest userInfoRequest, User user) {
         user = UserInfoRequest.updateUserInfo(userInfoRequest, user);
         userRepository.save(user);
     }
