@@ -7,6 +7,8 @@ import lombok.Data;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @Data
 @Builder
 public class RoutineResponse {
@@ -35,6 +37,11 @@ public class RoutineResponse {
                 .alarmTime(routine.getAlarmTime())
                 .routineTimeZone(routine.getRoutineTimeZone().routineTimeZoneId())
                 .build();
+    }
+
+    public static List<RoutineResponse> fromRoutines(List<Routine> routines) {
+        return routines.stream().map(RoutineResponse::from)
+                .collect(toList());
     }
 
 }

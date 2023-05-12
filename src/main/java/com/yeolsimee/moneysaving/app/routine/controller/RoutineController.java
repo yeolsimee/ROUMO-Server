@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -28,6 +30,12 @@ public class RoutineController {
     public ResponseEntity<?> getRoutine(@AuthenticationPrincipal User user, @PathVariable Long routineId){
         RoutineResponse routineResponse = routineService.findRoutineByUserIdAndRoutineId(user.getId(), routineId);
         return ResponseEntity.ok(responseService.getSingleResult(routineResponse));
+    }
+
+    @GetMapping("/routine")
+    public ResponseEntity<?> getRoutines(@AuthenticationPrincipal User user){
+        List<RoutineResponse> routineResponses = routineService.findRoutinesByUserId(user.getId());
+        return ResponseEntity.ok(responseService.getListResult(routineResponses));
     }
 
     @PutMapping("/routine/{routineId}")
