@@ -9,6 +9,8 @@ public class CategoryRequest {
 
     private long userId;
 
+    private Long categoryId;
+
     private String categoryName;
 
     public static Category toEntity(CategoryRequest categoryRequest, User user) {
