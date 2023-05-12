@@ -39,8 +39,10 @@ public enum ResponseMessage {
     NOT_PARSE_WEEKTYPE("요일값으로 parsing이 안됩니다."),
 
     //JWT 에러코드
-    EXPIRED_JWT_TOKEN("")
-    ;
+    EMPTY_JWT_TOKEN("토큰이 없습니다."),
+    EXPIRED_JWT_TOKEN("만료된 토큰입니다."),
+    INVALID_ID_TOKEN("유효하지 않은 토큰입니다.")
 
+    ;
     final String message;
 }

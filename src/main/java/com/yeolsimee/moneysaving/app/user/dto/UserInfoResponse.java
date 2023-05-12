@@ -21,8 +21,6 @@ public class UserInfoResponse {
 
     private String isNewUser;
 
-    private String token;
-
     public static UserInfoResponse of(User user) {
         return UserInfoResponse.builder()
                 .name(user.getName())
@@ -31,12 +29,4 @@ public class UserInfoResponse {
                 .build();
     }
 
-    public static UserInfoResponse of(User user, String token) {
-        return UserInfoResponse.builder()
-                .name(user.getName())
-                .username(user.getUsername())
-                .isNewUser(user.getIsNewUser())
-                .token(token)
-                .build();
-    }
 }

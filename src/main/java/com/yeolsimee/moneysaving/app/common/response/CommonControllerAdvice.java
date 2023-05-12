@@ -1,8 +1,8 @@
 package com.yeolsimee.moneysaving.app.common.response;
 
+import com.google.firebase.auth.*;
 import com.yeolsimee.moneysaving.app.common.exception.BaseException;
 import com.yeolsimee.moneysaving.app.common.response.service.ResponseService;
-import io.jsonwebtoken.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestControllerAdvice
@@ -54,10 +53,18 @@ public class CommonControllerAdvice {
     }
 
     @ResponseBody
-    @ExceptionHandler(value = ExpiredJwtException.class)
-    public CommonResult ExpiredJwtException(ExpiredJwtException e) {
+    @ExceptionHandler(value = FirebaseAuthException.class)
+    public CommonResult FirebaseAuthException(FirebaseAuthException e) {
         log.error(e.getMessage());
-        return responseService.getFailResult(401, ResponseMessage.EXPIRED_JWT_TOKEN.getMessage());
+        String errorMsg = e.getMessage();
+        if(Objects.equals(e.getAuthErrorCode(), AuthErrorCode.EXPIRED_ID_TOKEN)){
+            errorMsg = ResponseMessage.EXPIRED_JWT_TOKEN.getMessage();
+        }
+        if(Objects.equals(e.getAuthErrorCode(), AuthErrorCode.INVALID_ID_TOKEN)){
+            errorMsg = ResponseMessage.INVALID_ID_TOKEN.getMessage();
+        }
+
+        return responseService.getFailResult(401, errorMsg);
 
     }
 
