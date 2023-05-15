@@ -1,22 +1,22 @@
 package com.yeolsimee.moneysaving.app.category.service;
 
-import com.yeolsimee.moneysaving.app.category.dto.*;
+import com.yeolsimee.moneysaving.app.category.dto.CategoryRequest;
+import com.yeolsimee.moneysaving.app.category.dto.CategoryResponse;
 import com.yeolsimee.moneysaving.app.category.entity.Category;
 import com.yeolsimee.moneysaving.app.category.repository.CategoryRepository;
-import com.yeolsimee.moneysaving.app.routine.entity.Routine;
-import com.yeolsimee.moneysaving.app.routine.service.RoutineService;
-import com.yeolsimee.moneysaving.app.user.entity.*;
 import com.yeolsimee.moneysaving.app.common.exception.EntityNotFoundException;
 import com.yeolsimee.moneysaving.app.common.response.ResponseMessage;
+import com.yeolsimee.moneysaving.app.routine.entity.Routine;
+import com.yeolsimee.moneysaving.app.routine.service.RoutineService;
+import com.yeolsimee.moneysaving.app.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.*;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,14 +31,14 @@ public class CategoryService {
         return categoryRepository.save(Category.of(categoryName));
     }
 
-    public List<CategoryResponse> list(){
+    public List<CategoryResponse> getCategories(){
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Category> categoryList = categoryRepository.findByUser_Id(user.getId());
+        List<Category> categoryList = categoryRepository.findByUserId(user.getId());
         return categoryList.stream().map(CategoryResponse::of).toList();
     }
 
     @Transactional
-    public CategoryResponse insert(CategoryRequest categoryRequest){
+    public CategoryResponse insertCategory(CategoryRequest categoryRequest){
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Category category = CategoryRequest.toEntity(categoryRequest, user);
         category.changeCategoryDeleteYN("N");
@@ -47,21 +47,10 @@ public class CategoryService {
     }
 
     @Transactional
-    public void update(CategoryRequest categoryRequest) {
+    public void updateCategory(CategoryRequest categoryRequest) {
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Category category = CategoryRequest.toEntity(categoryRequest, user);
         categoryRepository.save(category);
-    }
-
-    @Transactional
-    public void delete(CategoryRequest categoryRequest){
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Category category = CategoryRequest.toEntity(categoryRequest, user);
-        categoryRepository.delete(category);
-    }
-
-    public Category findCategoryById(Long categoryId){
-        return categoryRepository.findById(categoryId).orElseThrow(()-> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
     }
 
     @Transactional
