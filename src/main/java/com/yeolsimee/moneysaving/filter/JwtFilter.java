@@ -2,18 +2,22 @@ package com.yeolsimee.moneysaving.filter;
 
 import com.google.firebase.auth.*;
 import com.yeolsimee.moneysaving.app.common.response.*;
+import com.yeolsimee.moneysaving.app.user.entity.*;
 import com.yeolsimee.moneysaving.app.user.service.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
-import org.apache.http.*;
+import org.apache.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.context.*;
+
 import org.springframework.util.*;
 import org.springframework.web.filter.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,6 +48,11 @@ public class JwtFilter extends OncePerRequestFilter {
             FirebaseToken verifyIdToken = firebaseAuth.verifyIdToken(jwt);
             String uid = verifyIdToken.getUid();
             Authentication authentication = userService.getAuthentication(uid);
+            User user = (User) authentication.getPrincipal();
+            if(Objects.equals("Y", user.getDeleteYn())){
+                setUnauthorizedResponse(response, ResponseMessage.WITHDRAW.getMessage());
+                return;
+            }
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (FirebaseAuthException e) {
             log.error(e.getMessage());
@@ -53,12 +62,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
     }
 
-    //TODO 응답방식 변경 예정
-    private void setUnauthorizedResponse(HttpServletResponse response, String code) throws IOException {
-
+    private void setUnauthorizedResponse(HttpServletResponse response, String message) throws IOException
+    {
         response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-        response.setContentType("application/json; charset=UTF-8");
-        response.getWriter().write("{\"code\":\""+code+"\"}");
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.getWriter().write("{" +
+                "\"success\": "+false+",\n" +
+                "\"code\":"+CommonResponse.FAIL.getCode()+",\n" +
+                "\"message\":\""+message+"\"\n" +
+                "}");
     }
 
 }

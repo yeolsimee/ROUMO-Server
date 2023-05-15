@@ -2,6 +2,7 @@ package com.yeolsimee.moneysaving.app.user.controller;
 
 import com.google.firebase.auth.*;
 import com.yeolsimee.moneysaving.app.common.response.service.*;
+import com.yeolsimee.moneysaving.app.routine.repository.*;
 import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.*;
 import com.yeolsimee.moneysaving.app.user.service.*;
@@ -33,6 +34,7 @@ import static com.yeolsimee.moneysaving.filter.JwtFilter.X_AUTH;
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class UserController {
+    private final RoutineRepositoryCustom routineRepository;
 
     private final ResponseService responseService;
     private final UserService userService;
@@ -69,5 +71,11 @@ public class UserController {
     public ResponseEntity<?> updateIsNewUser(@AuthenticationPrincipal User user, @RequestBody UserInfoRequest userInfoRequest) {
         UserInfoResponse userInfoResponse = userService.updateIsNewUser(user, userInfoRequest);
         return ResponseEntity.ok(responseService.getSingleResult(userInfoResponse));
+    }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<?> withdraw(@AuthenticationPrincipal User user){
+        userService.withdraw(user);
+        return ResponseEntity.ok(responseService.getSuccessResult());
     }
 }

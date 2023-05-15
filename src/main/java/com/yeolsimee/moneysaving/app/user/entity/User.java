@@ -66,7 +66,8 @@ public class User extends BaseEntity implements UserDetails  {
     private List<Category> categoryList;
 
     @Column(nullable = false)
-    private String deleteYn;
+    @Builder.Default
+    private String deleteYn = "N";
 
     public User(String name, String username, Role role) {
         this.name = name;
@@ -106,11 +107,11 @@ public class User extends BaseEntity implements UserDetails  {
         return true;
     }
 
-    public boolean isNotInputUserInfo(){
-        return StringUtils.hasLength(nickname) || StringUtils.hasLength(gender) || StringUtils.hasLength(birthday);
-    }
-
     public void changeIsNewUser(String isNewUser) {
         this.isNewUser = isNewUser;
+    }
+
+    public void withdraw(){
+        this.deleteYn = "Y";
     }
 }

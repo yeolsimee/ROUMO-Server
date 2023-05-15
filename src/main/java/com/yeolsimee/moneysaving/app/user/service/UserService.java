@@ -3,6 +3,8 @@ package com.yeolsimee.moneysaving.app.user.service;
 import com.google.firebase.auth.*;
 import com.yeolsimee.moneysaving.app.common.exception.*;
 import com.yeolsimee.moneysaving.app.common.response.*;
+import com.yeolsimee.moneysaving.app.routine.entity.*;
+import com.yeolsimee.moneysaving.app.routine.repository.*;
 import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.*;
 import com.yeolsimee.moneysaving.app.user.entity.User;
@@ -34,6 +36,7 @@ public class UserService implements UserDetailsService {
 
     private final FirebaseAuth firebaseAuth;
     private final UserRepository userRepository;
+    private final RoutineRepository routineRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -79,5 +82,13 @@ public class UserService implements UserDetailsService {
         user.changeIsNewUser(userInfoRequest.getIsNewUser());
         userRepository.save(user);
         return UserInfoResponse.of(user);
+    }
+
+    public void withdraw(User user) {
+        List<Routine> routineList = routineRepository.findByUserId(user.getId());
+        routineList.forEach(routine -> routine.changeRoutineDeleteYN("Y"));
+        routineRepository.saveAll(routineList);
+        user.withdraw();
+        userRepository.save(user);
     }
 }
