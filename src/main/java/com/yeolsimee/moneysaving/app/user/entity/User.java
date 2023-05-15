@@ -65,6 +65,9 @@ public class User extends BaseEntity implements UserDetails  {
     @OneToMany
     private List<Category> categoryList;
 
+    @Column(nullable = false)
+    private String deleteYn;
+
     public User(String name, String username, Role role) {
         this.name = name;
         this.username = username;
