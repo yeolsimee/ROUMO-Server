@@ -28,7 +28,7 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
     public DayResponse findRoutineDay(Long userId, String date, WeekType weekType, String checkedRoutineShow) {
 
         List<CategoryData> categoryData = queryFactory.select(new QCategoryData(
-                        category.id,
+                        category.id.stringValue(),
                         category.categoryName)
                 ).from(category)
                 .leftJoin(routine).on(category.id.eq(routine.category.id))
@@ -44,13 +44,13 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                 .fetch();
 
         for (CategoryData category : categoryData) {
-            List<RoutineData> routineDatas = findRoutineDatas(category.getCategoryId(), date, weekType, checkedRoutineShow);
+            List<RoutineData> routineDatas = findRoutineDatas(Long.valueOf(category.getCategoryId()), date, weekType, checkedRoutineShow);
 
             routineDatas.sort(Comparator.comparing(RoutineData::getRoutineTimeZone));
             routineDatas.sort(Comparator.comparing(RoutineData::getRoutineCheckYN));
 
             category.setRoutineDatas(routineDatas);
-            category.setRoutineCheckedRate(findRoutineCheckedRate(category.getCategoryId(), date, weekType));
+            category.setRoutineCheckedRate(findRoutineCheckedRate(Long.valueOf(category.getCategoryId()), date, weekType));
         }
 
         return DayResponse.of(date, categoryData);
