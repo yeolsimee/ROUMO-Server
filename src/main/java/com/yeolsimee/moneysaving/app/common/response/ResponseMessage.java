@@ -41,7 +41,10 @@ public enum ResponseMessage {
     //JWT 에러코드
     EMPTY_JWT_TOKEN("토큰이 없습니다."),
     EXPIRED_JWT_TOKEN("만료된 토큰입니다."),
-    INVALID_ID_TOKEN("유효하지 않은 토큰입니다.")
+    INVALID_ID_TOKEN("유효하지 않은 토큰입니다."),
+
+    //탈퇴한 회원
+    WITHDRAW("탈퇴한 회원입니다.")
 
     ;
     final String message;

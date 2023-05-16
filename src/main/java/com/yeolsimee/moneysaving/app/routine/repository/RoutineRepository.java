@@ -20,4 +20,7 @@ public interface RoutineRepository extends JpaRepository<Routine, Long>, Routine
     @Query("select r from Routine r where r.category.id = :categoryId")
     List<Routine> findByRoutineByCategoryId(Long categoryId);
 
+    List<Routine> findByUserId(Long userId);
+
+
 }
