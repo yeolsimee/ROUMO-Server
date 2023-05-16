@@ -29,8 +29,7 @@ public class CategoryController {
 
     @PostMapping("/category/update")
     public ResponseEntity<?> updateCategory(@RequestBody CategoryRequest categoryRequest){
-        categoryService.updateCategory(categoryRequest);
-        return ResponseEntity.ok(responseService.getSuccessResult());
+        return ResponseEntity.ok(responseService.getSingleResult(categoryService.updateCategory(categoryRequest)));
     }
 
     @PostMapping("/category/delete")

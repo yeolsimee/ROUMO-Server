@@ -7,15 +7,15 @@ import lombok.*;
 @Data
 public class CategoryResponse {
 
-    private long id;
+    private Long categoryId;
 
-    private String name;
+    private String categoryName;
 
     public static CategoryResponse of(Category category) {
 
         return CategoryResponse.builder()
-                .id(category.getId())
-                .name(category.getCategoryName())
+                .categoryId(category.getId())
+                .categoryName(category.getCategoryName())
                 .build();
     }
 }

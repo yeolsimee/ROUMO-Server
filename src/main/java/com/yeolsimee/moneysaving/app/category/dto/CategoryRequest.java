@@ -7,7 +7,7 @@ import lombok.*;
 @Data
 public class CategoryRequest {
 
-    private long userId;
+    private Long userId;
 
     private Long categoryId;
 

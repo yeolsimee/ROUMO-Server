@@ -1,6 +1,6 @@
 package com.yeolsimee.moneysaving.unit;
 
-import com.yeolsimee.moneysaving.app.category.entity.Category;
+import com.yeolsimee.moneysaving.app.category.dto.CategoryRequest;
 import com.yeolsimee.moneysaving.app.category.service.CategoryService;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
@@ -47,7 +47,10 @@ public class RoutineServiceTest {
         루틴_시간대 = "1";
         카테고리_이름 = "컴퓨터 하기";
 
-        categoryService.createCategory(카테고리_이름);
+        CategoryRequest categoryRequest = new CategoryRequest();
+        categoryRequest.setCategoryName(카테고리_이름);
+
+        categoryService.insertCategory(categoryRequest);
 
         RoutineRequest routineRequest = new RoutineRequest(루틴_이름, 루틴_카테고리_아이디, 루틴_요일, 루틴_공개범위, 루틴_알람상태, 루틴_알람시간, 루틴_시간대);
 
