@@ -6,7 +6,6 @@ import lombok.*;
 import org.springframework.security.core.*;
 import org.springframework.security.core.authority.*;
 import org.springframework.security.core.userdetails.*;
-import org.springframework.util.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -111,7 +110,7 @@ public class User extends BaseEntity implements UserDetails  {
         this.isNewUser = isNewUser;
     }
 
-    public void withdraw(){
-        this.deleteYn = "Y";
+    public void changeDeleteYn(String deleteYn){
+        this.deleteYn = deleteYn;
     }
 }

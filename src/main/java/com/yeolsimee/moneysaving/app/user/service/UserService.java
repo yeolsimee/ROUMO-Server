@@ -88,7 +88,21 @@ public class UserService implements UserDetailsService {
         List<Routine> routineList = routineRepository.findByUserId(user.getId());
         routineList.forEach(routine -> routine.changeRoutineDeleteYN("Y"));
         routineRepository.saveAll(routineList);
-        user.withdraw();
+        user.changeDeleteYn("Y");
         userRepository.save(user);
+    }
+
+    public void recovery(String jwt) throws FirebaseAuthException {
+
+        FirebaseToken firebaseToken = firebaseAuth.verifyIdToken(jwt);
+        String uid = firebaseToken.getUid();
+        User user = getUserByUid(uid);
+        user.changeDeleteYn("N");
+        userRepository.save(user);
+
+        List<Routine> routineList = routineRepository.findByUserId(user.getId());
+        routineList.forEach(routine -> routine.changeRoutineDeleteYN("N"));
+        routineRepository.saveAll(routineList);
+
     }
 }
