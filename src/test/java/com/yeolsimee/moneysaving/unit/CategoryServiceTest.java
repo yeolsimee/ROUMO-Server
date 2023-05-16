@@ -1,6 +1,7 @@
 package com.yeolsimee.moneysaving.unit;
 
-import com.yeolsimee.moneysaving.app.category.entity.Category;
+import com.yeolsimee.moneysaving.app.category.dto.CategoryRequest;
+import com.yeolsimee.moneysaving.app.category.dto.CategoryResponse;
 import com.yeolsimee.moneysaving.app.category.service.CategoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,8 +22,10 @@ public class CategoryServiceTest {
     @Test
     public void categoryCreate() {
         카테고리_이름 = "컴퓨터하기";
-        Category category = categoryService.createCategory(카테고리_이름);
-        assertThat(category.getId()).isEqualTo(1L);
-        assertThat(category.getCategoryName()).isEqualTo(카테고리_이름);
+        CategoryRequest categoryRequest = new CategoryRequest();
+        categoryRequest.setCategoryName(카테고리_이름);
+        CategoryResponse categoryResponse = categoryService.insertCategory(categoryRequest);
+        assertThat(categoryResponse.getCategoryId()).isEqualTo(1L);
+        assertThat(categoryResponse.getCategoryName()).isEqualTo(카테고리_이름);
     }
 }

@@ -34,4 +34,8 @@ public class Category extends BaseEntity {
     public void changeCategoryDeleteYN(String categoryDeleteYN) {
         this.categoryDeleteYN = categoryDeleteYN;
     }
+
+    public void changeCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }

@@ -26,11 +26,6 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final RoutineService routineService;
 
-    @Transactional
-    public Category createCategory(String categoryName) {
-        return categoryRepository.save(Category.of(categoryName));
-    }
-
     public List<CategoryResponse> getCategories(){
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Category> categoryList = categoryRepository.findByUserId(user.getId());
@@ -47,10 +42,12 @@ public class CategoryService {
     }
 
     @Transactional
-    public void updateCategory(CategoryRequest categoryRequest) {
+    public CategoryResponse updateCategory(CategoryRequest categoryRequest) {
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Category category = CategoryRequest.toEntity(categoryRequest, user);
+        Category category = categoryRepository.findByIdAndUserId(categoryRequest.getCategoryId(), user.getId()).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        category.changeCategoryName(categoryRequest.getCategoryName());
         categoryRepository.save(category);
+        return CategoryResponse.of(category);
     }
 
     @Transactional
