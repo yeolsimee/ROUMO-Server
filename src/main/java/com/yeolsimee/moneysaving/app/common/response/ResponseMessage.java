@@ -24,6 +24,7 @@ public enum ResponseMessage {
 
     // USER 에러코드
     AUTH_USER("사용자 정보가 없습니다."),
+    WITHDRAW_USER("탈퇴한 회원입니다."),
 
     // ROUTINE 에러코드
     NOT_VALID_ROUTINE("해당 루틴이 없습니다."),
@@ -43,8 +44,6 @@ public enum ResponseMessage {
     EXPIRED_JWT_TOKEN("만료된 토큰입니다."),
     INVALID_ID_TOKEN("유효하지 않은 토큰입니다."),
 
-    //탈퇴한 회원
-    WITHDRAW("탈퇴한 회원입니다.")
 
     ;
     final String message;
