@@ -45,7 +45,7 @@ public class RoutineService {
     @Transactional
     public RoutineResponse createRoutine(RoutineRequest routineRequest, Long userId) {
         User user = userService.getUserByUserId(userId);
-        Category category = categoryRepository.findByIdAndUserId(routineRequest.getCategoryId(), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        Category category = categoryRepository.findByIdAndUserId(Long.parseLong(routineRequest.getCategoryId()), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String routineEndDate = "99999999";
         if (routineRequest.getWeekTypes().isEmpty()) {
@@ -69,7 +69,7 @@ public class RoutineService {
         deleteRoutineOrChangeEndDate(routine, today);
 
         User user = userService.getUserByUserId(userId);
-        Category category = categoryRepository.findByIdAndUserId(routineRequest.getCategoryId(), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        Category category = categoryRepository.findByIdAndUserId(Long.parseLong(routineRequest.getCategoryId()), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
         String routineEndDate = "99999999";
 
         if (routineRequest.getWeekTypes().isEmpty()) {

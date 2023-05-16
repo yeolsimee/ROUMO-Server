@@ -7,14 +7,14 @@ import java.util.List;
 
 @Data
 public class CategoryData {
-    private Long categoryId;
+    private String categoryId;
     private String categoryName;
 
     private Double routineCheckedRate;
     private List<RoutineData> routineDatas;
 
     @QueryProjection
-    public CategoryData(Long categoryId, String categoryName) {
+    public CategoryData(String categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
     }
