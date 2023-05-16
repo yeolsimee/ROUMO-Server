@@ -44,7 +44,7 @@ public class CategoryService {
     @Transactional
     public CategoryResponse updateCategory(CategoryRequest categoryRequest) {
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Category category = categoryRepository.findByIdAndUserId(categoryRequest.getCategoryId(), user.getId()).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryRequest.getCategoryId()), user.getId()).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
         category.changeCategoryName(categoryRequest.getCategoryName());
         categoryRepository.save(category);
         return CategoryResponse.of(category);

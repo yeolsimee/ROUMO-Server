@@ -7,14 +7,14 @@ import lombok.*;
 @Data
 public class CategoryResponse {
 
-    private Long categoryId;
+    private String categoryId;
 
     private String categoryName;
 
     public static CategoryResponse of(Category category) {
 
         return CategoryResponse.builder()
-                .categoryId(category.getId())
+                .categoryId(String.valueOf(category.getId()))
                 .categoryName(category.getCategoryName())
                 .build();
     }

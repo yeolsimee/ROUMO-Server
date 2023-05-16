@@ -34,7 +34,7 @@ public class CategoryController {
 
     @PostMapping("/category/delete")
     public ResponseEntity<?> deleteCategory(@RequestBody CategoryRequest categoryRequest, @AuthenticationPrincipal User user){
-        categoryService.deleteCategory(categoryRequest.getCategoryId(), user.getId());
+        categoryService.deleteCategory(Long.valueOf(categoryRequest.getCategoryId()), user.getId());
         return ResponseEntity.ok(responseService.getSuccessResult());
     }
 
