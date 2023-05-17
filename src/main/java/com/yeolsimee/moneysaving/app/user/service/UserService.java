@@ -88,7 +88,6 @@ public class UserService implements UserDetailsService {
         List<Routine> routineList = routineRepository.findByUserId(user.getId());
         routineList.forEach(routine -> routine.changeRoutineDeleteYN("Y"));
         routineRepository.saveAll(routineList);
-        user.changeDeleteYn("Y");
         userRepository.save(user);
     }
 
@@ -97,7 +96,6 @@ public class UserService implements UserDetailsService {
         FirebaseToken firebaseToken = firebaseAuth.verifyIdToken(jwt);
         String uid = firebaseToken.getUid();
         User user = getUserByUid(uid);
-        user.changeDeleteYn("N");
         userRepository.save(user);
 
         List<Routine> routineList = routineRepository.findByUserId(user.getId());

@@ -64,10 +64,6 @@ public class User extends BaseEntity implements UserDetails  {
     @OneToMany
     private List<Category> categoryList;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private String deleteYn = "N";
-
     public User(String name, String username, Role role) {
         this.name = name;
         this.username = username;
@@ -110,7 +106,4 @@ public class User extends BaseEntity implements UserDetails  {
         this.isNewUser = isNewUser;
     }
 
-    public void changeDeleteYn(String deleteYn){
-        this.deleteYn = deleteYn;
-    }
 }
