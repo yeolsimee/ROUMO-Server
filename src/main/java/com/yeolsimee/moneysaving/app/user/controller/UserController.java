@@ -1,13 +1,16 @@
 package com.yeolsimee.moneysaving.app.user.controller;
 
 import com.google.firebase.auth.*;
+import com.yeolsimee.moneysaving.app.common.response.*;
 import com.yeolsimee.moneysaving.app.common.response.service.*;
 import com.yeolsimee.moneysaving.app.routine.repository.*;
 import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.*;
+import com.yeolsimee.moneysaving.app.user.repository.*;
 import com.yeolsimee.moneysaving.app.user.service.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
+import org.apache.commons.lang3.*;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +37,6 @@ import static com.yeolsimee.moneysaving.filter.JwtFilter.X_AUTH;
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class UserController {
-    private final RoutineRepositoryCustom routineRepository;
 
     private final ResponseService responseService;
     private final UserService userService;
@@ -51,6 +53,10 @@ public class UserController {
 
         if(Objects.isNull(user)){
             user = userService.signUp(uid);
+        }
+
+        if(StringUtils.equals("Y", user.getDeleteYn())){
+            return ResponseEntity.ok(responseService.getSuccessResult(ResponseMessage.WITHDRAW_USER.getMessage()));
         }
 
         return ResponseEntity.ok(responseService.getSingleResult(UserInfoResponse.of(user)));
@@ -77,5 +83,14 @@ public class UserController {
     public ResponseEntity<?> withdraw(@AuthenticationPrincipal User user){
         userService.withdraw(user);
         return ResponseEntity.ok(responseService.getSuccessResult());
+    }
+
+    @PostMapping("/user/recovery")
+    public ResponseEntity<?> recovery(HttpServletRequest request) throws FirebaseAuthException {
+
+        String jwt = request.getHeader(X_AUTH);
+        userService.recovery(jwt);
+        return ResponseEntity.ok(responseService.getSuccessResult());
+
     }
 }

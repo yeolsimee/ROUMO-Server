@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
 
-        if(uri.contains("/api/v1/login")){
+        if(uri.contains("/api/v1/login") || uri.contains("/api/v1/user/recovery")){
             filterChain.doFilter(request, response);
             return;
         }
@@ -50,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
             Authentication authentication = userService.getAuthentication(uid);
             User user = (User) authentication.getPrincipal();
             if(Objects.equals("Y", user.getDeleteYn())){
-                setUnauthorizedResponse(response, ResponseMessage.WITHDRAW.getMessage());
+                setUnauthorizedResponse(response, ResponseMessage.WITHDRAW_USER.getMessage());
                 return;
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);

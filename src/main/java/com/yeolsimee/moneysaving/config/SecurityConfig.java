@@ -51,6 +51,7 @@ public class SecurityConfig {
                     authorize.antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                             .antMatchers(HttpMethod.POST, "/api/v1/login/**").permitAll()
                             .antMatchers(HttpMethod.POST, "/api/v1/signin").permitAll()
+                            .antMatchers(HttpMethod.POST, "/api/v1/user/recovery").permitAll()
                             .antMatchers(HttpMethod.POST, "/api/v1/routine").permitAll()
                             .antMatchers(HttpMethod.GET, "/healthcheck").permitAll()
                             .antMatchers(HttpMethod.PUT, "/api/v1/routinecheck/*").permitAll()
