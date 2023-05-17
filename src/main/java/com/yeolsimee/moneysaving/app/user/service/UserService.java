@@ -67,8 +67,10 @@ public class UserService implements UserDetailsService {
 
     public Authentication getAuthentication(String uid){
 
-        User user = userRepository.findByUsername(uid).orElseThrow();
-
+        User user = getUserByUid(uid);
+        if(Objects.isNull(user)){
+            throw new EntityNotFoundException(ResponseMessage.AUTH_USER);
+        }
         return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
     }
 
