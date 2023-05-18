@@ -90,6 +90,7 @@ public class UserService implements UserDetailsService {
         return UserInfoResponse.of(user);
     }
 
+    @Transactional
     public void withdraw(User user) {
         List<Routine> routineList = routineRepository.findByUserId(user.getId());
         routineList.forEach(routine -> routineHistoryRepository.deleteByRoutineId(routine.getId()));
