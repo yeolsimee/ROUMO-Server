@@ -149,8 +149,13 @@ public class RoutineService {
         double dayRoutineNum = findDayRoutineNum(userId, routineDay, weekType);
         double dayCheckedRoutineNum = routineHistoryRepository.findDayCheckedRoutineNum(userId, routineDay, RoutineCheckYN.valueOf(routineCheckYN));
         if (dayRoutineNum != 0) {
-            double routineAchievementRate = dayCheckedRoutineNum / dayRoutineNum;
-            routineAchievement = RoutineUtils.convertRoutineAchievementRateToRoutineAchievement(routineAchievementRate);
+            String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            if (routineDay.compareTo(today) > 0) {
+                routineAchievement = "YET";
+            } else {
+                double routineAchievementRate = dayCheckedRoutineNum / dayRoutineNum;
+                routineAchievement = RoutineUtils.convertRoutineAchievementRateToRoutineAchievement(routineAchievementRate);
+            }
         }
         return routineAchievement;
     }
