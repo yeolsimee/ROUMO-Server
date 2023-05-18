@@ -2,6 +2,7 @@ package com.yeolsimee.moneysaving.app.routine.repository;
 
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.routine.entity.WeekType;
+import com.yeolsimee.moneysaving.app.user.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoutineRepository extends JpaRepository<Routine, Long>, RoutineRepositoryCustom {
+
     Optional<Routine> findByIdAndUserId(Long routineId, Long userId);
 
     @Query("select r from Routine r where r.user.id = :userId and r.routineStartDate <= :routineDay and r.routineEndDate >= :routineDay and r.alarmStatus = 'ON'")
@@ -22,5 +24,6 @@ public interface RoutineRepository extends JpaRepository<Routine, Long>, Routine
 
     List<Routine> findByUserId(Long userId);
 
+    void deleteByUser(User user);
 
 }

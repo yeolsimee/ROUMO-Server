@@ -1,10 +1,12 @@
 package com.yeolsimee.moneysaving.app.user.service;
 
 import com.google.firebase.auth.*;
+import com.yeolsimee.moneysaving.app.category.repository.*;
 import com.yeolsimee.moneysaving.app.common.exception.*;
 import com.yeolsimee.moneysaving.app.common.response.*;
 import com.yeolsimee.moneysaving.app.routine.entity.*;
 import com.yeolsimee.moneysaving.app.routine.repository.*;
+import com.yeolsimee.moneysaving.app.routinehistory.repository.*;
 import com.yeolsimee.moneysaving.app.user.dto.*;
 import com.yeolsimee.moneysaving.app.user.entity.*;
 import com.yeolsimee.moneysaving.app.user.entity.User;
@@ -37,6 +39,8 @@ public class UserService implements UserDetailsService {
     private final FirebaseAuth firebaseAuth;
     private final UserRepository userRepository;
     private final RoutineRepository routineRepository;
+    private final RoutineHistoryRepository routineHistoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -67,8 +71,10 @@ public class UserService implements UserDetailsService {
 
     public Authentication getAuthentication(String uid){
 
-        User user = userRepository.findByUsername(uid).orElseThrow();
-
+        User user = getUserByUid(uid);
+        if(Objects.isNull(user)){
+            throw new EntityNotFoundException(ResponseMessage.AUTH_USER);
+        }
         return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
     }
 
@@ -84,12 +90,13 @@ public class UserService implements UserDetailsService {
         return UserInfoResponse.of(user);
     }
 
+    @Transactional
     public void withdraw(User user) {
         List<Routine> routineList = routineRepository.findByUserId(user.getId());
-        routineList.forEach(routine -> routine.changeRoutineDeleteYN("Y"));
-        routineRepository.saveAll(routineList);
-        user.changeDeleteYn("Y");
-        userRepository.save(user);
+        routineList.forEach(routine -> routineHistoryRepository.deleteByRoutineId(routine.getId()));
+        routineRepository.deleteByUser(user);
+        categoryRepository.deleteByUser(user);
+        userRepository.delete(user);
     }
 
     public void recovery(String jwt) throws FirebaseAuthException {
@@ -97,7 +104,6 @@ public class UserService implements UserDetailsService {
         FirebaseToken firebaseToken = firebaseAuth.verifyIdToken(jwt);
         String uid = firebaseToken.getUid();
         User user = getUserByUid(uid);
-        user.changeDeleteYn("N");
         userRepository.save(user);
 
         List<Routine> routineList = routineRepository.findByUserId(user.getId());

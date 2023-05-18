@@ -2,7 +2,6 @@ package com.yeolsimee.moneysaving.filter;
 
 import com.google.firebase.auth.*;
 import com.yeolsimee.moneysaving.app.common.response.*;
-import com.yeolsimee.moneysaving.app.user.entity.*;
 import com.yeolsimee.moneysaving.app.user.service.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
@@ -17,7 +16,6 @@ import org.springframework.web.filter.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
-import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,11 +46,6 @@ public class JwtFilter extends OncePerRequestFilter {
             FirebaseToken verifyIdToken = firebaseAuth.verifyIdToken(jwt);
             String uid = verifyIdToken.getUid();
             Authentication authentication = userService.getAuthentication(uid);
-            User user = (User) authentication.getPrincipal();
-            if(Objects.equals("Y", user.getDeleteYn())){
-                setUnauthorizedResponse(response, ResponseMessage.WITHDRAW_USER.getMessage());
-                return;
-            }
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (FirebaseAuthException e) {
             log.error(e.getMessage());
