@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DisplayName("루틴 관련 기능")
 public class RoutineAcceptanceTest extends AcceptanceTest{
     public static final String EMAIL = "kim7@gmail.com";
-    public static final String UID = "uid1";
+    public static final String UID = "a1";
     public static final String ROUTINE_NAME = "코딩하기";
     public static final String ROUTINE_CATEGORY_ID = "1";
     public static final List<String> WEEK_TYPES = List.of("SUNDAY", "MONDAY");

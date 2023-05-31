@@ -15,7 +15,7 @@ public class CategorySteps {
 
         return RestAssured
                 .given().log().all()
-                .header("uid", uid)
+                .header("x-auth", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(params)
                 .when().post("/api/v1/category/insert")

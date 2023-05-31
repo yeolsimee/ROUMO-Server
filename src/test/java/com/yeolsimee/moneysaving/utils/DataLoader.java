@@ -17,11 +17,11 @@ public class DataLoader {
     }
 
     public void loadData() {
-        userRepository.save(new User("김아무개1", "아무개1", Role.ROLE_USER));
-        userRepository.save(new User("김아무개2", "아무개2", Role.ROLE_USER));
-        userRepository.save(new User("김아무개3", "아무개3", Role.ROLE_USER));
-        userRepository.save(new User("김아무개4", "아무개4", Role.ROLE_USER));
-        userRepository.save(new User("김아무개5", "아무개5", Role.ROLE_USER));
-        userRepository.save(new User("김아무개6", "아무개6", Role.ROLE_USER));
+        userRepository.save(new User("김아무개1", "a1", Role.ROLE_USER));
+        userRepository.save(new User("김아무개2", "a2", Role.ROLE_USER));
+        userRepository.save(new User("김아무개3", "a3", Role.ROLE_USER));
+        userRepository.save(new User("김아무개4", "a4", Role.ROLE_USER));
+        userRepository.save(new User("김아무개5", "a5", Role.ROLE_USER));
+        userRepository.save(new User("김아무개6", "a6", Role.ROLE_USER));
     }
 }
