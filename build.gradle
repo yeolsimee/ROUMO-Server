@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+    id 'jacoco'
 }
 
 group = 'com.yeolsimee'
@@ -43,10 +44,6 @@ dependencies {
     implementation'io.jsonwebtoken:jjwt-impl:0.11.1', 'io.jsonwebtoken:jjwt-jackson:0.11.1'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
 // querydsl 세팅 시작
 def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
@@ -63,3 +60,52 @@ compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
 // querydsl 세팅 끝
+
+//테스트 커버리지 jacoco
+jacoco {
+    toolVersion = '0.8.8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jacocoTestReport {
+    reports {
+        // 원하는 리포트를 켜고 끌 수 있습니다.
+        html.enabled true
+        xml.enabled false
+        csv.enabled false
+
+//  각 리포트 타입 마다 리포트 저장 경로를 설정할 수 있습니다.
+//  html.destination file("$buildDir/jacocoHtml")
+//  xml.destination file("$buildDir/jacoco.xml")
+    }
+}
+
+jacocoTestCoverageVerification {
+    // 이 커버리지 기준은 이 글의 맨 아래에서 다시 설명하겠습니다.
+    violationRules {
+        rule {
+            element = 'CLASS'
+
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.00
+            }
+        }
+    }
+}
+
+task testCoverage(type: Test) {
+    group 'verification'
+    description 'Runs the unit tests with coverage'
+
+    dependsOn(':test',
+            ':jacocoTestReport',
+            ':jacocoTestCoverageVerification')
+
+    tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
+    tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
+}
