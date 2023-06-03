@@ -31,6 +31,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String jwt = request.getHeader(X_AUTH);
 
+        //테스트 환경에서 x-auth값에 username 적어서 바로 호출하기
+        if (isProfileActive(System.getProperty("spring.profiles.active"))) {
+            Authentication authentication = userService.getAuthentication(jwt);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if(!StringUtils.hasText(jwt)) {
             setUnauthorizedResponse(response, ResponseMessage.EMPTY_JWT_TOKEN.getMessage());
             return;
@@ -66,4 +74,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 "}");
     }
 
+    private boolean isProfileActive(String activeProfile) {
+        return (activeProfile == null || activeProfile.equals(""));
+    }
 }

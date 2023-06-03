@@ -39,8 +39,12 @@ public class FirebaseConfig {
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(resourceAsStream))
                 .build();
-
-        FirebaseApp app = FirebaseApp.initializeApp(options);
+        FirebaseApp app;
+        if (FirebaseApp.getApps().isEmpty()) {
+            app = FirebaseApp.initializeApp(options);
+        } else {
+            app = FirebaseApp.getInstance();
+        }
         log.info("FirebaseApp initialized" + app.getName());
         return app;
     }

@@ -1,10 +1,15 @@
-package com.yeolsimee.moneysaving.unit;
+package com.yeolsimee.moneysaving.unit.service;
 
 import com.yeolsimee.moneysaving.app.category.dto.CategoryRequest;
+import com.yeolsimee.moneysaving.app.category.dto.CategoryResponse;
 import com.yeolsimee.moneysaving.app.category.service.CategoryService;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineRequest;
 import com.yeolsimee.moneysaving.app.routine.dto.RoutineResponse;
 import com.yeolsimee.moneysaving.app.routine.service.RoutineService;
+import com.yeolsimee.moneysaving.app.user.entity.Role;
+import com.yeolsimee.moneysaving.app.user.entity.User;
+import com.yeolsimee.moneysaving.app.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 public class RoutineServiceTest {
-    private Long 사용자;
     private String 루틴_이름;
-    private String 루틴_카테고리_아이디;
     private List<String> 루틴_요일 = new ArrayList<>();
     private String 루틴_공개범위;
     private String 루틴_알람상태;
@@ -32,12 +35,21 @@ public class RoutineServiceTest {
     RoutineService routineService;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    UserRepository userRepository;
+    private User savedUser;
+
+    @BeforeEach
+    public void setUp() {
+        User user = new User("test", "test", Role.ROLE_USER);
+        savedUser = userRepository.save(user);
+    }
+
     @Test
+    @DisplayName("루틴 생성하기")
     public void routineCreate() {
         //given
-        사용자 = 1L;
         루틴_이름 = "코딩하기";
-        루틴_카테고리_아이디 = "1";
         루틴_요일.add("MONDAY");
         루틴_요일.add("WEDNESDAY");
         루틴_요일.add("SUNDAY");
@@ -50,12 +62,11 @@ public class RoutineServiceTest {
         CategoryRequest categoryRequest = new CategoryRequest();
         categoryRequest.setCategoryName(카테고리_이름);
 
-        categoryService.insertCategory(categoryRequest);
-
-        RoutineRequest routineRequest = new RoutineRequest(루틴_이름, 루틴_카테고리_아이디, 루틴_요일, 루틴_공개범위, 루틴_알람상태, 루틴_알람시간, 루틴_시간대);
+        CategoryResponse categoryResponse = categoryService.insertCategory(categoryRequest, savedUser.getId());
+        RoutineRequest routineRequest = new RoutineRequest(루틴_이름, categoryResponse.getCategoryId(), 루틴_요일, 루틴_공개범위, 루틴_알람상태, 루틴_알람시간, 루틴_시간대);
 
         //when
-        RoutineResponse routineResponse = routineService.createRoutine(routineRequest, 사용자);
+        RoutineResponse routineResponse = routineService.createRoutine(routineRequest, savedUser.getId());
 
         //then
         assertThat(routineResponse).isNotNull();

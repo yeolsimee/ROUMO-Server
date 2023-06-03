@@ -18,18 +18,18 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/category")
-    public ResponseEntity<?> getCategories(){
-        return ResponseEntity.ok(responseService.getListResult(categoryService.getCategories()));
+    public ResponseEntity<?> getCategories(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(responseService.getListResult(categoryService.getCategories(user.getId())));
     }
 
     @PostMapping("/category/insert")
-    public ResponseEntity<?> insertCategory(@RequestBody CategoryRequest categoryRequest){
-        return ResponseEntity.ok(responseService.getSingleResult(categoryService.insertCategory(categoryRequest)));
+    public ResponseEntity<?> insertCategory(@RequestBody CategoryRequest categoryRequest, @AuthenticationPrincipal User user){
+        return ResponseEntity.ok(responseService.getSingleResult(categoryService.insertCategory(categoryRequest, user.getId())));
     }
 
     @PostMapping("/category/update")
-    public ResponseEntity<?> updateCategory(@RequestBody CategoryRequest categoryRequest){
-        return ResponseEntity.ok(responseService.getSingleResult(categoryService.updateCategory(categoryRequest)));
+    public ResponseEntity<?> updateCategory(@RequestBody CategoryRequest categoryRequest, @AuthenticationPrincipal User user){
+        return ResponseEntity.ok(responseService.getSingleResult(categoryService.updateCategory(categoryRequest, user.getId())));
     }
 
     @PostMapping("/category/delete")

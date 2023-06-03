@@ -1,8 +1,12 @@
-package com.yeolsimee.moneysaving.unit;
+package com.yeolsimee.moneysaving.unit.service;
 
 import com.yeolsimee.moneysaving.app.category.dto.CategoryRequest;
 import com.yeolsimee.moneysaving.app.category.dto.CategoryResponse;
 import com.yeolsimee.moneysaving.app.category.service.CategoryService;
+import com.yeolsimee.moneysaving.app.user.entity.Role;
+import com.yeolsimee.moneysaving.app.user.entity.User;
+import com.yeolsimee.moneysaving.app.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +22,25 @@ public class CategoryServiceTest {
     private String 카테고리_이름;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    UserRepository userRepository;
+
+    private User savedUser;
+
+    @BeforeEach
+    public void setUp() {
+        User user = new User("test", "test", Role.ROLE_USER);
+        savedUser = userRepository.save(user);
+    }
 
     @Test
+    @DisplayName("카테고리 생성하기")
     public void categoryCreate() {
         카테고리_이름 = "컴퓨터하기";
         CategoryRequest categoryRequest = new CategoryRequest();
         categoryRequest.setCategoryName(카테고리_이름);
-        CategoryResponse categoryResponse = categoryService.insertCategory(categoryRequest);
-        assertThat(categoryResponse.getCategoryId()).isEqualTo(1L);
+        CategoryResponse categoryResponse = categoryService.insertCategory(categoryRequest, savedUser.getId());
+        assertThat(categoryResponse.getCategoryId()).isEqualTo("1");
         assertThat(categoryResponse.getCategoryName()).isEqualTo(카테고리_이름);
     }
 }

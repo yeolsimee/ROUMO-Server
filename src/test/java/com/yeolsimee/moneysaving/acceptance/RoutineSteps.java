@@ -14,7 +14,7 @@ public class RoutineSteps {
     public static ExtractableResponse<Response> 루틴_생성_요청(String uid, Map<String, Object> params) {
         return RestAssured
                 .given().log().all()
-                .header("uid", uid)
+                .header("x-auth", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(params)
                 .when().post("/api/v1/routine")
@@ -24,7 +24,7 @@ public class RoutineSteps {
     public static ExtractableResponse<Response> 루틴_수정_요청(String uid, String routineId, Map<String, Object> params) {
         return RestAssured
                 .given().log().all()
-                .header("uid", uid)
+                .header("x-auth", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(params)
                 .when().put("/api/v1/routine/{routineId}", routineId)
@@ -33,7 +33,7 @@ public class RoutineSteps {
     public static ExtractableResponse<Response> 루틴_삭제_요청(String uid, String routineId) {
         return RestAssured
                 .given().log().all()
-                .header("uid", uid)
+                .header("x-auth", uid)
                 .when().delete("/api/v1/routine/{routineId}", routineId)
                 .then().log().all().extract();
     }
@@ -41,7 +41,7 @@ public class RoutineSteps {
     public static ExtractableResponse<Response> 루틴_조회_요청(String uid, String routineId) {
         return RestAssured
                 .given().log().all()
-                .header("uid", uid)
+                .header("x-auth", uid)
                 .when().get("/api/v1/routine/{routineId}", routineId)
                 .then().log().all().extract();
     }
@@ -53,7 +53,7 @@ public class RoutineSteps {
 
         return RestAssured
                 .given().log().all()
-                .header("uid", uid)
+                .header("x-auth", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .params(params)
                 .when().get("/api/v1/routinedays")
@@ -64,7 +64,7 @@ public class RoutineSteps {
 
         return RestAssured
                 .given().log().all()
-                .header("uid", uid)
+                .header("x-auth", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/api/v1/routineday?date={date}&checkedRoutineShow={checkedRoutineShow}", date, checkedRoutineShow)
                 .then().log().all().extract();
@@ -78,7 +78,7 @@ public class RoutineSteps {
 
         return RestAssured
                 .given().log().all()
-                .header("uid", uid)
+                .header("x-auth", uid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(params)
                 .when().post("/api/v1/routinecheck")

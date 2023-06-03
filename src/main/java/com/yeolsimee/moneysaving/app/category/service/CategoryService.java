@@ -9,8 +9,8 @@ import com.yeolsimee.moneysaving.app.common.response.ResponseMessage;
 import com.yeolsimee.moneysaving.app.routine.entity.Routine;
 import com.yeolsimee.moneysaving.app.routine.service.RoutineService;
 import com.yeolsimee.moneysaving.app.user.entity.User;
+import com.yeolsimee.moneysaving.app.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,16 +25,16 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final RoutineService routineService;
+    private final UserService userService;
 
-    public List<CategoryResponse> getCategories(){
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Category> categoryList = categoryRepository.findByUserId(user.getId());
+    public List<CategoryResponse> getCategories(Long userId){
+        List<Category> categoryList = categoryRepository.findByUserId(userId);
         return categoryList.stream().map(CategoryResponse::of).toList();
     }
 
     @Transactional
-    public CategoryResponse insertCategory(CategoryRequest categoryRequest){
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public CategoryResponse insertCategory(CategoryRequest categoryRequest, Long userId) {
+        User user = userService.getUserByUserId(userId);
         Category category = CategoryRequest.toEntity(categoryRequest, user);
         category.changeCategoryDeleteYN("N");
         categoryRepository.save(category);
@@ -42,9 +42,8 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryResponse updateCategory(CategoryRequest categoryRequest) {
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryRequest.getCategoryId()), user.getId()).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+    public CategoryResponse updateCategory(CategoryRequest categoryRequest, Long userId) {
+        Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryRequest.getCategoryId()), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
         category.changeCategoryName(categoryRequest.getCategoryName());
         categoryRepository.save(category);
         return CategoryResponse.of(category);
