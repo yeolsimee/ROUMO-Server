@@ -1,6 +1,6 @@
 # ROUMO (루틴 습관 형성 앱)
-![image](https://github.com/yeolsimee/MoneySaving-Server/assets/18053020/65cc3f38-91bf-4722-8727-d70b400eef4b)
-![image](https://github.com/yeolsimee/MoneySaving-Server/assets/18053020/1fc77bb9-00c0-4a1e-92aa-7b3a34799a50)
+![image](https://github.com/yeolsimee/ROUMO-Server/assets/18053020/65cc3f38-91bf-4722-8727-d70b400eef4b)
+![image](https://github.com/yeolsimee/ROUMO-Server/assets/18053020/1fc77bb9-00c0-4a1e-92aa-7b3a34799a50)
 
 ## 기술 스택
 - Java 17
@@ -13,7 +13,7 @@
 
 ### 1. CI/CD 배포
 - `github actions`과 `네이버클라우드`를 이용하여 CI/CD 파이프라인 구축
-![image](https://github.com/yeolsimee/MoneySaving-Server/assets/18053020/0e929c6e-971b-4300-a0d0-03e8606f72a7)
+![image](https://github.com/yeolsimee/ROUMO-Server/assets/18053020/0e929c6e-971b-4300-a0d0-03e8606f72a7)
 
 ### 2. 인수테스트를 이용하여 테스트 리팩토링
 1. 기존에 루틴을 생성시에 routineDay라는 테이블에 일별로 최대 `1년치 컬럼`을 생성했음.(매일 반복시)
@@ -27,14 +27,14 @@
 
 ## 설계
 ### ER 다이어그램
-<img width="688" alt="image" src="https://github.com/yeolsimee/MoneySaving-Server/assets/18053020/6afe83f9-4024-4e96-bc55-73b6b1dddf0f">
+<img width="688" alt="image" src="https://github.com/yeolsimee/ROUMO-Server/assets/18053020/6afe83f9-4024-4e96-bc55-73b6b1dddf0f">
 
 ### 클래스 다이어그램
 1. user
-   ![user](https://github.com/yeolsimee/MoneySaving-Server/assets/18053020/537064a8-0da5-4536-a3fd-d79c2cd3abee)
+   ![user](https://github.com/yeolsimee/ROUMO-Server/assets/18053020/537064a8-0da5-4536-a3fd-d79c2cd3abee)
 2. category
-   ![category](https://github.com/yeolsimee/MoneySaving-Server/assets/18053020/2ff7cf7b-ddb9-4f38-be5e-c5f02e1e52b0)
+   ![category](https://github.com/yeolsimee/ROUMO-Server/assets/18053020/2ff7cf7b-ddb9-4f38-be5e-c5f02e1e52b0)
 3. routine
-   ![routine](https://github.com/yeolsimee/MoneySaving-Server/assets/18053020/697eb98a-e990-45f7-ad4d-bce92f0e8a72)
+   ![routine](https://github.com/yeolsimee/ROUMO-Server/assets/18053020/697eb98a-e990-45f7-ad4d-bce92f0e8a72)
 4. routineHistory
-   ![routinehistory](https://github.com/yeolsimee/MoneySaving-Server/assets/18053020/95158047-22fc-4e0f-a5d8-27855dbd6697)
+   ![routinehistory](https://github.com/yeolsimee/ROUMO-Server/assets/18053020/95158047-22fc-4e0f-a5d8-27855dbd6697)
