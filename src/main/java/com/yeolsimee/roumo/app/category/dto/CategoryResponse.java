@@ -11,11 +11,14 @@ public class CategoryResponse {
 
     private String categoryName;
 
+    private Long categoryOrder;
+
     public static CategoryResponse of(Category category) {
 
         return CategoryResponse.builder()
                 .categoryId(String.valueOf(category.getId()))
                 .categoryName(category.getCategoryName())
+                .categoryOrder(category.getCategoryOrder())
                 .build();
     }
 }

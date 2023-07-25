@@ -23,6 +23,10 @@ public class Category extends BaseEntity {
     @ManyToOne(targetEntity = User.class)
     private User user;
     private String categoryDeleteYN;
+
+    @Column(nullable = false)
+    private Long categoryOrder;
+
     public Category(String categoryName) {
         this.categoryName = categoryName;
     }
