@@ -77,7 +77,7 @@ jobs:
         with:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USERNAME }}
-          password: ${{ secrets.PROD_PASSWORD }}
+          key: ${{ secrets.PROD_KEY }}
           port: ${{ secrets.PROD_PORT }}
           script: |
             docker rm $(docker ps -a -q)
