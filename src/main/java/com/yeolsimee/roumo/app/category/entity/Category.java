@@ -42,4 +42,8 @@ public class Category extends BaseEntity {
     public void changeCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
+    public void changeCategoryOrder(Long categoryOrder) {
+        this.categoryOrder = categoryOrder;
+    }
 }

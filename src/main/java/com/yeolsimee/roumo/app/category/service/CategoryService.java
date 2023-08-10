@@ -59,4 +59,11 @@ public class CategoryService {
             routineService.deleteRoutineOrChangeEndDate(routine, today);
         }
     }
+
+    public CategoryResponse updateOrder(CategoryRequest categoryRequest, long userId) {
+        Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryRequest.getCategoryId()), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        category.changeCategoryOrder(category.getCategoryOrder());
+        categoryRepository.save(category);
+        return CategoryResponse.of(category);
+    }
 }
