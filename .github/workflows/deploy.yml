@@ -80,7 +80,7 @@ jobs:
           key: ${{ secrets.PROD_KEY }}
           port: ${{ secrets.PROD_PORT }}
           script: |
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker login -u ${{ secrets.DOCKERHUB_ACCESS_KEY }} -p ${{ secrets.DOCKERHUB_SECRET_KEY }}
             sudo docker rm $(docker ps -a -q)
             sudo docker pull ${{ secrets.DOCKERHUB_CONTAINER_REGISTRY }}/roumo-web
             sudo docker pull ${{ secrets.DOCKERHUB_CONTAINER_REGISTRY }}/roumo-nginx
