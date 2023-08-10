@@ -136,6 +136,18 @@ public class RoutineAcceptanceTest extends AcceptanceTest{
         );
     }
 
+    @DisplayName("카테고리와 루틴을 동시에 생성 한다.")
+    @Test
+    void createRoutineAndCategory() {
+        // when
+        ExtractableResponse<Response> response = 루틴_생성_요청(UID, createRoutineCreateParams(ROUTINE_NAME, ROUTINE_CATEGORY_ID, WEEK_TYPES, ROUTINE_TYPE, ALARM_STATUS, ALARM_TIME, ROUTINE_TIME_ZONE));
+        // then
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getString("data.routineName")).isEqualTo(ROUTINE_NAME)
+        );
+    }
+
     private Map<String, Object> createRoutineCreateParams(String routineName, String categoryId, List<String> weekTypes, String routineType, String alarmStatus, String alarmTime, String routineTimeZone) {
         Map<String, Object> params = new HashMap<>();
         params.put("routineName", routineName);
