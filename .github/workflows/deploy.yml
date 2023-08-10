@@ -32,10 +32,9 @@ jobs:
         shell: bash
       - name: Build with Gradle
         run: ./gradlew bootJar
-      - name: Login to NCP Container Registry
-        uses: docker/login-action@v2
+      - name: Login to DOCKERHUB Container Registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
-          registry: ${{ secrets.DOCKERHUB_CONTAINER_REGISTRY }}
           username: ${{ secrets.DOCKERHUB_ACCESS_KEY }}
           password: ${{ secrets.DOCKERHUB_SECRET_KEY }}
       - name: build and push
