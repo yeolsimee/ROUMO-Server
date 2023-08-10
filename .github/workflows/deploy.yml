@@ -80,9 +80,9 @@ jobs:
           key: ${{ secrets.PROD_KEY }}
           port: ${{ secrets.PROD_PORT }}
           script: |
-            docker rm $(docker ps -a -q)
-            docker pull ${{ secrets.DOCKERHUB_CONTAINER_REGISTRY }}/roumo-web
-            docker pull ${{ secrets.DOCKERHUB_CONTAINER_REGISTRY }}/roumo-nginx
+            sudo docker rm $(docker ps -a -q)
+            sudo docker pull ${{ secrets.DOCKERHUB_CONTAINER_REGISTRY }}/roumo-web
+            sudo docker pull ${{ secrets.DOCKERHUB_CONTAINER_REGISTRY }}/roumo-nginx
             docker-compose up -d
             docker image prune -f
 
