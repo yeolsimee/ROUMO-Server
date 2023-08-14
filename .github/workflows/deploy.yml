@@ -80,9 +80,9 @@ jobs:
           key: ${{ secrets.PROD_KEY }}
           port: ${{ secrets.PROD_PORT }}
           script: |
-            sudo docker rm $(docker ps -a -q)
+            sudo docker rm -f $(docker ps -aqf "name=web")
+            sudo docker rm -f $(docker ps -aqf "name=nginx")
             sudo docker pull ${{ secrets.DOCKERHUB_CONTAINER_REGISTRY }}/roumo-web
-            sudo docker pull ${{ secrets.DOCKERHUB_CONTAINER_REGISTRY }}/roumo-writing-api
             sudo docker pull ${{ secrets.DOCKERHUB_CONTAINER_REGISTRY }}/roumo-nginx
             docker-compose up -d
             docker image prune -f
