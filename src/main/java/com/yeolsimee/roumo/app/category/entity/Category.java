@@ -22,13 +22,20 @@ public class Category extends BaseEntity {
 
     @ManyToOne(targetEntity = User.class)
     private User user;
+
     private String categoryDeleteYN;
 
-    @Column(nullable = false)
     private Long categoryOrder;
 
     public Category(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    @PostPersist
+    public void postPersist() {
+        if (categoryOrder == null) {
+            categoryOrder = id; // customField 값을 id 값으로 설정
+        }
     }
 
     public static Category of(String categoryName) {

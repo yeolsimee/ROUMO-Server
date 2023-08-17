@@ -2,6 +2,7 @@ package com.yeolsimee.roumo.app.category.service;
 
 import com.yeolsimee.roumo.app.category.dto.CategoryRequest;
 import com.yeolsimee.roumo.app.category.dto.CategoryResponse;
+import com.yeolsimee.roumo.app.category.dto.UpdateCategoryOrderResponse;
 import com.yeolsimee.roumo.app.category.entity.Category;
 import com.yeolsimee.roumo.app.category.repository.CategoryRepository;
 import com.yeolsimee.roumo.app.common.exception.EntityNotFoundException;
@@ -60,10 +61,16 @@ public class CategoryService {
         }
     }
 
-    public CategoryResponse updateOrder(CategoryRequest categoryRequest, long userId) {
-        Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryRequest.getCategoryId()), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
-        category.changeCategoryOrder(category.getCategoryOrder());
-        categoryRepository.save(category);
-        return CategoryResponse.of(category);
+    @Transactional
+    public UpdateCategoryOrderResponse updateCategoryOrder(long userId, long firstCategoryId, long secondCategoryId) {
+        Category firstCategory = categoryRepository.findByIdAndUserId(firstCategoryId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        Category secondCategory = categoryRepository.findByIdAndUserId(secondCategoryId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+
+        long firstCategoryOrder = firstCategory.getCategoryOrder();
+        long secondCategoryOrder = secondCategory.getCategoryOrder();
+
+        firstCategory.changeCategoryOrder(secondCategoryOrder);
+        secondCategory.changeCategoryOrder(firstCategoryOrder);
+        return UpdateCategoryOrderResponse.of(firstCategory, secondCategory);
     }
 }
