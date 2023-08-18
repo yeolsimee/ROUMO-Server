@@ -29,7 +29,8 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
 
         List<CategoryData> categoryData = queryFactory.select(new QCategoryData(
                         category.id.stringValue(),
-                        category.categoryName)
+                        category.categoryName,
+                        category.categoryOrder)
                 ).from(category)
                 .leftJoin(routine).on(category.id.eq(routine.category.id))
                 .join(routine.user, user)
@@ -41,6 +42,7 @@ public class RoutineRepositoryImpl implements RoutineRepositoryCustom {
                         routine.routineEndDate.goe(date),
                         Expressions.anyOf(routine.weekTypes.any().eq(weekType),
                                 routine.weekTypes.isEmpty()))
+                .orderBy(category.categoryOrder.asc())
                 .fetch();
 
         for (CategoryData category : categoryData) {
