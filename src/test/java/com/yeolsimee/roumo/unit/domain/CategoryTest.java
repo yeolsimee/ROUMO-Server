@@ -1,4 +1,4 @@
-package com.yeolsimee.roumo.unit;
+package com.yeolsimee.roumo.unit.domain;
 
 import com.yeolsimee.roumo.app.category.entity.Category;
 import org.junit.jupiter.api.DisplayName;

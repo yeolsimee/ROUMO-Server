@@ -13,11 +13,14 @@ public class CategoryRequest {
 
     private String categoryName;
 
+    private Long categoryOrder;
+
     public static Category toEntity(CategoryRequest categoryRequest, User user) {
 
         return Category.builder()
                 .user(user)
                 .categoryName(categoryRequest.getCategoryName())
+                .categoryOrder(categoryRequest.getCategoryOrder())
                 .build();
 
     }

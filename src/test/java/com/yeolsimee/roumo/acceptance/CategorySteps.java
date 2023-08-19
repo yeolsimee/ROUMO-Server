@@ -21,4 +21,18 @@ public class CategorySteps {
                 .when().post("/api/v1/category/insert")
                 .then().log().all().extract();
     }
+
+    public static ExtractableResponse<Response> 카테고리_순서_변경(String uid, Long firstCategoryId, Long secondCategoryId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("firstCategoryId", firstCategoryId);
+        params.put("secondCategoryId", secondCategoryId);
+
+        return RestAssured
+                .given().log().all()
+                .header("x-auth", uid)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(params)
+                .when().post("/api/v1/category/order/update")
+                .then().log().all().extract();
+    }
 }
