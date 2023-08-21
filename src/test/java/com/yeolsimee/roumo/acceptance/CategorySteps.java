@@ -22,10 +22,10 @@ public class CategorySteps {
                 .then().log().all().extract();
     }
 
-    public static ExtractableResponse<Response> 카테고리_순서_변경(String uid, Long firstCategoryId, Long secondCategoryId) {
+    public static ExtractableResponse<Response> 카테고리_순서_변경(String uid, String categoryId, Long categoryOrder) {
         Map<String, Object> params = new HashMap<>();
-        params.put("firstCategoryId", firstCategoryId);
-        params.put("secondCategoryId", secondCategoryId);
+        params.put("categoryId", categoryId);
+        params.put("categoryOrder", categoryOrder);
 
         return RestAssured
                 .given().log().all()

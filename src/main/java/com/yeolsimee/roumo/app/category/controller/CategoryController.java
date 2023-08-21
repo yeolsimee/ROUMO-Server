@@ -40,6 +40,6 @@ public class CategoryController {
 
     @PostMapping("/category/order/update")
     public ResponseEntity<?> updateCategoryOrder(@RequestBody UpdateCategoryOrderRequest updateCategoryOrderRequest, @AuthenticationPrincipal User user){
-        return ResponseEntity.ok(responseService.getSingleResult(categoryService.updateCategoryOrder(user.getId(), updateCategoryOrderRequest.getFirstCategoryId(), updateCategoryOrderRequest.getSecondCategoryId())));
+        return ResponseEntity.ok(responseService.getSingleResult(categoryService.updateCategoryOrder(user.getId(), updateCategoryOrderRequest.getCategoryId(), updateCategoryOrderRequest.getCategoryOrder())));
     }
 }
