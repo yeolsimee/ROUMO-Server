@@ -17,4 +17,20 @@ public class CategoryTest {
         Category category = Category.of(카테고리_이름);
         assertThat(category.getCategoryName()).isEqualTo(카테고리_이름);
     }
+
+    @DisplayName("카테고리 순서 같은치 체크하기")
+    @Test
+    void equalCategoryOrder() {
+    	// given
+        카테고리_이름 = "컴퓨터 하기";
+        Category category = Category.builder()
+                .categoryName(카테고리_이름)
+                .categoryOrder(1L)
+                .build();
+        // when
+        boolean result = category.equalCategoryOrder(1L);
+
+        // then
+    	assertThat(result).isTrue();
+    }
 }

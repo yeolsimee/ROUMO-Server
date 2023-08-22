@@ -2,9 +2,9 @@ package com.yeolsimee.roumo.app.category.service;
 
 import com.yeolsimee.roumo.app.category.dto.CategoryRequest;
 import com.yeolsimee.roumo.app.category.dto.CategoryResponse;
-import com.yeolsimee.roumo.app.category.dto.UpdateCategoryOrderResponse;
 import com.yeolsimee.roumo.app.category.entity.Category;
 import com.yeolsimee.roumo.app.category.repository.CategoryRepository;
+import com.yeolsimee.roumo.app.common.exception.BaseException;
 import com.yeolsimee.roumo.app.common.exception.EntityNotFoundException;
 import com.yeolsimee.roumo.app.common.response.ResponseMessage;
 import com.yeolsimee.roumo.app.routine.entity.Routine;
@@ -24,53 +24,67 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
-    private final RoutineService routineService;
-    private final UserService userService;
+	private final CategoryRepository categoryRepository;
+	private final RoutineService routineService;
+	private final UserService userService;
 
-    public List<CategoryResponse> getCategories(Long userId){
-        List<Category> categoryList = categoryRepository.findByUserId(userId);
-        return categoryList.stream().map(CategoryResponse::of).toList();
-    }
+	public List<CategoryResponse> getCategories(Long userId) {
+		List<Category> categoryList = categoryRepository.findByUserId(userId);
+		return categoryList.stream().map(CategoryResponse::of).toList();
+	}
 
-    @Transactional
-    public CategoryResponse insertCategory(CategoryRequest categoryRequest, Long userId) {
-        User user = userService.getUserByUserId(userId);
-        Category category = CategoryRequest.toEntity(categoryRequest, user);
-        category.changeCategoryDeleteYN("N");
-        categoryRepository.save(category);
-        return CategoryResponse.of(category);
-    }
+	@Transactional
+	public CategoryResponse insertCategory(CategoryRequest categoryRequest, Long userId) {
+		User user = userService.getUserByUserId(userId);
+		Category category = CategoryRequest.toEntity(categoryRequest, user);
+		category.changeCategoryDeleteYN("N");
+		categoryRepository.save(category);
+		return CategoryResponse.of(category);
+	}
 
-    @Transactional
-    public CategoryResponse updateCategory(CategoryRequest categoryRequest, Long userId) {
-        Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryRequest.getCategoryId()), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
-        category.changeCategoryName(categoryRequest.getCategoryName());
-        categoryRepository.save(category);
-        return CategoryResponse.of(category);
-    }
+	@Transactional
+	public CategoryResponse updateCategory(CategoryRequest categoryRequest, Long userId) {
+		Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryRequest.getCategoryId()), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+		category.changeCategoryName(categoryRequest.getCategoryName());
+		categoryRepository.save(category);
+		return CategoryResponse.of(category);
+	}
 
-    @Transactional
-    public void deleteCategory(Long categoryId, Long userId) {
-        Category category = categoryRepository.findByIdAndUserId(categoryId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
-        category.changeCategoryDeleteYN("Y");
-        List<Routine> routineByCategoryId = routineService.findRoutineByCategoryId(category.getId());
-        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        for (Routine routine : routineByCategoryId) {
-            routineService.deleteRoutineOrChangeEndDate(routine, today);
-        }
-    }
+	@Transactional
+	public void deleteCategory(Long categoryId, Long userId) {
+		Category category = categoryRepository.findByIdAndUserId(categoryId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+		category.changeCategoryDeleteYN("Y");
+		List<Routine> routineByCategoryId = routineService.findRoutineByCategoryId(category.getId());
+		String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		for (Routine routine : routineByCategoryId) {
+			routineService.deleteRoutineOrChangeEndDate(routine, today);
+		}
+	}
 
-    @Transactional
-    public UpdateCategoryOrderResponse updateCategoryOrder(long userId, long firstCategoryId, long secondCategoryId) {
-        Category firstCategory = categoryRepository.findByIdAndUserId(firstCategoryId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
-        Category secondCategory = categoryRepository.findByIdAndUserId(secondCategoryId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+	@Transactional
+	public CategoryResponse updateCategoryOrder(long userId, String categoryId, long categoryOrder) {
+		List<Category> categories = categoryRepository.findByUserId(userId);
+		Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryId), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+		Long originalCategoryOrder = category.getCategoryOrder();
 
-        long firstCategoryOrder = firstCategory.getCategoryOrder();
-        long secondCategoryOrder = secondCategory.getCategoryOrder();
+		if (category.equalCategoryOrder(categoryOrder)) {
+			throw new BaseException(ResponseMessage.EQUAL_BEFORE_CATEGORY_ORDER);
+		}
 
-        firstCategory.changeCategoryOrder(secondCategoryOrder);
-        secondCategory.changeCategoryOrder(firstCategoryOrder);
-        return UpdateCategoryOrderResponse.of(firstCategory, secondCategory);
-    }
+		if (originalCategoryOrder > categoryOrder) {
+			categories.stream()
+					.filter(cate -> cate.getCategoryOrder() >= categoryOrder && cate.getCategoryOrder() < originalCategoryOrder)
+					.forEach(cate -> cate.changeCategoryOrder(cate.getCategoryOrder() + 1));
+			category.changeCategoryOrder(categoryOrder);
+		}
+
+		if (originalCategoryOrder < categoryOrder) {
+			categories.stream()
+					.filter(cate -> cate.getCategoryOrder() <= categoryOrder && cate.getCategoryOrder() > originalCategoryOrder)
+					.forEach(cate -> cate.changeCategoryOrder(cate.getCategoryOrder() - 1));
+			category.changeCategoryOrder(categoryOrder);
+		}
+
+		return CategoryResponse.of(category);
+	}
 }

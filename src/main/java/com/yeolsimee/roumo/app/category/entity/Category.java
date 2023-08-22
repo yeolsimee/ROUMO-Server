@@ -53,4 +53,8 @@ public class Category extends BaseEntity {
     public void changeCategoryOrder(Long categoryOrder) {
         this.categoryOrder = categoryOrder;
     }
+
+    public boolean equalCategoryOrder(long categoryOrder) {
+        return this.categoryOrder.equals(categoryOrder);
+    }
 }

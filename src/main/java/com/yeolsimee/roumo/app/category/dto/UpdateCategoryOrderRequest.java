@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class UpdateCategoryOrderRequest {
-	private Long firstCategoryId;
-	private Long secondCategoryId;
+	private String categoryId;
+	private Long categoryOrder;
 }
