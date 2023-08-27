@@ -31,19 +31,16 @@ public class Category extends BaseEntity {
         this.categoryName = categoryName;
     }
 
-    @PostPersist
-    public void postPersist() {
-        if (categoryOrder == null) {
-            categoryOrder = id; // customField 값을 id 값으로 설정
-        }
-    }
-
     public static Category of(String categoryName) {
         return new Category(categoryName);
     }
 
     public void changeCategoryDeleteYN(String categoryDeleteYN) {
         this.categoryDeleteYN = categoryDeleteYN;
+    }
+
+    public void setCategoryOrder(long categoryOrder) {
+        this.categoryOrder = categoryOrder;
     }
 
     public void changeCategoryName(String categoryName) {

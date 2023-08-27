@@ -24,67 +24,80 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CategoryService {
 
-	private final CategoryRepository categoryRepository;
-	private final RoutineService routineService;
-	private final UserService userService;
+    private final CategoryRepository categoryRepository;
+    private final RoutineService routineService;
+    private final UserService userService;
 
-	public List<CategoryResponse> getCategories(Long userId) {
-		List<Category> categoryList = categoryRepository.findByUserId(userId);
-		return categoryList.stream().map(CategoryResponse::of).toList();
-	}
+    public List<CategoryResponse> getCategories(Long userId) {
+        List<Category> categoryList = categoryRepository.findByUserId(userId);
+        return categoryList.stream().map(CategoryResponse::of).toList();
+    }
 
-	@Transactional
-	public CategoryResponse insertCategory(CategoryRequest categoryRequest, Long userId) {
-		User user = userService.getUserByUserId(userId);
-		Category category = CategoryRequest.toEntity(categoryRequest, user);
-		category.changeCategoryDeleteYN("N");
-		categoryRepository.save(category);
-		return CategoryResponse.of(category);
-	}
+    @Transactional
+    public CategoryResponse insertCategory(CategoryRequest categoryRequest, Long userId) {
+        User user = userService.getUserByUserId(userId);
+        Category category = CategoryRequest.toEntity(categoryRequest, user);
+        category.changeCategoryDeleteYN("N");
 
-	@Transactional
-	public CategoryResponse updateCategory(CategoryRequest categoryRequest, Long userId) {
-		Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryRequest.getCategoryId()), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
-		category.changeCategoryName(categoryRequest.getCategoryName());
-		categoryRepository.save(category);
-		return CategoryResponse.of(category);
-	}
+        List<Category> categories = categoryRepository.findByUserId(userId);
 
-	@Transactional
-	public void deleteCategory(Long categoryId, Long userId) {
-		Category category = categoryRepository.findByIdAndUserId(categoryId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
-		category.changeCategoryDeleteYN("Y");
-		List<Routine> routineByCategoryId = routineService.findRoutineByCategoryId(category.getId());
-		String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-		for (Routine routine : routineByCategoryId) {
-			routineService.deleteRoutineOrChangeEndDate(routine, today);
-		}
-	}
+        long lastedOrder = categories.stream()
+                .mapToLong(cate -> cate.getCategoryOrder())
+                .max()
+                .orElse(0);
 
-	@Transactional
-	public CategoryResponse updateCategoryOrder(long userId, String categoryId, long categoryOrder) {
-		List<Category> categories = categoryRepository.findByUserId(userId);
-		Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryId), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
-		Long originalCategoryOrder = category.getCategoryOrder();
+        category.setCategoryOrder(lastedOrder + 1);
 
-		if (category.equalCategoryOrder(categoryOrder)) {
-			throw new BaseException(ResponseMessage.EQUAL_BEFORE_CATEGORY_ORDER);
-		}
+        categoryRepository.save(category);
+        return CategoryResponse.of(category);
+    }
 
-		if (originalCategoryOrder > categoryOrder) {
-			categories.stream()
-					.filter(cate -> cate.getCategoryOrder() >= categoryOrder && cate.getCategoryOrder() < originalCategoryOrder)
-					.forEach(cate -> cate.changeCategoryOrder(cate.getCategoryOrder() + 1));
-			category.changeCategoryOrder(categoryOrder);
-		}
+    @Transactional
+    public CategoryResponse updateCategory(CategoryRequest categoryRequest, Long userId) {
+        Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryRequest.getCategoryId()), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        category.changeCategoryName(categoryRequest.getCategoryName());
+        categoryRepository.save(category);
+        return CategoryResponse.of(category);
+    }
 
-		if (originalCategoryOrder < categoryOrder) {
-			categories.stream()
-					.filter(cate -> cate.getCategoryOrder() <= categoryOrder && cate.getCategoryOrder() > originalCategoryOrder)
-					.forEach(cate -> cate.changeCategoryOrder(cate.getCategoryOrder() - 1));
-			category.changeCategoryOrder(categoryOrder);
-		}
+    @Transactional
+    public void deleteCategory(Long categoryId, Long userId) {
+        Category category = categoryRepository.findByIdAndUserId(categoryId, userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        category.changeCategoryDeleteYN("Y");
+        List<Routine> routineByCategoryId = routineService.findRoutineByCategoryId(category.getId());
+        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        for (Routine routine : routineByCategoryId) {
+            routineService.deleteRoutineOrChangeEndDate(routine, today);
+        }
+    }
 
-		return CategoryResponse.of(category);
-	}
+    @Transactional
+    public CategoryResponse updateCategoryOrder(long userId, String categoryId, String targetCategoryId) {
+        List<Category> categories = categoryRepository.findByUserId(userId);
+
+        Category category = categoryRepository.findByIdAndUserId(Long.parseLong(categoryId), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        Category targetCategory = categoryRepository.findByIdAndUserId(Long.parseLong(targetCategoryId), userId).orElseThrow(() -> new EntityNotFoundException(ResponseMessage.NOT_VALID_CATEGORY));
+        Long originalCategoryOrder = category.getCategoryOrder();
+        Long targetCategoryOrder = targetCategory.getCategoryOrder();
+
+        if (category.equalCategoryOrder(targetCategoryOrder)) {
+            throw new BaseException(ResponseMessage.EQUAL_BEFORE_CATEGORY_ORDER);
+        }
+
+        if (originalCategoryOrder > targetCategoryOrder) {
+            categories.stream()
+                    .filter(cate -> cate.getCategoryOrder() >= targetCategoryOrder && cate.getCategoryOrder() < originalCategoryOrder)
+                    .forEach(cate -> cate.changeCategoryOrder(cate.getCategoryOrder() + 1));
+            category.changeCategoryOrder(targetCategoryOrder);
+        }
+
+        if (originalCategoryOrder < targetCategoryOrder) {
+            categories.stream()
+                    .filter(cate -> cate.getCategoryOrder() <= targetCategoryOrder && cate.getCategoryOrder() > originalCategoryOrder)
+                    .forEach(cate -> cate.changeCategoryOrder(cate.getCategoryOrder() - 1));
+            category.changeCategoryOrder(targetCategoryOrder);
+        }
+
+        return CategoryResponse.of(category);
+    }
 }
